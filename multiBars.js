@@ -102,6 +102,14 @@ function highlight(selectedBars){
 		selectedBars[i].style("fill", "#ffff00");
 	}
  }
+ 
+function bolding(selectedBars){
+	for (var i=0; i<selectedBars.length; i++)
+	{
+		selectedBars[i].style("stroke-width", 3)
+ 						.style("stroke", "red");
+	}
+ }
 
 
 //BEN: blink 1 (i.e. changing the colour, then calling blink 2)
@@ -128,8 +136,12 @@ function blink2(selectedBars)
 function referenceLine(selectedGroup){
 	
 var rect = $(selectedGroup).children();
+
+//var rectG = d3.select("#Average");
+
 var hArr = new Array;
 rect.each(function (i,d) { hArr[i] = $(this).attr("height")});
+//rectG.each(function (i,d) { hArr[i] = rectG.attr("height")});
 
 var sum = 0;
 
@@ -240,16 +252,20 @@ function trigger(){
 //	blink(selectedBars);
 
 //Daisy Jun18 Print Value not done
-	selectedGroup = "#Average";
+//	selectedGroup = "#Average";
 //	selectedGroup = "#Andrea";
-//	selectedGroup = "#Diana";
+	selectedGroup = "#Diana";
 	showGroupValue(selectedGroup);
 
-//Daisy Jun18 Draw Reference Line
+//Daisy Jun18 Draw Reference Line see if d3 works 
 //	selectedGroup = "#Average";
 //	selectedGroup = "#Andrea";
 //	selectedGroup = "#Diana";
 //	referenceLine(selectedGroup);
+
+//Daisy Jun21 Bolding
+//	selectedBars = getSelectedBars([["Andrea", "2"],["Diana", "3"]]);
+//	bolding(selectedBars);
 }
 
 //BEN: Stop Blinking
