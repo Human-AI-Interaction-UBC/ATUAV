@@ -209,14 +209,33 @@ function showGroupValue(selectedGroup)
 	}
 
 	var textData = new Array;
-	textData = [intValue, xCor, yCor];
+	for(var i = 0; i<xCor.length; i++){
+		textData[i] = [ intValue[i], xCor[i], yCor[i]];
+	}
+// or vis.append("svg:text") but dunno how to iterate data array
+/*8	 var text = vis
+	 			.selectAll("svg:g")
+	 			.data(textData).enter()
+	 			.append("svg:text")
+	 			.attr("dx", 3)
+ 				.attr("dy", ".35em")
+ 				.attr("font-family", "sans-serif")
+ 				.attr("fill", "black")
+				.attr("x", function(d){	return d[0];})
+				.attr("y", function(d, i){	return h - d[1]; })
 
-	 		//vis.append("svg:text")
-	 		g.selectAll("text")
+//				.attr("x", function(){	for (var i = 0; i<xCor.length; i++) return xCor[i];})
+//				.attr("y", function(){	for (var i = 0; i<yCor.length; i++) return h - yCor[i]; })
+				.attr("text-anchor", "middle")
+				.text(function(d){return d[2];});
+//				.text(function(){for (var i = 0; i<intValue.length; i++) return intValue[i];});**/
+
+
+	 		d3.select(selectedGroup).selectAll("text")
  				.data(textData)
  				.enter().append("svg:text")
- 				.attr("x", function(d){	return d[1];})
- 				.attr("y", function(d){	return h - d[2]; } )
+ 				.attr("x", function(d){	return d[1] - 50;})
+ 				.attr("y", function(d){	return h- d[2] -150; } )
  				.attr("dx", 3)
  				.attr("dy", ".35em")
  				.attr("font-family", "sans-serif")
@@ -225,7 +244,6 @@ function showGroupValue(selectedGroup)
  				//.attr("transform", function(d, i) { return "translate(" + x1(i) + "," + "0)"; })
  				.text(function(d){return d[0];});
  				
- 			//vis.append("svg:text")
 }
 
 //BEN: Trigger
@@ -253,8 +271,8 @@ function trigger(){
 
 //Daisy Jun18 Print Value not done
 //	selectedGroup = "#Average";
-//	selectedGroup = "#Andrea";
-	selectedGroup = "#Diana";
+	selectedGroup = "#Andrea";
+//	selectedGroup = "#Diana";
 	showGroupValue(selectedGroup);
 
 //Daisy Jun18 Draw Reference Line see if d3 works 
