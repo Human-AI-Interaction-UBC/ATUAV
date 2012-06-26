@@ -140,9 +140,9 @@ var rect = $(selectedGroup).children();
 //var rectG = d3.select("#Average");
 
 var hArr = new Array;
+var colour;
 rect.each(function (i,d) { hArr[i] = $(this).attr("height")});
-//rectG.each(function (i,d) { hArr[i] = rectG.attr("height")});
-
+colour = $(selectedGroup).attr("fill");
 var sum = 0;
 
 for(var i = 0; i<hArr.length; i++){
@@ -156,7 +156,7 @@ var avg = sum/hArr.length;
 						.attr("y1", h-avg)
 						.attr("x2", w)
 						.attr("y2", h-avg)
-						.style("stroke","black")
+						.style("stroke",colour)
 						.style("stroke-width", 5);
 						
 var	min=hArr[0];
@@ -170,7 +170,7 @@ for(var i = 0; i<hArr.length; i++){
 						.attr("y1", h-min)
 						.attr("x2", w)
 						.attr("y2", h-min)
-						.style("stroke", "black")
+						.style("stroke", colour)
 						.style("stroke-width", 5);
 						
 
@@ -185,7 +185,7 @@ for(var i = 0; i<hArr.length; i++){
 						.attr("y1", h-max)
 						.attr("x2", w)
 						.attr("y2", h-max)
-						.style("stroke", "black")
+						.style("stroke", colour)
 
 						.style("stroke-width", 5); 
 
@@ -269,17 +269,17 @@ function trigger(){
 //	selectedBars = getSelectedBars([["Andrea", "2"],["Diana", "3"]]);
 //	blink(selectedBars);
 
-//Daisy Jun18 Print Value not done
-//	selectedGroup = "#Average";
-	selectedGroup = "#Andrea";
-//	selectedGroup = "#Diana";
-	showGroupValue(selectedGroup);
-
-//Daisy Jun18 Draw Reference Line see if d3 works 
+//Daisy Jun25 Print Value Done, working on positions
 //	selectedGroup = "#Average";
 //	selectedGroup = "#Andrea";
 //	selectedGroup = "#Diana";
-//	referenceLine(selectedGroup);
+//	showGroupValue(selectedGroup);
+
+//Daisy Jun18 Draw Reference Line see if d3 works 
+//	selectedGroup = "#Average";
+	selectedGroup = "#Andrea";
+//	selectedGroup = "#Diana";
+	referenceLine(selectedGroup);
 
 //Daisy Jun21 Bolding
 //	selectedBars = getSelectedBars([["Andrea", "2"],["Diana", "3"]]);
@@ -289,4 +289,9 @@ function trigger(){
 //BEN: Stop Blinking
 function stopBlinking(){
 	clearTimeout(timeOutHandle);
+}
+
+function undo(){
+//wanna get rid of myCircle
+//myCircle.parentNode.removeChild(myCircle);	
 }
