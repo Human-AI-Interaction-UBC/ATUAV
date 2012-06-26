@@ -295,3 +295,20 @@ function undo(){
 //wanna get rid of myCircle
 //myCircle.parentNode.removeChild(myCircle);	
 }
+
+//arrow
+Raphael.fn.arrow = function (x1, y1, x2, y2, size) {
+        var angle = Math.atan2(x1-x2,y2-y1);
+        angle = (angle / (2 * Math.PI)) * 360;
+        var arrowPath = this.path("M" + x2 + " " + y2 + " L" + (x2  - size) + " " + (y2  - size) + " L" + (x2  - size)  + " " + (y2  + size) + " L" + x2 + " " + y2 ).attr("fill","black").rotate((90+angle),x2,y2);
+        var linePath = this.path("M" + x1 + " " + y1 + " L" + x2 + " " + y2);
+        return [linePath,arrowPath];
+};
+
+var x = 10;
+var y = 50;
+var x1 = 200;
+var y1 = 90;
+
+var paper = new Raphael(0,0,2000,2000);
+paper.arrow(x,y,x1,y1,8);
