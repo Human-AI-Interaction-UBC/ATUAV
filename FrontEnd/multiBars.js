@@ -140,9 +140,9 @@ var rect = $(selectedGroup).children();
 //var rectG = d3.select("#Average");
 
 var hArr = new Array;
+var colour;
 rect.each(function (i,d) { hArr[i] = $(this).attr("height")});
-//rectG.each(function (i,d) { hArr[i] = rectG.attr("height")});
-
+colour = $(selectedGroup).attr("fill");
 var sum = 0;
 
 for(var i = 0; i<hArr.length; i++){
@@ -156,7 +156,7 @@ var avg = sum/hArr.length;
 						.attr("y1", h-avg)
 						.attr("x2", w)
 						.attr("y2", h-avg)
-						.style("stroke","black")
+						.style("stroke",colour)
 						.style("stroke-width", 5);
 						
 var	min=hArr[0];
@@ -170,7 +170,7 @@ for(var i = 0; i<hArr.length; i++){
 						.attr("y1", h-min)
 						.attr("x2", w)
 						.attr("y2", h-min)
-						.style("stroke", "black")
+						.style("stroke", colour)
 						.style("stroke-width", 5);
 						
 
@@ -185,7 +185,7 @@ for(var i = 0; i<hArr.length; i++){
 						.attr("y1", h-max)
 						.attr("x2", w)
 						.attr("y2", h-max)
-						.style("stroke", "black")
+						.style("stroke", colour)
 
 						.style("stroke-width", 5); 
 
@@ -269,17 +269,17 @@ function trigger(){
 //	selectedBars = getSelectedBars([["Andrea", "2"],["Diana", "3"]]);
 //	blink(selectedBars);
 
-//Daisy Jun18 Print Value not done
-//	selectedGroup = "#Average";
-	selectedGroup = "#Andrea";
-//	selectedGroup = "#Diana";
-	showGroupValue(selectedGroup);
-
-//Daisy Jun18 Draw Reference Line see if d3 works 
+//Daisy Jun25 Print Value Done, working on positions
 //	selectedGroup = "#Average";
 //	selectedGroup = "#Andrea";
 //	selectedGroup = "#Diana";
-//	referenceLine(selectedGroup);
+//	showGroupValue(selectedGroup);
+
+//Daisy Jun18 Draw Reference Line see if d3 works 
+//	selectedGroup = "#Average";
+	selectedGroup = "#Andrea";
+//	selectedGroup = "#Diana";
+	referenceLine(selectedGroup);
 
 //Daisy Jun21 Bolding
 //	selectedBars = getSelectedBars([["Andrea", "2"],["Diana", "3"]]);
@@ -290,3 +290,25 @@ function trigger(){
 function stopBlinking(){
 	clearTimeout(timeOutHandle);
 }
+
+function undo(){
+//wanna get rid of myCircle
+//myCircle.parentNode.removeChild(myCircle);	
+}
+
+//arrow
+Raphael.fn.arrow = function (x1, y1, x2, y2, size) {
+        var angle = Math.atan2(x1-x2,y2-y1);
+        angle = (angle / (2 * Math.PI)) * 360;
+        var arrowPath = this.path("M" + x2 + " " + y2 + " L" + (x2  - size) + " " + (y2  - size) + " L" + (x2  - size)  + " " + (y2  + size) + " L" + x2 + " " + y2 ).attr("fill","black").rotate((90+angle),x2,y2);
+        var linePath = this.path("M" + x1 + " " + y1 + " L" + x2 + " " + y2);
+        return [linePath,arrowPath];
+};
+
+var x = 10;
+var y = 50;
+var x1 = 200;
+var y1 = 90;
+
+var paper = new Raphael(0,0,2000,2000);
+paper.arrow(x,y,x1,y1,8);
