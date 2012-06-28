@@ -15,3 +15,4 @@ C:\Documents and Settings\Admin\My Documents\Visual Studio 2008\Projects\ATUAV_R
 C:\Documents and Settings\Admin\My Documents\Visual Studio 2008\Projects\ATUAV_RT\RealTimeProcessing\ATUAV_RT\bin\Debug\ATUAV_RT.pdb
 C:\Documents and Settings\Admin\My Documents\Visual Studio 2008\Projects\ATUAV_RT\RealTimeProcessing\ATUAV_RT\bin\Debug\Interop.FixDet.dll
 C:\Documents and Settings\Admin\My Documents\Visual Studio 2008\Projects\ATUAV_RT\RealTimeProcessing\ATUAV_RT\obj\Debug\ResolveAssemblyReference.cache
+C:\Documents and Settings\Admin\My Documents\Visual Studio 2008\Projects\ATUAV_RT\RealTimeProcessing\ATUAV_RT\bin\Debug\NDesk.Options.dll
