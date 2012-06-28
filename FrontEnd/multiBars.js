@@ -22,6 +22,7 @@ var w = 625,
     y1 = d3.scale.linear().domain([0, 15]).range([ 0, h]),
     x0 = d3.scale.ordinal().domain(d3.range(n)).rangeBands([0, w], .3),
     x1 = d3.scale.ordinal().domain(d3.range(m)).rangeBands([0, x0.rangeBand()]),
+    score = d3.scale.linear().domain([0,500]).range([0, 100]);
     z = d3.scale.category10();
 
 var xAxis = d3.svg.axis()
@@ -94,6 +95,34 @@ function getSelectedBars(seriesValuesPairs){
 	
 	return selectedBars;
  }
+ 
+function getSelectedJBars(seriesValuesPairs){
+	
+	var selectedBars = new Array();
+	var value = new Array;
+	var xCor = new Array;
+	var yCor = new Array;
+	var intValue = new Array;
+	
+	for (var i=0; i<seriesValuesPairs.length; i++)
+	{
+		value[i] = $("#"+ seriesValuesPairs[i][0]).children("#value"+ seriesValuesPairs[i][1]).attr("height");
+		xCor[i] = $("#"+ seriesValuesPairs[i][0]).children("#value"+ seriesValuesPairs[i][1]).offset().left;
+		yCor[i] = $("#"+ seriesValuesPairs[i][0]).children("#value"+ seriesValuesPairs[i][1]).offset().top;		
+		
+	}
+	
+	for (var i = 0; i<value.length; i++){
+		intValue[i] = Math.floor(value[i])
+	}
+	
+	var textData = new Array;
+	for(var i = 0; i<xCor.length; i++){
+		textData[i] = [ intValue[i], xCor[i], yCor[i]];
+	}
+	
+	return textData;
+ } 
 
 //BEN: highlight selection
 function highlight(selectedBars){
@@ -212,39 +241,68 @@ function showGroupValue(selectedGroup)
 	for(var i = 0; i<xCor.length; i++){
 		textData[i] = [ intValue[i], xCor[i], yCor[i]];
 	}
-// or vis.append("svg:text") but dunno how to iterate data array
-/*8	 var text = vis
-	 			.selectAll("svg:g")
-	 			.data(textData).enter()
-	 			.append("svg:text")
-	 			.attr("dx", 3)
- 				.attr("dy", ".35em")
- 				.attr("font-family", "sans-serif")
- 				.attr("fill", "black")
-				.attr("x", function(d){	return d[0];})
-				.attr("y", function(d, i){	return h - d[1]; })
-
-//				.attr("x", function(){	for (var i = 0; i<xCor.length; i++) return xCor[i];})
-//				.attr("y", function(){	for (var i = 0; i<yCor.length; i++) return h - yCor[i]; })
-				.attr("text-anchor", "middle")
-				.text(function(d){return d[2];});
-//				.text(function(){for (var i = 0; i<intValue.length; i++) return intValue[i];});**/
-
 
 	 		d3.select(selectedGroup).selectAll("text")
  				.data(textData)
  				.enter().append("svg:text")
- 				.attr("x", function(d){	return d[1] - 50;})
- 				.attr("y", function(d){	return h- d[2] -150; } )
+ 				.attr("x", function(d){	return x0(d[1]) + 10 ;})
+ 				.attr("y", function(d){	return d[2] -10 ; } )
  				.attr("dx", 3)
  				.attr("dy", ".35em")
  				.attr("font-family", "sans-serif")
  				.attr("fill", "black")
  				.attr("text-anchor", "middle")
  				//.attr("transform", function(d, i) { return "translate(" + x1(i) + "," + "0)"; })
- 				.text(function(d){return d[0];});
+ 				.text(function(d){return Math.floor(score(d[0]));});
  				
 }
+
+function showIndiValue(selectedGroup)
+{
+	var rect = $(selectedGroup).children();
+	var value = new Array;
+	var xCor = new Array;
+	var yCor = new Array;
+	var intValue = new Array;
+
+	rect.each(function (i,d) { value[i] = $(this).attr("height")});
+	rect.each(function(i,d) {xCor[i] = $(this).offset().left});
+	rect.each(function(i,d) {yCor[i] = $(this).offset().top});
+	
+
+	for (var i = 0; i<value.length; i++){
+		intValue[i] = Math.floor(value[i])
+	}
+
+	var textData = new Array;
+	for(var i = 0; i<xCor.length; i++){
+		textData[i] = [ intValue[i], xCor[i], yCor[i]];
+	}
+
+	 		d3.select(selectedGroup).selectAll("text")
+ 				.data(textData)
+ 				.enter().append("svg:text")
+ 				.attr("x", function(d){	return x0(d[1]) + 10 ;})
+ 				.attr("y", function(d){	return d[2] -10 ; } )
+ 				.attr("dx", 3)
+ 				.attr("dy", ".35em")
+ 				.attr("font-family", "sans-serif")
+ 				.attr("fill", "black")
+ 				.attr("text-anchor", "middle")
+ 				.text(function(d){return Math.floor(score(d[0]));});
+ 				
+}
+
+function getAbsoluteXY(element) { 
+   var viewportElement = document.documentElement; 
+   var box = element.getBoundingClientRect(); 
+   var scrollLeft = viewportElement.scrollLeft; 
+   var scrollTop = viewportElement.scrollTop; 
+   var x = box.left + scrollLeft; 
+   var y = box.top + scrollTop; 
+   return {"x": x, "y": y} 
+} 
+
 
 //BEN: Trigger
 function trigger(){
@@ -269,21 +327,29 @@ function trigger(){
 //	selectedBars = getSelectedBars([["Andrea", "2"],["Diana", "3"]]);
 //	blink(selectedBars);
 
-//Daisy Jun25 Print Value Done, working on positions
+
+//Daisy Jun25 Print Value
 //	selectedGroup = "#Average";
 //	selectedGroup = "#Andrea";
 //	selectedGroup = "#Diana";
 //	showGroupValue(selectedGroup);
 
+//Daisy Jun28 Print individual value
+selectedBars = getSelectedJBars([["Andrea", "2"],["Diana", "3"]]);
+
 //Daisy Jun18 Draw Reference Line see if d3 works 
 //	selectedGroup = "#Average";
-	selectedGroup = "#Andrea";
+//	selectedGroup = "#Andrea";
 //	selectedGroup = "#Diana";
-	referenceLine(selectedGroup);
+//	referenceLine(selectedGroup);
 
 //Daisy Jun21 Bolding
 //	selectedBars = getSelectedBars([["Andrea", "2"],["Diana", "3"]]);
 //	bolding(selectedBars);
+
+//Daisy Jun27 Arrow Not Done
+//	selectedBars = getSelectedBars([["Andrea", "2"],["Diana", "3"]]);
+//	drawArrow(selectedBars);
 }
 
 //BEN: Stop Blinking
@@ -291,13 +357,13 @@ function stopBlinking(){
 	clearTimeout(timeOutHandle);
 }
 
-function undo(){
+/**function undo(theNode){
 //wanna get rid of myCircle
-//myCircle.parentNode.removeChild(myCircle);	
-}
+theNode.parentNode.removeChild(myCircle);	
+}**/
 
 //arrow
-Raphael.fn.arrow = function (x1, y1, x2, y2, size) {
+/**Raphael.fn.arrow = function (x1, y1, x2, y2, size) {
         var angle = Math.atan2(x1-x2,y2-y1);
         angle = (angle / (2 * Math.PI)) * 360;
         var arrowPath = this.path("M" + x2 + " " + y2 + " L" + (x2  - size) + " " + (y2  - size) + " L" + (x2  - size)  + " " + (y2  + size) + " L" + x2 + " " + y2 ).attr("fill","black").rotate((90+angle),x2,y2);
@@ -310,5 +376,9 @@ var y = 50;
 var x1 = 200;
 var y1 = 90;
 
-var paper = new Raphael(0,0,2000,2000);
-paper.arrow(x,y,x1,y1,8);
+var paper = new Raphael(0,0,625,500);
+paper.arrow(x,y,x1,y1,10);
+
+function drawArrow(selectedBars){
+	
+}**/
