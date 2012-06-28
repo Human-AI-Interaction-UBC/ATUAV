@@ -15,6 +15,7 @@ namespace ATUAV_RT
     class GazeDataWindowingPrintHandler : GazeDataSynchronizedHandler
     {
         private bool collectingData = false;
+		private bool clearDataOnWindow = false;
         private readonly LinkedList<EyetrackerEvent> events = new LinkedList<EyetrackerEvent>();
 
         public GazeDataWindowingPrintHandler(SyncManager syncManager)
@@ -35,6 +36,29 @@ namespace ATUAV_RT
                 }
             }
         }
+		
+		/// <summary>
+		/// Gets or sets a value indicating whether to clear data on every window.
+		/// If true, each window will collect only the events that happened during that window.
+		/// If false, no data is cleared between window events. Instead all data collected to date is processed.
+		/// </summary>
+		public bool ClearDataOnWindow
+		{
+			get
+			{
+				lock (this)
+				{
+					return clearDataOnWindow;
+				}
+			}
+			set
+			{
+				lock (this)
+				{
+					clearDataOnWindow = value;
+				}
+			}
+		}
 
         /// <summary>
         /// Start collecting data in a new window.
@@ -44,7 +68,10 @@ namespace ATUAV_RT
         {
             lock (this)
             {
-                events.Clear();
+				if (clearDataOnWindow)
+				{
+                	events.Clear();
+				}
                 collectingData = true;
             }
         }
@@ -64,8 +91,10 @@ namespace ATUAV_RT
                 {
                     PrintDataUnsafe();
                 }
-
-                events.Clear();
+				if (clearDataOnWindow)
+				{
+                	events.Clear();
+				}
                 collectingData = true;
             }
         }
