@@ -18,7 +18,8 @@ namespace ATUAV_RT
     class Program
     {
         private static Clock clock;
-        private static int windowDuration = 3000; // Default is 3000 ms
+        private static int windowDuration = 3000; // ms
+        private static bool cumulativeWindows = false;
         private static bool help = false;
 
         /// <summary>
@@ -33,8 +34,9 @@ namespace ATUAV_RT
             // parse arguments
             var p = new OptionSet()
             {
+                { "c|cumulative", "windows collect data cumulatively", v => cumulativeWindows = v != null},
                 { "w|window=", "the {DURATION} of a window in ms (default=" + windowDuration + ")", (int v) => windowDuration = v },
-                { "h|help", "", v => help = v != null }
+                { "h|help", v => help = v != null }
             };
 
             try
@@ -42,16 +44,15 @@ namespace ATUAV_RT
                 List<string> extra = p.Parse(args);
                 if (extra.Count > 0)
                 {
-                    Console.WriteLine("Unknown arguments.");
-                    Console.WriteLine();
-                    help = true;
+                    throw new OptionException("Unknown arguments.", "");
                 }
             }
             catch (OptionException e)
             {
                 Console.WriteLine(e.Message);
+                Console.WriteLine("Try \'atuavrt --help\' for more information.");
                 Console.WriteLine();
-                help = true;
+                return;
             }
 
             if (help)
@@ -100,7 +101,7 @@ namespace ATUAV_RT
             SyncManager syncManager = new SyncManager(clock, e.EyetrackerInfo, EventThreadingOptions.BackgroundThread);
             
             // detect fixations
-            GazeDataFixationHandler fixations = new GazeDataFixationHandler(syncManager);
+            FixationDetector fixations = new FixationDetector(syncManager);
             connector.Eyetracker.GazeDataReceived += fixations.GazeDataReceived;
 
             /*/ print each event to console
@@ -109,15 +110,15 @@ namespace ATUAV_RT
             fixations.FixationDetector.FixationEnd += printer.FixationEnd;*/
 
             // windowed print to console
-            GazeDataWindowingPrintHandler printer = new GazeDataWindowingPrintHandler(syncManager);
+            WindowingConsolePrinter printer = new WindowingConsolePrinter(syncManager);
             //connector.Eyetracker.GazeDataReceived += printer.GazeDataReceived;
-            fixations.FixationDetector.FixationEnd += printer.FixationEnd;
+            fixations.FixDetector.FixationEnd += printer.FixationEnd;
             printer.StartWindow();
 
             while (true)
             {
                 Thread.Sleep(windowDuration);
-                printer.RenewWindow(true);
+                printer.ProcessWindow(cumulativeWindows);
             }
         }
     }

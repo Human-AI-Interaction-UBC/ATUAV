@@ -18,7 +18,7 @@ namespace ATUAV_RT
     /// 
     /// Documentation available through download link above.
     /// </summary>
-    class GazeDataFixationHandler : GazeDataSynchronizedHandler
+    class FixationDetector : GazeDataSynchronizedHandler
     {
         private readonly FixDetector fixationDetector;
 
@@ -28,21 +28,21 @@ namespace ATUAV_RT
         /// Filter = EFDFilter.fdfAveraging
         /// </summary>
         /// <param name="syncManager"></param>
-        public GazeDataFixationHandler(SyncManager syncManager) : base(syncManager)
+        public FixationDetector(SyncManager syncManager) : base(syncManager)
         {
             fixationDetector = new FixDetectorClass();
             fixationDetector.init();
 
-            // TODO determine settings of Tobii Studio fixation detector
+            // TODO determine settings of Tobii Fixation Filter
             fixationDetector.Analyzer = EFDAnalyzer.fdaFixationSize;
-            fixationDetector.Filter = EFDFilter.fdfAveraging;
-            // fixationDetector.FilterBufferSize =
-            // fixationDetector.FilterWeight =
-            // fixationDetector.MinFixDuration =
-            // fixationDetector.UpdateInterval =
+            fixationDetector.Filter = EFDFilter.fdfNone;
+            fixationDetector.setAnalyzerProperty("fixation_radius", 35);
+
+            // alt: Raw Data Filter
+            // alt: ClearView Fixation Filter
         }
 
-        ~GazeDataFixationHandler()
+        ~FixationDetector()
         {
             fixationDetector.finalize();
         }
@@ -51,7 +51,7 @@ namespace ATUAV_RT
         /// Real-time fixation detector. Results available by subscription to FixationEnd, 
         /// FixationStart, and FixationUpdate events.
         /// </summary>
-        public FixDetector FixationDetector
+        public FixDetector FixDetector
         {
             get
             {
@@ -59,7 +59,7 @@ namespace ATUAV_RT
             }
         }
 
-        int count = 0;//testing
+        //int count = 0;//testing
 
         /// <summary>
         /// Forwards 2D gaze points to fixation detector. Gaze points are only forwarded

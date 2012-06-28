@@ -11,9 +11,9 @@ namespace ATUAV_RT
     /// Example GazeDataHandler that prints all events to console.
     /// When subscribed to fixation events, also prints them to console.
     /// </summary>
-    class GazeDataConsolePrintHandler : GazeDataSynchronizedHandler
+    class ConsolePrinter : GazeDataSynchronizedHandler
     {
-        public GazeDataConsolePrintHandler(SyncManager syncManager) : base(syncManager)
+        public ConsolePrinter(SyncManager syncManager) : base(syncManager)
         {
         }
 
