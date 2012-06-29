@@ -20,6 +20,9 @@ namespace ATUAV_RT
     /// </summary>
     class FixationDetector : GazeDataSynchronizedHandler
     {
+        private static readonly double SCREEN_HEIGHT = 1024; // Tobii T120 Eye Tracker
+        private static readonly double SCREEN_WIDTH = 1280;  // Tobii T120 Eye Tracker
+
         private readonly FixDetector fixationDetector;
 
         /// <summary>
@@ -59,36 +62,27 @@ namespace ATUAV_RT
             }
         }
 
-        //int count = 0;//testing
-
         /// <summary>
         /// Forwards 2D gaze points to fixation detector. Gaze points are only forwarded
-        /// if CPU and Eyetracker clocks are synchronized.
-        /// 
-        /// Detailed explanation of synchronization available in Tobii SDK 3.0 Developer Guide.
-        /// http://www.tobii.com/Global/Analysis/Downloads/User_Manuals_and_Guides/Tobii%20SDK%203.0%20Release%20Candidate%201%20Developers%20Guide.pdf
+        /// if CPU and Eyetracker clocks are synchronized. Gaze point is the average of the left and right gaze points.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         protected override void GazeDataReceivedSynchronized(object sender, GazeDataEventArgs e)
         {
             int time = (int)syncManager.RemoteToLocal(e.GazeDataItem.TimeStamp);
-            int x = (int)e.GazeDataItem.LeftGazePoint3D.X; // TODO Determine which of LeftGazePoint2D, LeftGazePoint3D, RightGazePoint2D, RightGazePoint3D or combination thereof is same as Tobii Studio
-            int y = (int)e.GazeDataItem.LeftGazePoint3D.Y;
-            fixationDetector.addPoint(time, x, y);
 
-            // testing
-            /*GazeDataItem gdi = e.GazeDataItem;
-            Console.WriteLine("GazeDataItem:\r\n" +
-                "LeftEyePosition3D         (" + gdi.LeftEyePosition3D.X + ", " + gdi.LeftEyePosition3D.Y + ", " + gdi.LeftEyePosition3D.Z + ")\r\n" +
-                "LeftEyePosition3DRelative (" + gdi.LeftEyePosition3DRelative.X + ", " + gdi.LeftEyePosition3DRelative.Y + ", " + gdi.LeftEyePosition3DRelative.Z + ")\r\n" +
-                "LeftGazePoint2D           (" + gdi.LeftGazePoint2D.X + ", " + gdi.LeftGazePoint2D.Y + ")\r\n" +
-                "LeftGazePoint3D           (" + gdi.LeftGazePoint3D.X + ", " + gdi.LeftGazePoint3D.Y + ", " + gdi.LeftGazePoint3D.Z + ")\r\n" + 
-                "RightEyePosition3D         (" + gdi.RightEyePosition3D.X + ", " + gdi.RightEyePosition3D.Y + ", " + gdi.RightEyePosition3D.Z + ")\r\n" +
-                "RightEyePosition3DRelative (" + gdi.RightEyePosition3DRelative.X + ", " + gdi.RightEyePosition3DRelative.Y + ", " + gdi.RightEyePosition3DRelative.Z + ")\r\n" +
-                "RightGazePoint2D           (" + gdi.RightGazePoint2D.X + ", " + gdi.RightGazePoint2D.Y + ")\r\n" +
-                "RightGazePoint3D           (" + gdi.RightGazePoint3D.X + ", " + gdi.RightGazePoint3D.Y + ", " + gdi.RightGazePoint3D.Z + ")");
-            count++;*/
+            // calculate coordinates in pixels (0, 0 is top left corner
+            double leftX = e.GazeDataItem.LeftGazePoint2D.X * SCREEN_WIDTH;
+            double leftY = e.GazeDataItem.LeftGazePoint2D.Y * SCREEN_HEIGHT;
+            double rightX = e.GazeDataItem.RightGazePoint2D.X * SCREEN_WIDTH;
+            double rightY = e.GazeDataItem.RightGazePoint2D.Y * SCREEN_HEIGHT;
+
+            // average left and right eyes
+            int x = (int) ((leftX + rightX) / 2);
+            int y = (int) ((leftY + rightY) / 2);
+
+            fixationDetector.addPoint(time, x, y);
         }
     }
 }

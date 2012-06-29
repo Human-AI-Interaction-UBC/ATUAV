@@ -1,0 +1,3 @@
+[submodule "EMDAT"]
+	path = EMDAT
+	url = https://github.com/ATUAV/EMDAT.git
