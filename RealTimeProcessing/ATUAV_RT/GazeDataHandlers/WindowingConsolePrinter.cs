@@ -12,7 +12,7 @@ namespace ATUAV_RT
     /// Example GazeDataHandler that collects gaze data in dynamically sized windows
     /// and prints each window to console.
     /// </summary>
-    class WindowingConsolePrinter : GazeDataSynchronizedHandler, WindowingHandler
+    class WindowingConsolePrinter : ConsolePrinter, WindowingHandler
     {
         private bool collectingData = false;
         private readonly LinkedList<EyetrackerEvent> events = new LinkedList<EyetrackerEvent>();
@@ -45,7 +45,7 @@ namespace ATUAV_RT
         /// <param name="duration">Duration of fixation</param>
         /// <param name="x">Fixation Y position</param>
         /// <param name="y">Fixation X position</param>
-        public void FixationEnd(int time, int duration, int x, int y)
+        public override void FixationEnd(int time, int duration, int x, int y)
         {
             lock (this)
             {
@@ -71,11 +71,11 @@ namespace ATUAV_RT
             {
                 if (e.GazeDataItem != null)
                 {
-                    Console.WriteLine("GazeData - (" + e.GazeDataItem.LeftEyePosition3D.X + ", " + e.GazeDataItem.LeftEyePosition3D.Y + ")");
+                    base.Print(e.GazeDataItem);
                 }
                 else
                 {
-                    Console.WriteLine("FixationEnd - (" + e.Fixation.X + ", " + e.Fixation.Y + ") for " + e.Fixation.Duration + "ms");
+                    base.Print(e.Fixation.Time, e.Fixation.Duration, e.Fixation.X, e.Fixation.Y);
                 }
             }
             Console.WriteLine();

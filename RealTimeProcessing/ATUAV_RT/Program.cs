@@ -104,12 +104,12 @@ namespace ATUAV_RT
             FixationDetector fixations = new FixationDetector(syncManager);
             connector.Eyetracker.GazeDataReceived += fixations.GazeDataReceived;
 
-            /*/ print each event to console
-            GazeDataConsolePrintHandler printer = new GazeDataConsolePrintHandler(syncManager);
+            // print each event to console
+            ConsolePrinter printer = new ConsolePrinter(syncManager);
             //connector.Eyetracker.GazeDataReceived += printer.GazeDataReceived;
-            fixations.FixationDetector.FixationEnd += printer.FixationEnd;*/
+            fixations.FixDetector.FixationEnd += printer.FixationEnd;
 
-            // windowed print to console
+            /*/ windowed print to console
             WindowingConsolePrinter printer = new WindowingConsolePrinter(syncManager);
             //connector.Eyetracker.GazeDataReceived += printer.GazeDataReceived;
             fixations.FixDetector.FixationEnd += printer.FixationEnd;
@@ -119,7 +119,7 @@ namespace ATUAV_RT
             {
                 Thread.Sleep(windowDuration);
                 printer.ProcessWindow(cumulativeWindows);
-            }
+            }*/
         }
     }
 }

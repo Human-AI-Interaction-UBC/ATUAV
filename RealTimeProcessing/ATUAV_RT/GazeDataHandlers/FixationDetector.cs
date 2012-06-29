@@ -40,9 +40,18 @@ namespace ATUAV_RT
             fixationDetector.Analyzer = EFDAnalyzer.fdaFixationSize;
             fixationDetector.Filter = EFDFilter.fdfNone;
             fixationDetector.setAnalyzerProperty("fixation_radius", 35);
+            fixationDetector.setAnalyzerProperty("noise_filter", 1);
+            //fixationDetector.MinFixDuration = 17;
 
             // alt: Raw Data Filter
+
             // alt: ClearView Fixation Filter
+            /*
+            fixationDetector.Analyzer = EFDAnalyzer.fdaFixationSize;
+            fixationDetector.Filter = EFDFilter.fdfNone;
+            fixationDetector.setAnalyzerProperty("fixation_radius", 50);
+            fixationDetector.MinFixDuration = 100;
+            */
         }
 
         ~FixationDetector()

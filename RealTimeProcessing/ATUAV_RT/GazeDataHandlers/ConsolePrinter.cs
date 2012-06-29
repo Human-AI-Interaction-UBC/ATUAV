@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using FixDet;
 using Tobii.Eyetracking.Sdk;
 using Tobii.Eyetracking.Sdk.Time;
 
@@ -27,7 +28,17 @@ namespace ATUAV_RT
         /// <param name="e"></param>
         protected override void GazeDataReceivedSynchronized(object sender, GazeDataEventArgs e)
         {
-            Console.WriteLine("GazeData - (" + e.GazeDataItem.LeftEyePosition3D.X + ", " + e.GazeDataItem.LeftEyePosition3D.Y + ")");
+            Print(e.GazeDataItem);
+        }
+
+        /// <summary>
+        /// Writes gaze data information to console.
+        /// </summary>
+        /// <param name="gazePoint">GazeDataItem to write to console</param>
+        protected void Print(GazeDataItem gazePoint)
+        {
+            DateTime dt = new DateTime(syncManager.RemoteToLocal(gazePoint.TimeStamp));
+            Console.WriteLine("GazePoint [" + dt + "] - (" + gazePoint.LeftEyePosition3D.X + ", " + gazePoint.LeftEyePosition3D.Y + ")");
         }
 
         /// <summary>
@@ -40,9 +51,22 @@ namespace ATUAV_RT
         /// <param name="duration">Fixation duration</param>
         /// <param name="x">Fixation X position</param>
         /// <param name="y">Fixation Y position</param>
-        public void FixationEnd(int time, int duration, int x, int y)
+        public virtual void FixationEnd(int time, int duration, int x, int y)
         {
-            Console.WriteLine("FixationEnd - (" + x + ", " + y + ") for " + duration + "ms");
+            Print(time, duration, x, y);
+        }
+
+        /// <summary>
+        /// Writes fixation information to console.
+        /// </summary>
+        /// <param name="time">Start time of fixation</param>
+        /// <param name="duration">Duration of fixation</param>
+        /// <param name="x">X coordinate of fixation</param>
+        /// <param name="y">Y coordinate of fixation</param>
+        protected void Print(int time, int duration, int x, int y)
+        {
+            DateTime dt = new DateTime(time);
+            Console.WriteLine("Fixation  [" + dt + "] - (" + x + ", " + y + ") for " + duration + "ms");
         }
     }
 }
