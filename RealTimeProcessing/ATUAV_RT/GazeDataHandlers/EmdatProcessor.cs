@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Python.Runtime;
 using Tobii.Eyetracking.Sdk;
 using Tobii.Eyetracking.Sdk.Time;
 using FixDet;
@@ -11,12 +10,6 @@ namespace ATUAV_RT
 {
     class EmdatProcessor : GazeDataSynchronizedHandler, WindowingHandler
     {
-        static EmdatProcessor()
-        {
-            PythonEngine.Initialize();
-            //PythonEngine.ImportModule("emdat");
-        }
-
         private bool collectingData;
         private string aoiFilePath;
         private LinkedList<SFDFixation> fixations = new LinkedList<SFDFixation>();

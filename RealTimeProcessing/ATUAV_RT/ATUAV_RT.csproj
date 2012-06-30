@@ -51,18 +51,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\Downloads\NDesk.Options.dll</HintPath>
     </Reference>
-    <Reference Include="python, Version=2.0.0.2, Culture=neutral, PublicKeyToken=5000fea6cba702dd, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\pythonnet-2.0-alpha2\python2.6-UCS4\python.exe</HintPath>
-    </Reference>
-    <Reference Include="Python.Runtime, Version=2.0.0.2, Culture=neutral, PublicKeyToken=5000fea6cba702dd, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\pythonnet-2.0-alpha2\python2.6-UCS4\Python.Runtime.dll</HintPath>
-    </Reference>
-    <Reference Include="Python.Test, Version=0.0.0.0, Culture=neutral, PublicKeyToken=5000fea6cba702dd, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\pythonnet-2.0-alpha2\python2.6-UCS4\Python.Test.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>

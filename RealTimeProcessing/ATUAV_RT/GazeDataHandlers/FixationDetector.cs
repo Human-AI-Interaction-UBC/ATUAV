@@ -69,7 +69,7 @@ namespace ATUAV_RT
         /// if only one eye is valid, only that eye's gaze point is used.
         /// </summary>
         /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="e">GazeDataItem to process</param>
         protected override void GazeDataReceivedSynchronized(object sender, GazeDataEventArgs e)
         {
             // ignore gaze data with low validity
