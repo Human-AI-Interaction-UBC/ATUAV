@@ -257,32 +257,14 @@ function showGroupValue(selectedGroup)
  				
 }
 
-function showIndiValue(selectedGroup)
+function showIndiValue(selectedBars)
 {
-	var rect = $(selectedGroup).children();
-	var value = new Array;
-	var xCor = new Array;
-	var yCor = new Array;
-	var intValue = new Array;
-
-	rect.each(function (i,d) { value[i] = $(this).attr("height")});
-	rect.each(function(i,d) {xCor[i] = $(this).offset().left});
-	rect.each(function(i,d) {yCor[i] = $(this).offset().top});
-	
-
-	for (var i = 0; i<value.length; i++){
-		intValue[i] = Math.floor(value[i])
-	}
-
-	var textData = new Array;
-	for(var i = 0; i<xCor.length; i++){
-		textData[i] = [ intValue[i], xCor[i], yCor[i]];
-	}
-
-	 		d3.select(selectedGroup).selectAll("text")
- 				.data(textData)
+			var baseXCor = selectedBars[0][1];
+			alert(selectedBars);
+	 		g.select("text") 			
+ 				.data(selectedBars)
  				.enter().append("svg:text")
- 				.attr("x", function(d){	return x0(d[1]) + 10 ;})
+ 				.attr("x", function(d){	return x0(d[1]) + baseXCor - 15;})
  				.attr("y", function(d){	return d[2] -10 ; } )
  				.attr("dx", 3)
  				.attr("dy", ".35em")
@@ -320,12 +302,12 @@ function trigger(){
 //	highlight(selectedBars);
 	
 	//BEN: EXAMPLE 4: Get the 2nd for Andrea and 3rd value for Diana and highlight
-//	selectedBars = getSelectedBars([["Andrea", "1"],["Diana", "2"]]);
+	selectedBars = getSelectedBars([["Andrea", "1"],["Diana", "2"], ["Diana", "3"], ["Andrea", "0"]]);
 //	highlight(selectedBars);
 	
 	//BEN: EXAMPLE 5: Get the 2nd for Andrea and 3rd value for Diana and make selection blink
 //	selectedBars = getSelectedBars([["Andrea", "2"],["Diana", "3"]]);
-//	blink(selectedBars);
+	blink(selectedBars);
 
 
 //Daisy Jun25 Print Value
@@ -335,7 +317,9 @@ function trigger(){
 //	showGroupValue(selectedGroup);
 
 //Daisy Jun28 Print individual value
-selectedBars = getSelectedJBars([["Andrea", "2"],["Diana", "3"]]);
+//	selectedBars = getSelectedJBars([["Andrea", "2"],["Diana", "3"]]);
+	selectedBars = getSelectedJBars([["Andrea", "1"],["Diana", "2"], ["Diana", "3"], ["Andrea", "0"]]);
+	showIndiValue(selectedBars);
 
 //Daisy Jun18 Draw Reference Line see if d3 works 
 //	selectedGroup = "#Average";
