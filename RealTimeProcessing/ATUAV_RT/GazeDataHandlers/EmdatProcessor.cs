@@ -18,12 +18,29 @@ namespace ATUAV_RT
         }
 
         private bool collectingData;
+        private string aoiFilePath;
         private LinkedList<SFDFixation> fixations = new LinkedList<SFDFixation>();
         private LinkedList<GazeDataItem> gazePoints = new LinkedList<GazeDataItem>();
 
         public EmdatProcessor(SyncManager syncManager)
             : base(syncManager)
         {
+        }
+
+        /// <summary>
+        /// Path to Areas of Interest definitions file.
+        /// </summary>
+        public string AoiFilePath
+        {
+            get
+            {
+                return aoiFilePath;
+            }
+
+            set
+            {
+                aoiFilePath = value;
+            }
         }
 
         protected override void GazeDataReceivedSynchronized(object sender, GazeDataEventArgs e)
@@ -75,6 +92,11 @@ namespace ATUAV_RT
             }
         }
 
+        /// <summary>
+        /// Uses EMDAT to process gaze point, fixation, and AOI data
+        /// and generate features.
+        /// </summary>
+        /// <param name="keepData">If true, collected data is kept for next window. Otherwise data is cleared.</param>
         public void ProcessWindow(bool keepData)
         {
             lock (this)

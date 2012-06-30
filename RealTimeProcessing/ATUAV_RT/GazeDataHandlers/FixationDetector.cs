@@ -65,7 +65,8 @@ namespace ATUAV_RT
 
         /// <summary>
         /// Forwards 2D gaze points to fixation detector. Gaze points are only forwarded
-        /// if CPU and Eyetracker clocks are synchronized. Gaze point is the average of the left and right gaze points.
+        /// if CPU and Eyetracker clocks are synchronized and validity is &lt 2. If both eyes are valid gaze point coordinates are averaged,
+        /// if only one eye is valid, only that eye's gaze point is used.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -83,20 +84,21 @@ namespace ATUAV_RT
                 double rightX = e.GazeDataItem.RightGazePoint2D.X * SCREEN_WIDTH;
                 double rightY = e.GazeDataItem.RightGazePoint2D.Y * SCREEN_HEIGHT;
 
-                // average left and right eyes
                 if (e.GazeDataItem.LeftValidity < 2 && e.GazeDataItem.RightValidity < 2)
                 {
+                    // average left and right eyes
                     int x = (int)((leftX + rightX) / 2);
                     int y = (int)((leftY + rightY) / 2);
-
                     fixationDetector.addPoint(time, x, y);
                 }
                 else if (e.GazeDataItem.LeftValidity < 2)
                 {
+                    // use only left eye
                     fixationDetector.addPoint(time, (int)leftX, (int)leftY);
                 }
                 else if (e.GazeDataItem.RightValidity < 2)
                 {
+                    // use only right eye
                     fixationDetector.addPoint(time, (int)rightX, (int)rightY);
                 }
             }

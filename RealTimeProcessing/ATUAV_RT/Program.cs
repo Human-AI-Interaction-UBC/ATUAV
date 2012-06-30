@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using NDesk.Options;
 using Tobii.Eyetracking.Sdk;
@@ -18,6 +19,7 @@ namespace ATUAV_RT
     class Program
     {
         private static Clock clock;
+        private static string aoiFilePath;
         private static int windowDuration = 3000; // ms
         private static bool cumulativeWindows = false;
         private static bool help = false;
@@ -28,12 +30,10 @@ namespace ATUAV_RT
         /// <param name="args">Command line arguments</param>
         static void Main(string[] args)
         {
-            Library.Init();
-            clock = new Clock();
-
             // parse arguments
             var p = new OptionSet()
             {
+                { "a|aoi=", "{FILEPATH} for areas of interest definitions file", (string v) => aoiFilePath = Path.GetFullPath(v)},
                 { "c|cumulative", "windows collect data cumulatively", v => cumulativeWindows = v != null},
                 { "w|window=", "the {DURATION} of a window in ms (default=" + windowDuration + ")", (int v) => windowDuration = v },
                 { "h|help", v => help = v != null }
@@ -42,6 +42,14 @@ namespace ATUAV_RT
             try
             {
                 List<string> extra = p.Parse(args);
+
+                // check if aoiFilePath points to actual file
+                if (aoiFilePath != null && !File.Exists(aoiFilePath))
+                {
+                    throw new OptionException("AOI file does not exist. Verify file path.", "a");
+                }
+
+                // check for unparsed arguments
                 if (extra.Count > 0)
                 {
                     throw new OptionException("Unknown arguments.", "");
@@ -61,13 +69,16 @@ namespace ATUAV_RT
                 return;
             }
 
+            // initialize Tobii SDK
+            Library.Init();
+            clock = new Clock();
+
             // find eyetrackers on LAN
             EyetrackerBrowser browser = new EyetrackerBrowser(EventThreadingOptions.BackgroundThread);
             browser.EyetrackerFound += EyetrackerFound;
             browser.Start();
 
-            // keep main thread running
-            // (all events happen in background thread)
+            // keep main thread running (all events happen in background thread)
             while (true)
             {
                 Thread.Sleep(1000000);
