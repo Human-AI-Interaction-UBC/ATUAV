@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using NDesk.Options;
 using Tobii.Eyetracking.Sdk;
@@ -18,7 +19,9 @@ namespace ATUAV_RT
     class Program
     {
         private static Clock clock;
-        private static int windowDuration = 3000; // Default is 3000 ms
+        private static string aoiFilePath;
+        private static int windowDuration = 3000; // ms
+        private static bool cumulativeWindows = false;
         private static bool help = false;
 
         /// <summary>
@@ -27,31 +30,37 @@ namespace ATUAV_RT
         /// <param name="args">Command line arguments</param>
         static void Main(string[] args)
         {
-            Library.Init();
-            clock = new Clock();
-
             // parse arguments
             var p = new OptionSet()
             {
+                { "a|aoi=", "{FILEPATH} for areas of interest definitions file", (string v) => aoiFilePath = Path.GetFullPath(v)},
+                { "c|cumulative", "windows collect data cumulatively", v => cumulativeWindows = v != null},
                 { "w|window=", "the {DURATION} of a window in ms (default=" + windowDuration + ")", (int v) => windowDuration = v },
-                { "h|help", "", v => help = v != null }
+                { "h|help", v => help = v != null }
             };
 
             try
             {
                 List<string> extra = p.Parse(args);
+
+                // check if aoiFilePath points to actual file
+                if (aoiFilePath != null && !File.Exists(aoiFilePath))
+                {
+                    throw new OptionException("AOI file does not exist. Verify file path.", "a");
+                }
+
+                // check for unparsed arguments
                 if (extra.Count > 0)
                 {
-                    Console.WriteLine("Unknown arguments.");
-                    Console.WriteLine();
-                    help = true;
+                    throw new OptionException("Unknown arguments.", "");
                 }
             }
             catch (OptionException e)
             {
                 Console.WriteLine(e.Message);
+                Console.WriteLine("Try \'atuavrt --help\' for more information.");
                 Console.WriteLine();
-                help = true;
+                return;
             }
 
             if (help)
@@ -60,13 +69,16 @@ namespace ATUAV_RT
                 return;
             }
 
+            // initialize Tobii SDK
+            Library.Init();
+            clock = new Clock();
+
             // find eyetrackers on LAN
             EyetrackerBrowser browser = new EyetrackerBrowser(EventThreadingOptions.BackgroundThread);
             browser.EyetrackerFound += EyetrackerFound;
             browser.Start();
 
-            // keep main thread running
-            // (all events happen in background thread)
+            // keep main thread running (all events happen in background thread)
             while (true)
             {
                 Thread.Sleep(1000000);
@@ -100,25 +112,25 @@ namespace ATUAV_RT
             SyncManager syncManager = new SyncManager(clock, e.EyetrackerInfo, EventThreadingOptions.BackgroundThread);
             
             // detect fixations
-            GazeDataFixationHandler fixations = new GazeDataFixationHandler(syncManager);
+            FixationDetector fixations = new FixationDetector(syncManager);
             connector.Eyetracker.GazeDataReceived += fixations.GazeDataReceived;
 
-            /*/ print each event to console
-            GazeDataConsolePrintHandler printer = new GazeDataConsolePrintHandler(syncManager);
+            // print each event to console
+            ConsolePrinter printer = new ConsolePrinter(syncManager);
             //connector.Eyetracker.GazeDataReceived += printer.GazeDataReceived;
-            fixations.FixationDetector.FixationEnd += printer.FixationEnd;*/
+            fixations.FixDetector.FixationEnd += printer.FixationEnd;
 
-            // windowed print to console
-            GazeDataWindowingPrintHandler printer = new GazeDataWindowingPrintHandler(syncManager);
+            /*/ windowed print to console
+            WindowingConsolePrinter printer = new WindowingConsolePrinter(syncManager);
             //connector.Eyetracker.GazeDataReceived += printer.GazeDataReceived;
-            fixations.FixationDetector.FixationEnd += printer.FixationEnd;
+            fixations.FixDetector.FixationEnd += printer.FixationEnd;
             printer.StartWindow();
 
             while (true)
             {
                 Thread.Sleep(windowDuration);
-                printer.RenewWindow(true);
-            }
+                printer.ProcessWindow(cumulativeWindows);
+            }*/
         }
     }
 }
