@@ -75,7 +75,11 @@ namespace ATUAV_RT
             // ignore gaze data with low validity
             if (e.GazeDataItem.LeftValidity < 2 || e.GazeDataItem.RightValidity < 2)
             {
-                int time = (int)syncManager.RemoteToLocal(e.GazeDataItem.TimeStamp);
+                // convert timestamp
+                long microseconds = e.GazeDataItem.TimeStamp;
+                int milliseconds = (int)(microseconds / 1000);
+                int time = milliseconds;
+                if (((microseconds / 100) % 10) >= 5) time++; // round
 
                 // convert normalized screen coordinates (float between [0 - 1]) to pixel coordinates
                 // coordinates (0, 0) designate the top left corner
