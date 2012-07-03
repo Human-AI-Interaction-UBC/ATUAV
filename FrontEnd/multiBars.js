@@ -267,7 +267,7 @@ function showIndiValue(selectedBars)
 	 		g.select("text") 			
  				.data(selectedBars)
  				.enter().append("svg:text")
- 				.attr("x", function(d){	return x0(d[1]) + baseXCor - 15;})
+ 				.attr("x", function(d){	return d[1]  - 13;})
  				.attr("y", function(d){	return d[2] -10 ; } )
  				.attr("dx", 3)
  				.attr("dy", ".35em")
@@ -323,12 +323,12 @@ function trigger(){
 //	highlight(selectedBars);
 	
 	//BEN: EXAMPLE 4: Get the 2nd for Andrea and 3rd value for Diana and highlight
-	selectedBars = getSelectedBars([["Andrea", "1"],["Diana", "2"], ["Diana", "3"], ["Andrea", "0"]]);
-	highlight(selectedBars);
+//	selectedBars = getSelectedBars([["Andrea", "1"],["Diana", "2"], ["Diana", "3"]]);
+//	highlight(selectedBars);
 	
 	//BEN: EXAMPLE 5: Get the 2nd for Andrea and 3rd value for Diana and make selection blink
-//	selectedBars = getSelectedBars([["Andrea", "2"],["Diana", "3"]]);
-//	blink(selectedBars);
+	selectedBars = getSelectedBars([["Andrea", "2"],["Average", "0"], ["Diana", "3"]]);
+	blink(selectedBars);
 
 
 //Daisy Jun25 Print Value
@@ -338,9 +338,9 @@ function trigger(){
 //	showGroupValue(selectedGroup);
 
 //Daisy Jun28 Print individual value
-//	selectedBars = getSelectedJBars([["Andrea", "2"],["Diana", "3"]]);
-//	selectedBars = getSelectedJBars([["Andrea", "1"],["Diana", "2"], ["Diana", "3"], ["Andrea", "0"]]);
-//	showIndiValue(selectedBars);
+	selectedJBars = getSelectedJBars([["Andrea", "2"],["Average", "0"], ["Diana", "3"], ["Diana", "0"], ["Andrea", "0"]]);
+//	selectedJBars = getSelectedJBars([["Andrea", "1"],["Diana", "2"], ["Diana", "3"]]);
+	showIndiValue(selectedJBars);
 
 //Daisy Jun18 Draw Reference Line see if d3 works 
 //	selectedGroup = "#Average";
@@ -354,7 +354,7 @@ function trigger(){
 
 //Daisy Jun27 Arrow Not Done
 //	selectedJBars = getSelectedJBars([["Andrea", "2"],["Diana", "3"]]);
-	selectedJBars = getSelectedJBars([["Andrea", "1"],["Diana", "2"], ["Diana", "3"], ["Andrea", "0"]]);
+//	selectedJBars = getSelectedJBars([["Andrea", "1"],["Diana", "2"], ["Diana", "3"], ["Andrea", "0"]]);
 	drawArrow(selectedJBars);
 	
 
