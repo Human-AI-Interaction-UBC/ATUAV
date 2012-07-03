@@ -95,7 +95,11 @@ function getSelectedBars(seriesValuesPairs){
 	
 	return selectedBars;
  }
- 
+ /**
+  * ways to selected bars in jQuery
+  * input: array of bars value pairs
+  * return: 2D array of value, xCor, yCor
+  */
 function getSelectedJBars(seriesValuesPairs){
 	
 	var selectedBars = new Array();
@@ -260,7 +264,6 @@ function showGroupValue(selectedGroup)
 function showIndiValue(selectedBars)
 {
 			var baseXCor = selectedBars[0][1];
-			alert(selectedBars);
 	 		g.select("text") 			
  				.data(selectedBars)
  				.enter().append("svg:text")
@@ -275,15 +278,33 @@ function showIndiValue(selectedBars)
  				
 }
 
-function getAbsoluteXY(element) { 
-   var viewportElement = document.documentElement; 
-   var box = element.getBoundingClientRect(); 
-   var scrollLeft = viewportElement.scrollLeft; 
-   var scrollTop = viewportElement.scrollTop; 
-   var x = box.left + scrollLeft; 
-   var y = box.top + scrollTop; 
-   return {"x": x, "y": y} 
-} 
+//arrow
+Raphael.fn.arrow = function (x1, y1, x2, y2, size) {
+        var angle = Math.atan2(x1-x2,y2-y1);
+        angle = (angle / (2 * Math.PI)) * 360;
+        var arrowPath = this.path("M" + x2 + " " + y2 + " L" + (x2  - size) + " " + (y2  - size) + " L" + (x2  - size)  + " " + (y2  + size) + " L" + x2 + " " + y2 ).attr("fill","black").rotate((90+angle),x2,y2);
+        var linePath = this.path("M" + x1 + " " + y1 + " L" + x2 + " " + y2);
+        return [linePath,arrowPath];
+};
+
+
+
+function drawArrow(selectedBars){
+	
+	var xCor = new Array;
+	var yCor = new Array;
+	var paper = new Raphael(0,0,625,500);
+	
+for (var i = 0; i < selectedBars.length; i++){
+	
+	xCor[i] = selectedBars[i][1];
+	yCor[i] = selectedBars[i][2];
+	
+	paper.arrow(xCor[i]-20,yCor[i]-20,xCor[i],yCor[i],10);
+}
+
+}
+
 
 
 //BEN: Trigger
@@ -303,11 +324,11 @@ function trigger(){
 	
 	//BEN: EXAMPLE 4: Get the 2nd for Andrea and 3rd value for Diana and highlight
 	selectedBars = getSelectedBars([["Andrea", "1"],["Diana", "2"], ["Diana", "3"], ["Andrea", "0"]]);
-//	highlight(selectedBars);
+	highlight(selectedBars);
 	
 	//BEN: EXAMPLE 5: Get the 2nd for Andrea and 3rd value for Diana and make selection blink
 //	selectedBars = getSelectedBars([["Andrea", "2"],["Diana", "3"]]);
-	blink(selectedBars);
+//	blink(selectedBars);
 
 
 //Daisy Jun25 Print Value
@@ -318,8 +339,8 @@ function trigger(){
 
 //Daisy Jun28 Print individual value
 //	selectedBars = getSelectedJBars([["Andrea", "2"],["Diana", "3"]]);
-	selectedBars = getSelectedJBars([["Andrea", "1"],["Diana", "2"], ["Diana", "3"], ["Andrea", "0"]]);
-	showIndiValue(selectedBars);
+//	selectedBars = getSelectedJBars([["Andrea", "1"],["Diana", "2"], ["Diana", "3"], ["Andrea", "0"]]);
+//	showIndiValue(selectedBars);
 
 //Daisy Jun18 Draw Reference Line see if d3 works 
 //	selectedGroup = "#Average";
@@ -332,8 +353,11 @@ function trigger(){
 //	bolding(selectedBars);
 
 //Daisy Jun27 Arrow Not Done
-//	selectedBars = getSelectedBars([["Andrea", "2"],["Diana", "3"]]);
-//	drawArrow(selectedBars);
+//	selectedJBars = getSelectedJBars([["Andrea", "2"],["Diana", "3"]]);
+	selectedJBars = getSelectedJBars([["Andrea", "1"],["Diana", "2"], ["Diana", "3"], ["Andrea", "0"]]);
+	drawArrow(selectedJBars);
+	
+
 }
 
 //BEN: Stop Blinking
@@ -344,25 +368,4 @@ function stopBlinking(){
 /**function undo(theNode){
 //wanna get rid of myCircle
 theNode.parentNode.removeChild(myCircle);	
-}**/
-
-//arrow
-/**Raphael.fn.arrow = function (x1, y1, x2, y2, size) {
-        var angle = Math.atan2(x1-x2,y2-y1);
-        angle = (angle / (2 * Math.PI)) * 360;
-        var arrowPath = this.path("M" + x2 + " " + y2 + " L" + (x2  - size) + " " + (y2  - size) + " L" + (x2  - size)  + " " + (y2  + size) + " L" + x2 + " " + y2 ).attr("fill","black").rotate((90+angle),x2,y2);
-        var linePath = this.path("M" + x1 + " " + y1 + " L" + x2 + " " + y2);
-        return [linePath,arrowPath];
-};
-
-var x = 10;
-var y = 50;
-var x1 = 200;
-var y1 = 90;
-
-var paper = new Raphael(0,0,625,500);
-paper.arrow(x,y,x1,y1,10);
-
-function drawArrow(selectedBars){
-	
 }**/
