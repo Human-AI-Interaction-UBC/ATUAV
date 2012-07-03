@@ -1,0 +1,13 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="ATUAV_RT/GazeDataWindowingPrintHandler.cs">
+    <Files>
+      <File FileName="ATUAV_RT/Program.cs" Line="17" Column="6" />
+      <File FileName="ATUAV_RT/GazeDataWindowingPrintHandler.cs" Line="19" Column="97" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
