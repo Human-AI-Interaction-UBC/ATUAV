@@ -24,6 +24,7 @@ namespace ATUAV_RT
         private static readonly double SCREEN_WIDTH = 1280;  // Tobii T120 Eye Tracker
 
         private readonly FixDetector fixationDetector;
+        private int timestampOffset = -1;
 
         /// <summary>
         /// Initializes fixation detector to Tobii Studio default
@@ -34,7 +35,7 @@ namespace ATUAV_RT
             fixationDetector = new FixDetectorClass();
             fixationDetector.init();
 
-            // TODO determine settings of Tobii Fixation Filter
+            // mimic Tobii Fixation Filter
             // Detailed information available in Tobii Studio User Manual 1.X
             // http://www.tobii.com/Global/Analysis/Downloads/User_Manuals_and_Guides/Tobii_Studio1.X_UserManual.pdf
             // as well as the appendix of Olsson, P. 2007. Real-time and offline filters for eye tracking. Msc thesis, KTH Royal Institue of Technology, April 2007.
@@ -48,7 +49,14 @@ namespace ATUAV_RT
 
         ~FixationDetector()
         {
-            fixationDetector.finalize();
+            try
+            {
+                fixationDetector.finalize();
+            }
+            catch (Exception)
+            {
+
+            }
         }
 
         /// <summary>
@@ -78,6 +86,7 @@ namespace ATUAV_RT
                 // convert timestamp
                 long microseconds = e.GazeDataItem.TimeStamp;
                 int milliseconds = (int)(microseconds / 1000);
+                milliseconds -= getTimestampOffset(milliseconds);
                 int time = milliseconds;
                 if (((microseconds / 100) % 10) >= 5) time++; // round
 
@@ -106,6 +115,22 @@ namespace ATUAV_RT
                     fixationDetector.addPoint(time, (int)rightX, (int)rightY);
                 }
             }
+        }
+
+        /// <summary>
+        /// Sets the first timestamp to be at time zero, offsets all
+        /// subsequent timestamps accordingly.
+        /// 
+        /// Only call this method when SyncManager is Synchronized.
+        /// </summary>
+        /// <returns>Offset in milliseconds</returns>
+        private int getTimestampOffset(int milliseconds)
+        {
+            if (timestampOffset == -1)
+            {
+                timestampOffset = milliseconds;
+            }
+            return timestampOffset;
         }
     }
 }

@@ -5,10 +5,9 @@ Oliver Schmid - oliver.schmd@gmail.com
 Programmatic interface for generating machine learning features from real-time Tobii data.  
 '''
 from EMDAT.data_structures import Datapoint, Fixation
-from EMDAT.Recording import read_aois_Tobii
-from EMDAT import Segment
+from EMDAT import Recording, Segment
 
-def generate_features(segment_id, raw_gaze_points, raw_fixations, aoi_path):
+def generate_features(segment_id, raw_gaze_points, raw_fixations, raw_aois):
     '''
     Generates machine learning features from gaze points, raw_fixations and AOIs.
     
@@ -21,17 +20,22 @@ def generate_features(segment_id, raw_gaze_points, raw_fixations, aoi_path):
     @type raw_fixations: string
     @param raw_fixations: string formatted like lines from a Tobii fixation export
     
-    @type aoi_path: string 
-    @param aoi_path: filepath to AOI definitions file
+    @type raw_aois: string 
+    @param raw_aois: AOI definitions
     
     @return string listing features and their values. Each feature is on a new line
     and in the format: feature=value
     '''
+    # test
+    if True:
+		return segment_id
+    # test
+    
     # convert inputs
     gaze_points = map(Datapoint, raw_gaze_points)
     gaze_points = filter(lambda x: x.number != None, gaze_points)
     fixations = map(lambda x: Fixation(x, 0), raw_fixations)
-    aois = read_aois_Tobii(aoi_path)
+    aois = Recording.read_aois(raw_aois)
     
     # generate features
     segment = Segment(segment_id, gaze_points, fixations, aois)

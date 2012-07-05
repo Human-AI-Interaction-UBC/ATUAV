@@ -64,6 +64,7 @@
 				AdditionalDependencies="$(NoInherit)"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="C:\Python26\libs"
+				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="false"
 				AssemblyDebug="1"
 				TargetMachine="1"
@@ -116,6 +117,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="C:\Python26\libs;C:\Python26\include"
 				PreprocessorDefinitions="WIN32;NDEBUG"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
@@ -133,7 +135,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="$(NoInherit)"
+				AdditionalDependencies="C:/Python26/libs/python26.lib $(NOINHERIT)"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
 				TargetMachine="1"

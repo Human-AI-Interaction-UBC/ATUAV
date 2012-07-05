@@ -118,19 +118,36 @@ namespace ATUAV_RT
             // print each event to console
             ConsolePrinter printer = new ConsolePrinter(syncManager);
             //connector.Eyetracker.GazeDataReceived += printer.GazeDataReceived;
-            fixations.FixDetector.FixationEnd += printer.FixationEnd;
+            fixations.FixDetector.FixationEnd += printer.FixationEnd;//*/
 
             /*/ windowed print to console
             WindowingConsolePrinter printer = new WindowingConsolePrinter(syncManager);
             //connector.Eyetracker.GazeDataReceived += printer.GazeDataReceived;
             fixations.FixDetector.FixationEnd += printer.FixationEnd;
+            
             printer.StartWindow();
-
             while (true)
             {
                 Thread.Sleep(windowDuration);
                 printer.ProcessWindow(cumulativeWindows);
-            }*/
+            }//*/
+
+            /*/ process windows with EMDAT
+            EmdatProcessor processor = new EmdatProcessor(syncManager);
+            if (aoiFilePath != null)
+            {
+                processor.AoiFilePath = aoiFilePath;
+            }
+
+            connector.Eyetracker.GazeDataReceived += processor.GazeDataReceived;
+            fixations.FixDetector.FixationEnd += processor.FixationEnd;
+            
+            processor.StartWindow();
+            while (true)
+            {
+                Thread.Sleep(windowDuration);
+                processor.ProcessWindow(cumulativeWindows);
+            }//*/
         }
     }
 }
