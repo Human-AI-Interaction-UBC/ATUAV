@@ -63,7 +63,8 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="$(NoInherit)"
 				LinkIncremental="2"
-				GenerateDebugInformation="true"
+				AdditionalLibraryDirectories="C:\Python26\libs"
+				GenerateDebugInformation="false"
 				AssemblyDebug="1"
 				TargetMachine="1"
 			/>
