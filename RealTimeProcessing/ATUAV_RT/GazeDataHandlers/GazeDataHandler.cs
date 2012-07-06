@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Tobii.Eyetracking.Sdk;
+﻿using Tobii.Eyetracking.Sdk;
 using Tobii.Eyetracking.Sdk.Time;
 
 namespace ATUAV_RT

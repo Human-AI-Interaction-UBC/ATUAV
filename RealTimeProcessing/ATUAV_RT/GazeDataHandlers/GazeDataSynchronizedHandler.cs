@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Tobii.Eyetracking.Sdk;
+﻿using Tobii.Eyetracking.Sdk;
 using Tobii.Eyetracking.Sdk.Time;
 
 namespace ATUAV_RT
@@ -27,7 +23,7 @@ namespace ATUAV_RT
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e">Contains the gaze data item</param>
-        public override void GazeDataReceived(object sender, GazeDataEventArgs e)
+        public sealed override void GazeDataReceived(object sender, GazeDataEventArgs e)
         {
             if (syncManager.SyncState.StateFlag == SyncStateFlag.Synchronized)
             {

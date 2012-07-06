@@ -73,7 +73,7 @@ Emdat::UnmanagedEmdatModule::~UnmanagedEmdatModule() {
 // segment_id: name for segment
 // raw_gaze_points: gaze point data formatted like lines from a Tobii all data export
 // raw_fixations: fixations formatted like lines from a Tobii fixation export
-// aoi_path: file path to AOI definitions file TODO eliminate IO bound by reading file only the first time
+// aoi_path: AOI definitions
 //
 // returns: line deliminated features with format "feature=value" (without quotes)
 string Emdat::UnmanagedEmdatModule::generate_features(string segment_id, string raw_gaze_points, string raw_fixations, string raw_aois) {

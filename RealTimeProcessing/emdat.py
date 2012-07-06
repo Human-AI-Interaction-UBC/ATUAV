@@ -26,11 +26,11 @@ def generate_features(segment_id, raw_gaze_points, raw_fixations, raw_aois):
     @return string listing features and their values. Each feature is on a new line
     and in the format: feature=value
     '''
-    # test
-    if True:
-		return segment_id
-    # test
-    
+	# test
+	if True:
+		return segment_id;
+	# test
+		
     # convert inputs
     gaze_points = map(Datapoint, raw_gaze_points)
     gaze_points = filter(lambda x: x.number != None, gaze_points)

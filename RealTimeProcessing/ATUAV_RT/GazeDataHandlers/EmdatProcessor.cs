@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using Emdat;
+using FixDet;
 using Tobii.Eyetracking.Sdk;
 using Tobii.Eyetracking.Sdk.Time;
-using FixDet;
 
 namespace ATUAV_RT
 {
@@ -114,8 +112,9 @@ namespace ATUAV_RT
         {
             lock (this)
             {
+                // TODO convert gaze points and fixations to string form
                 string features = emdat.GenerateFeatures("segment_id", "raw_gaze_points", "raw_fixations", aoiDefinitions);
-
+                // TODO what to do after features have been generated?
                 if (!keepData)
                 {
                     fixations.Clear();
