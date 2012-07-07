@@ -166,6 +166,18 @@ function blink2(selectedBars)
 	timeOutHandle = setTimeout("blink(selectedBars)",500)
 }
 
+function deEmphRest(){
+	//1. select everything but the selectedBars
+	//2. change the opacity
+	//var highlight;
+	rect.each(function(d) {		//Do something for each g element
+			var thisRect = d3.select(this);	//Get a reference to the child rect in this g only
+			if (d != 9.2) {		//If this is the one we want to highlight
+				thisRect.style("opacity", 0.5);	//Make the rect pink
+			}
+		});
+ }
+ 
 function referenceLine(selectedGroup){
 	
 var rect = $(selectedGroup).children();
@@ -288,7 +300,6 @@ Raphael.fn.arrow = function (x1, y1, x2, y2, size) {
 };
 
 
-
 function drawArrow(selectedBars){
 	
 	var xCor = new Array;
@@ -304,7 +315,6 @@ for (var i = 0; i < selectedBars.length; i++){
 }
 
 }
-
 
 
 //BEN: Trigger
@@ -327,8 +337,8 @@ function trigger(){
 //	highlight(selectedBars);
 	
 	//BEN: EXAMPLE 5: Get the 2nd for Andrea and 3rd value for Diana and make selection blink
-	selectedBars = getSelectedBars([["Andrea", "2"],["Average", "0"], ["Diana", "3"]]);
-	blink(selectedBars);
+//	selectedBars = getSelectedBars([["Andrea", "2"],["Average", "0"], ["Diana", "3"]]);
+//	blink(selectedBars);
 
 
 //Daisy Jun25 Print Value
@@ -338,9 +348,9 @@ function trigger(){
 //	showGroupValue(selectedGroup);
 
 //Daisy Jun28 Print individual value
-	selectedJBars = getSelectedJBars([["Andrea", "2"],["Average", "0"], ["Diana", "3"], ["Diana", "0"], ["Andrea", "0"]]);
+//	selectedJBars = getSelectedJBars([["Andrea", "2"],["Average", "0"], ["Diana", "3"], ["Diana", "0"], ["Andrea", "0"]]);
 //	selectedJBars = getSelectedJBars([["Andrea", "1"],["Diana", "2"], ["Diana", "3"]]);
-	showIndiValue(selectedJBars);
+//	showIndiValue(selectedJBars);
 
 //Daisy Jun18 Draw Reference Line see if d3 works 
 //	selectedGroup = "#Average";
@@ -355,8 +365,11 @@ function trigger(){
 //Daisy Jun27 Arrow Not Done
 //	selectedJBars = getSelectedJBars([["Andrea", "2"],["Diana", "3"]]);
 //	selectedJBars = getSelectedJBars([["Andrea", "1"],["Diana", "2"], ["Diana", "3"], ["Andrea", "0"]]);
-	drawArrow(selectedJBars);
+//	drawArrow(selectedJBars);
 	
+//Daisy Jul3 DeEmphasizing
+//	selectedBars = getSelectedBars([["Andrea", "2"]]);
+	deEmphRest();	
 
 }
 
