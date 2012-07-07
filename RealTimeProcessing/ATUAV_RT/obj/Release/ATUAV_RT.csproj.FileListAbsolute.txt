@@ -1,0 +1,3 @@
+C:\Documents and Settings\Admin\My Documents\Visual Studio 2008\Projects\ATUAV_RT\RealTimeProcessing\ATUAV_RT\obj\Release\Interop.FixDet.dll
+C:\Documents and Settings\Admin\My Documents\Visual Studio 2008\Projects\ATUAV_RT\RealTimeProcessing\ATUAV_RT\obj\Release\ATUAV_RT.csproj.ResolveComReference.cache
+C:\Documents and Settings\Admin\My Documents\Visual Studio 2008\Projects\ATUAV_RT\RealTimeProcessing\ATUAV_RT\obj\Release\ResolveAssemblyReference.cache

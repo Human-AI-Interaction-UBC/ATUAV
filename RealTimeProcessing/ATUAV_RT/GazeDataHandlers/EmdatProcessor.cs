@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.IO;
+using Emdat;
+using FixDet;
 using Tobii.Eyetracking.Sdk;
 using Tobii.Eyetracking.Sdk.Time;
-using FixDet;
 
 namespace ATUAV_RT
 {
     class EmdatProcessor : GazeDataSynchronizedHandler, WindowingHandler
     {
+        private EmdatModule emdat = new EmdatModule();
         private bool collectingData;
         private string aoiFilePath;
+        private string aoiDefinitions;
         private LinkedList<SFDFixation> fixations = new LinkedList<SFDFixation>();
         private LinkedList<GazeDataItem> gazePoints = new LinkedList<GazeDataItem>();
 
@@ -33,6 +35,22 @@ namespace ATUAV_RT
             set
             {
                 aoiFilePath = value;
+                readAoiDefinitions();
+            }
+        }
+
+        private void readAoiDefinitions()
+        {
+            try
+            {
+                using (StreamReader sr = new StreamReader(aoiFilePath))
+                {
+                    aoiDefinitions = sr.ReadToEnd();
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("AOI definitions could not be read: " + e.Message);
             }
         }
 
@@ -94,8 +112,9 @@ namespace ATUAV_RT
         {
             lock (this)
             {
-                // TODO emdat
-
+                // TODO convert gaze points and fixations to string form
+                string features = emdat.GenerateFeatures("segment_id", "raw_gaze_points", "raw_fixations", aoiDefinitions);
+                // TODO what to do after features have been generated?
                 if (!keepData)
                 {
                     fixations.Clear();
