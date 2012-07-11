@@ -79,8 +79,36 @@ vis.append("g")
    	.attr("transform", "translate( 4," + h + ")")
    	.attr("font-size", "11px")
    	.call(xAxis);
- 
 
+               
+/** UndoManager
+                var undoManager = new UndoManager();
+   
+                var btnUndo = document.getElementById('btnUndo');
+                var btnRedo = document.getElementById('btnRedo');
+                var btnClear = document.getElementById('btnClear');
+                
+                function updateUI() {
+                    btnUndo.disabled = !undoManager.hasUndo();
+                    btnRedo.disabled = !undoManager.hasRedo();
+                }
+                undoManager.setCallback(updateUI);
+
+                btnUndo.onclick = function() {
+                    undoManager.undo();
+                    updateUI();
+                };
+                btnRedo.onclick = function() {
+                    undoManager.redo();
+                    updateUI();
+                };
+                btnClear.onclick = function() {
+                    undoManager.clear();
+                    updateUI();
+                };
+                
+                updateUI();**/
+           
 //BEN: Get multiple bars	
 function getSelectedBars(seriesValuesPairs){
 	
@@ -166,73 +194,86 @@ function blink2(selectedBars)
 	timeOutHandle = setTimeout("blink(selectedBars)",500)
 }
 
-function deEmphRest(){
+function contain(obj, array){
+	
+}
+
+function deEmphRest(selectedBars){
 	//1. select everything but the selectedBars
 	//2. change the opacity
-	//var highlight;
-	rect.each(function(d) {		//Do something for each g element
-			var thisRect = d3.select(this);	//Get a reference to the child rect in this g only
-			if (d != 9.2) {		//If this is the one we want to highlight
-				thisRect.style("opacity", 0.5);	//Make the rect pink
+	
+	var selectedId = new Array();
+	var selectedHeight = new Array();
+	//work with one selectedBar for now. need to make it work on an array of selectedBars
+	for(var i = 0; i< selectedBars.length; i++){
+		selectedId[i] = selectedBars[i].attr("id");
+		selectedHeight[i] = selectedBars[i].attr("height");
+	
+	}
+	
+	rect.each(function(d,i) {		
+			var thisRect = d3.select(this);	
+			if (thisRect.attr("id") != selectedId[0] || thisRect.attr("height") != selectedHeight[0]) {
+				thisRect.style("opacity", 0.5);	
 			}
 		});
+	
  }
  
 function referenceLine(selectedGroup){
 	
-var rect = $(selectedGroup).children();
-
-//var rectG = d3.select("#Average");
-
-var hArr = new Array;
-var colour;
-rect.each(function (i,d) { hArr[i] = $(this).attr("height")});
-colour = $(selectedGroup).attr("fill");
-var sum = 0;
-
-for(var i = 0; i<hArr.length; i++){
-		sum += parseFloat(hArr[i]);
-	}	
-var avg = sum/hArr.length;
-
-
-	var avgLine = vis.append("svg:line")
-						.attr("x1", 6)
-						.attr("y1", h-avg)
-						.attr("x2", w)
-						.attr("y2", h-avg)
-						.style("stroke",colour)
-						.style("stroke-width", 5);
-						
-var	min=hArr[0];
-for(var i = 0; i<hArr.length; i++){
-	if(hArr[i]<min)
-	min=hArr[i];
-} 
-						
-	var minLine = vis.append("svg:line")
-						.attr("x1", 6)
-						.attr("y1", h-min)
-						.attr("x2", w)
-						.attr("y2", h-min)
-						.style("stroke", colour)
-						.style("stroke-width", 5);
-						
-
-var max = hArr[0];
-for(var i = 0; i<hArr.length; i++){
-	if(hArr[i]>max)
-	max=hArr[i];
-}
-						
-	var maxLine = vis.append("svg:line")
-						.attr("x1", 6)
-						.attr("y1", h-max)
-						.attr("x2", w)
-						.attr("y2", h-max)
-						.style("stroke", colour)
-
-						.style("stroke-width", 5); 
+	var rect = $(selectedGroup).children();
+	
+	
+	var hArr = new Array;
+	var colour;
+	rect.each(function (i,d) { hArr[i] = $(this).attr("height")});
+	colour = $(selectedGroup).attr("fill");
+	var sum = 0;
+	
+	for(var i = 0; i<hArr.length; i++){
+			sum += parseFloat(hArr[i]);
+		}	
+	var avg = sum/hArr.length;
+	
+	
+		var avgLine = vis.append("svg:line")
+							.attr("x1", 6)
+							.attr("y1", h-avg)
+							.attr("x2", w)
+							.attr("y2", h-avg)
+							.style("stroke",colour)
+							.style("stroke-width", 5);
+							
+	var	min=hArr[0];
+	for(var i = 0; i<hArr.length; i++){
+		if(hArr[i]<min)
+		min=hArr[i];
+	} 
+							
+		var minLine = vis.append("svg:line")
+							.attr("x1", 6)
+							.attr("y1", h-min)
+							.attr("x2", w)
+							.attr("y2", h-min)
+							.style("stroke", colour)
+							.style("stroke-width", 5);
+							
+	
+	var max = hArr[0];
+	for(var i = 0; i<hArr.length; i++){
+		if(hArr[i]>max)
+		max=hArr[i];
+	}
+							
+		var maxLine = vis.append("svg:line")
+							.attr("x1", 6)
+							.attr("y1", h-max)
+							.attr("x2", w)
+							.attr("y2", h-max)
+							.style("stroke", colour)
+	
+							.style("stroke-width", 5); 
 
 }  
 
@@ -362,14 +403,15 @@ function trigger(){
 //	selectedBars = getSelectedBars([["Andrea", "2"],["Diana", "3"]]);
 //	bolding(selectedBars);
 
-//Daisy Jun27 Arrow Not Done
+//Daisy Jun27 Arrow 
 //	selectedJBars = getSelectedJBars([["Andrea", "2"],["Diana", "3"]]);
 //	selectedJBars = getSelectedJBars([["Andrea", "1"],["Diana", "2"], ["Diana", "3"], ["Andrea", "0"]]);
 //	drawArrow(selectedJBars);
 	
-//Daisy Jul3 DeEmphasizing
-//	selectedBars = getSelectedBars([["Andrea", "2"]]);
-	deEmphRest();	
+//Daisy Jul3 DeEmphasizing Not Done
+//	selectedBars = getSelectedBars([["Andrea", "2"],["Diana", "3"]]);ㄥ
+	selectedBars = getSelectedBars([["Andrea", "2"]]);
+	deEmphRest(selectedBars);	
 
 }
 
