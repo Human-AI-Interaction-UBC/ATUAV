@@ -13,7 +13,11 @@ var data =
 [8.6, 13.5, 13.5, 12, 14.3, 12.7, 11.9, 11.9] ];
 var subject = ["Physics", "Marine Biology", "Calculus", "Geometry", "Painting", "Phtography", 
 					"English Literature", "Anthropology"];				
-
+var stack = new Array;
+//stack.push(2);       
+//stack.push(5);
+//var i = stack.pop();
+//alert(i);
 					
 var w = 625,
     h = 500,
@@ -155,6 +159,17 @@ function getSelectedJBars(seriesValuesPairs){
 	
 	return textData;
  } 
+ 
+function contain(obj, array){
+	for(var i = 0; i<array.length; i++){
+		if(array[i] == obj){
+				return true;
+
+		}
+	}
+	return false;
+}
+
 
 //BEN: highlight selection
 function highlight(selectedBars){
@@ -162,6 +177,7 @@ function highlight(selectedBars){
 	{
 		selectedBars[i].style("fill", "#ffff00");
 	}
+	stack.push("highlight");
  }
  
 function bolding(selectedBars){
@@ -170,6 +186,7 @@ function bolding(selectedBars){
 		selectedBars[i].style("stroke-width", 3)
  						.style("stroke", "red");
 	}
+	stack.push("bolding");
  }
 
 
@@ -180,7 +197,7 @@ function blink(selectedBars)
 	{
 			selectedBars[i].style("fill", "#ffff00");
 	}
-	
+	stack.push("blink");
 	timeOutHandle = setTimeout("blink2(selectedBars)",500)
 }
 //BEN: blink 2 (i.e. changing the colour back, then calling blink 1)
@@ -194,17 +211,11 @@ function blink2(selectedBars)
 	timeOutHandle = setTimeout("blink(selectedBars)",500)
 }
 
-function contain(obj, array){
-	
-}
-
 function deEmphRest(selectedBars){
-	//1. select everything but the selectedBars
-	//2. change the opacity
 	
 	var selectedId = new Array();
 	var selectedHeight = new Array();
-	//work with one selectedBar for now. need to make it work on an array of selectedBars
+	
 	for(var i = 0; i< selectedBars.length; i++){
 		selectedId[i] = selectedBars[i].attr("id");
 		selectedHeight[i] = selectedBars[i].attr("height");
@@ -213,8 +224,8 @@ function deEmphRest(selectedBars){
 	
 	rect.each(function(d,i) {		
 			var thisRect = d3.select(this);	
-			if (thisRect.attr("id") != selectedId[0] || thisRect.attr("height") != selectedHeight[0]) {
-				thisRect.style("opacity", 0.5);	
+			if (!contain(thisRect.attr("id"), selectedId) || !contain(thisRect.attr("height"),selectedHeight)) {
+				thisRect.style("opacity", 0.2);	
 			}
 		});
 	
@@ -272,10 +283,16 @@ function referenceLine(selectedGroup){
 							.attr("x2", w)
 							.attr("y2", h-max)
 							.style("stroke", colour)
-	
 							.style("stroke-width", 5); 
 
+	stack.push("referenceLine");
 }  
+
+function undoRefLine(){
+	
+	d3.selectAll("line").remove();
+	stack.pop();
+}
 
 function showGroupValue(selectedGroup)
 {
@@ -311,7 +328,7 @@ function showGroupValue(selectedGroup)
  				.attr("text-anchor", "middle")
  				//.attr("transform", function(d, i) { return "translate(" + x1(i) + "," + "0)"; })
  				.text(function(d){return Math.floor(score(d[0]));});
- 				
+ 		stack.push("showGroupValue");		
 }
 
 function showIndiValue(selectedBars)
@@ -327,8 +344,14 @@ function showIndiValue(selectedBars)
  				.attr("font-family", "sans-serif")
  				.attr("fill", "black")
  				.attr("text-anchor", "middle")
+ 				.attr("class", function(d, i) {return 'textID';})
  				.text(function(d){return Math.floor(score(d[0]));});
- 				
+ 	stack.push("showIndiValue");			
+}
+
+function undoIndiValue(){
+	d3.select("g").selectAll(".textID").remove();
+	stack.pop();
 }
 
 //arrow
@@ -354,6 +377,7 @@ for (var i = 0; i < selectedBars.length; i++){
 	
 	paper.arrow(xCor[i]-20,yCor[i]-20,xCor[i],yCor[i],10);
 }
+stack.push("drdawArrow");
 
 }
 
@@ -390,15 +414,22 @@ function trigger(){
 
 //Daisy Jun28 Print individual value
 //	selectedJBars = getSelectedJBars([["Andrea", "2"],["Average", "0"], ["Diana", "3"], ["Diana", "0"], ["Andrea", "0"]]);
-//	selectedJBars = getSelectedJBars([["Andrea", "1"],["Diana", "2"], ["Diana", "3"]]);
-//	showIndiValue(selectedJBars);
+	selectedJBars = getSelectedJBars([["Andrea", "1"],["Diana", "2"], ["Diana", "3"]]);
+	showIndiValue(selectedJBars);
+	alert(stack);
+//Jul11 UndoIndiValue not done
+	undoIndiValue();
+	alert(stack);
 
 //Daisy Jun18 Draw Reference Line see if d3 works 
 //	selectedGroup = "#Average";
 //	selectedGroup = "#Andrea";
 //	selectedGroup = "#Diana";
 //	referenceLine(selectedGroup);
-
+//	alert(stack);
+//	undoRefLine();
+//	alert(stack);
+	
 //Daisy Jun21 Bolding
 //	selectedBars = getSelectedBars([["Andrea", "2"],["Diana", "3"]]);
 //	bolding(selectedBars);
@@ -408,10 +439,10 @@ function trigger(){
 //	selectedJBars = getSelectedJBars([["Andrea", "1"],["Diana", "2"], ["Diana", "3"], ["Andrea", "0"]]);
 //	drawArrow(selectedJBars);
 	
-//Daisy Jul3 DeEmphasizing Not Done
-//	selectedBars = getSelectedBars([["Andrea", "2"],["Diana", "3"]]);ㄥ
-	selectedBars = getSelectedBars([["Andrea", "2"]]);
-	deEmphRest(selectedBars);	
+//Daisy Jul3 DeEmphasizing
+//	selectedBars = getSelectedBars([["Andrea", "2"],["Diana", "3"],["Average","2"]]);
+//	selectedBars = getSelectedBars([["Andrea", "3"]]);
+//	deEmphRest(selectedBars);
 
 }
 
