@@ -326,9 +326,16 @@ function showGroupValue(selectedGroup)
  				.attr("font-family", "sans-serif")
  				.attr("fill", "black")
  				.attr("text-anchor", "middle")
+ 				.attr("class", function(d, i) {return 'groupTextID';})
+
  				//.attr("transform", function(d, i) { return "translate(" + x1(i) + "," + "0)"; })
  				.text(function(d){return Math.floor(score(d[0]));});
  		stack.push("showGroupValue");		
+}
+
+function undogGroupValue(){
+	d3.select("g").selectAll(".groupTextID").remove();
+	stack.pop();
 }
 
 function showIndiValue(selectedBars)
@@ -358,7 +365,10 @@ function undoIndiValue(){
 Raphael.fn.arrow = function (x1, y1, x2, y2, size) {
         var angle = Math.atan2(x1-x2,y2-y1);
         angle = (angle / (2 * Math.PI)) * 360;
-        var arrowPath = this.path("M" + x2 + " " + y2 + " L" + (x2  - size) + " " + (y2  - size) + " L" + (x2  - size)  + " " + (y2  + size) + " L" + x2 + " " + y2 ).attr("fill","black").rotate((90+angle),x2,y2);
+        var arrowPath = this.path("M" + x2 + " " + y2 + " L" + (x2  - size) + " " + (y2  - size) + " L" + (x2  - size)  + " " + (y2  + size) + " L" + x2 + " " + y2 )
+        					.attr("fill","black")
+        					//.attr("class", "arrow")
+        					.rotate((90+angle),x2,y2);
         var linePath = this.path("M" + x1 + " " + y1 + " L" + x2 + " " + y2);
         return [linePath,arrowPath];
 };
@@ -368,6 +378,7 @@ function drawArrow(selectedBars){
 	
 	var xCor = new Array;
 	var yCor = new Array;
+	var arrow = new Array;
 	var paper = new Raphael(0,0,625,500);
 	
 for (var i = 0; i < selectedBars.length; i++){
@@ -375,9 +386,10 @@ for (var i = 0; i < selectedBars.length; i++){
 	xCor[i] = selectedBars[i][1];
 	yCor[i] = selectedBars[i][2];
 	
-	paper.arrow(xCor[i]-20,yCor[i]-20,xCor[i],yCor[i],10);
+	 arrow[i] = paper.arrow(xCor[i]-20,yCor[i]-20,xCor[i],yCor[i],10);
 }
-stack.push("drdawArrow");
+stack.push("drawArrow");
+	arrow.remove();
 
 }
 
@@ -411,15 +423,19 @@ function trigger(){
 //	selectedGroup = "#Andrea";
 //	selectedGroup = "#Diana";
 //	showGroupValue(selectedGroup);
+//	alert(stack);
+//Jul 13 UndoGroupValue
+//	undogGroupValue();
+//	alert(stack);
 
 //Daisy Jun28 Print individual value
 //	selectedJBars = getSelectedJBars([["Andrea", "2"],["Average", "0"], ["Diana", "3"], ["Diana", "0"], ["Andrea", "0"]]);
-	selectedJBars = getSelectedJBars([["Andrea", "1"],["Diana", "2"], ["Diana", "3"]]);
-	showIndiValue(selectedJBars);
-	alert(stack);
-//Jul11 UndoIndiValue not done
-	undoIndiValue();
-	alert(stack);
+//	selectedJBars = getSelectedJBars([["Andrea", "1"],["Diana", "2"], ["Diana", "3"]]);
+//	showIndiValue(selectedJBars);
+//	alert(stack);
+//Jul11 UndoIndiValue 
+//	undoIndiValue();
+//	alert(stack);
 
 //Daisy Jun18 Draw Reference Line see if d3 works 
 //	selectedGroup = "#Average";
@@ -436,8 +452,10 @@ function trigger(){
 
 //Daisy Jun27 Arrow 
 //	selectedJBars = getSelectedJBars([["Andrea", "2"],["Diana", "3"]]);
-//	selectedJBars = getSelectedJBars([["Andrea", "1"],["Diana", "2"], ["Diana", "3"], ["Andrea", "0"]]);
-//	drawArrow(selectedJBars);
+	selectedJBars = getSelectedJBars([["Andrea", "1"],["Diana", "2"], ["Diana", "3"], ["Andrea", "0"]]);
+	drawArrow(selectedJBars);
+	alert(stack);
+//	arrow.remove();
 	
 //Daisy Jul3 DeEmphasizing
 //	selectedBars = getSelectedBars([["Andrea", "2"],["Diana", "3"],["Average","2"]]);
