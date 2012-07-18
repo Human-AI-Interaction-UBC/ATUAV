@@ -181,6 +181,14 @@ function highlight(selectedBars){
 	stack.push("highlight");
  }
  
+function undoHighlight(selectedBars){
+	for (var i=0; i<selectedBars.length; i++)
+	{
+		selectedBars[i].style("fill", null);
+	}
+	stack.pop();
+}
+
 function bolding(selectedBars){
 	for (var i=0; i<selectedBars.length; i++)
 	{
@@ -190,6 +198,15 @@ function bolding(selectedBars){
 	stack.push("bolding");
  }
 
+function undoBolding(selectedBars){
+	
+	for (var i=0; i<selectedBars.length; i++)
+	{
+		selectedBars[i].style("stroke-width", 0)
+ 						.style("stroke", null);
+	}
+	stack.pop();
+}
 
 //BEN: blink 1 (i.e. changing the colour, then calling blink 2)
 function blink(selectedBars)
@@ -404,18 +421,17 @@ function trigger(){
 	//BEN: EXAMPLE 1: Get the 1st value for Diana and highlight
 //	selectedBars = getSelectedBars([["Diana", "0"]]);
 //	highlight(selectedBars);
-	
-	//BEN: EXAMPLE 2: Get the 5th value for Andrea and highlight
-//	selectedBars = getSelectedBars([["Andrea", "4"]]);
-//	highlight(selectedBars);
-	
+//	alert(stack);
+//	undoHighlight(selectedBars);
+//	alert(stack);
+		
 	//BEN: EXAMPLE 3: Get the 2nd and 3rd value for Diana and highlight
 //	selectedBars = getSelectedBars([["Diana", "1"],["Diana", "2"]]);
 //	highlight(selectedBars);
-	
-	//BEN: EXAMPLE 4: Get the 2nd for Andrea and 3rd value for Diana and highlight
-//	selectedBars = getSelectedBars([["Andrea", "1"],["Diana", "2"], ["Diana", "3"]]);
-//	highlight(selectedBars);
+//	alert(stack);
+//	undoHighlight(selectedBars);
+//	alert(stack);
+		
 	
 	//BEN: EXAMPLE 5: Get the 2nd for Andrea and 3rd value for Diana and make selection blink
 //	selectedBars = getSelectedBars([["Andrea", "2"],["Average", "0"], ["Diana", "3"]]);
@@ -451,16 +467,19 @@ function trigger(){
 //	alert(stack);
 	
 //Daisy Jun21 Bolding
-//	selectedBars = getSelectedBars([["Andrea", "2"],["Diana", "3"]]);
-//	bolding(selectedBars);
-
+	selectedBars = getSelectedBars([["Andrea", "2"],["Diana", "3"]]);
+	bolding(selectedBars);
+	alert(stack);
+	undoBolding(selectedBars);
+	alert(stack);
+	
 //Daisy Jun27 Arrow 
 //	selectedJBars = getSelectedJBars([["Andrea", "2"],["Diana", "3"]]);
-	selectedJBars = getSelectedJBars([["Andrea", "1"],["Diana", "2"], ["Diana", "3"], ["Andrea", "0"]]);
-	drawArrow(selectedJBars);
-	alert(stack);
-	undoArrow();
-	alert(stack);
+//	selectedJBars = getSelectedJBars([["Andrea", "1"],["Diana", "2"], ["Diana", "3"], ["Andrea", "0"]]);
+//	drawArrow(selectedJBars);
+//	alert(stack);
+//	undoArrow();
+//	alert(stack);
 	
 //Daisy Jul3 DeEmphasizing
 //	selectedBars = getSelectedBars([["Andrea", "2"],["Diana", "3"],["Average","2"]]);
