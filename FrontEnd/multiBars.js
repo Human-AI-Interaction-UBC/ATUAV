@@ -14,6 +14,7 @@ var data =
 var subject = ["Physics", "Marine Biology", "Calculus", "Geometry", "Painting", "Phtography", 
 					"English Literature", "Anthropology"];				
 var stack = new Array;
+var paper ;
 //stack.push(2);       
 //stack.push(5);
 //var i = stack.pop();
@@ -367,7 +368,6 @@ Raphael.fn.arrow = function (x1, y1, x2, y2, size) {
         angle = (angle / (2 * Math.PI)) * 360;
         var arrowPath = this.path("M" + x2 + " " + y2 + " L" + (x2  - size) + " " + (y2  - size) + " L" + (x2  - size)  + " " + (y2  + size) + " L" + x2 + " " + y2 )
         					.attr("fill","black")
-        					//.attr("class", "arrow")
         					.rotate((90+angle),x2,y2);
         var linePath = this.path("M" + x1 + " " + y1 + " L" + x2 + " " + y2);
         return [linePath,arrowPath];
@@ -379,7 +379,7 @@ function drawArrow(selectedBars){
 	var xCor = new Array;
 	var yCor = new Array;
 	var arrow = new Array;
-	var paper = new Raphael(0,0,625,500);
+	paper = new Raphael(0,0,625,500);
 	
 for (var i = 0; i < selectedBars.length; i++){
 	
@@ -389,11 +389,15 @@ for (var i = 0; i < selectedBars.length; i++){
 	 arrow[i] = paper.arrow(xCor[i]-20,yCor[i]-20,xCor[i],yCor[i],10);
 }
 stack.push("drawArrow");
-	arrow.remove();
+
+
 
 }
 
-
+function undoArrow(){
+		paper.clear();
+		stack.pop();
+}
 //BEN: Trigger
 function trigger(){
 	
@@ -455,7 +459,8 @@ function trigger(){
 	selectedJBars = getSelectedJBars([["Andrea", "1"],["Diana", "2"], ["Diana", "3"], ["Andrea", "0"]]);
 	drawArrow(selectedJBars);
 	alert(stack);
-//	arrow.remove();
+	undoArrow();
+	alert(stack);
 	
 //Daisy Jul3 DeEmphasizing
 //	selectedBars = getSelectedBars([["Andrea", "2"],["Diana", "3"],["Average","2"]]);
