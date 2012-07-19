@@ -246,9 +246,27 @@ function deEmphRest(selectedBars){
 				thisRect.style("opacity", 0.2);	
 			}
 		});
-	
+	stack.push("deEmphRest");
  }
  
+function undoDeEmph(selectedBars){
+		var selectedId = new Array();
+	var selectedHeight = new Array();
+	
+	for(var i = 0; i< selectedBars.length; i++){
+		selectedId[i] = selectedBars[i].attr("id");
+		selectedHeight[i] = selectedBars[i].attr("height");
+	
+	}
+	
+	rect.each(function(d,i) {		
+			var thisRect = d3.select(this);	
+			if (!contain(thisRect.attr("id"), selectedId) || !contain(thisRect.attr("height"),selectedHeight)) {
+				thisRect.style("opacity", 1);	
+			}
+		});
+	stack.pop();
+}
 function referenceLine(selectedGroup){
 	
 	var rect = $(selectedGroup).children();
@@ -467,11 +485,11 @@ function trigger(){
 //	alert(stack);
 	
 //Daisy Jun21 Bolding
-	selectedBars = getSelectedBars([["Andrea", "2"],["Diana", "3"]]);
-	bolding(selectedBars);
-	alert(stack);
-	undoBolding(selectedBars);
-	alert(stack);
+//	selectedBars = getSelectedBars([["Andrea", "2"],["Diana", "3"]]);
+//	bolding(selectedBars);
+//	alert(stack);
+//	undoBolding(selectedBars);
+//	alert(stack);
 	
 //Daisy Jun27 Arrow 
 //	selectedJBars = getSelectedJBars([["Andrea", "2"],["Diana", "3"]]);
@@ -482,9 +500,12 @@ function trigger(){
 //	alert(stack);
 	
 //Daisy Jul3 DeEmphasizing
-//	selectedBars = getSelectedBars([["Andrea", "2"],["Diana", "3"],["Average","2"]]);
+	selectedBars = getSelectedBars([["Andrea", "2"],["Diana", "3"],["Average","2"]]);
 //	selectedBars = getSelectedBars([["Andrea", "3"]]);
-//	deEmphRest(selectedBars);
+	deEmphRest(selectedBars);
+	alert(stack);
+	undoDeEmph(selectedBars);
+	alert(stack);
 
 }
 
