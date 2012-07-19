@@ -330,6 +330,29 @@ function undoRefLine(){
 	stack.pop();
 }
 
+function lineComp(selectedBars){
+	
+	var xCor = new Array;
+	var yCor = new Array;
+	
+for (var i = 0; i < selectedBars.length; i++){
+	
+	xCor[i] = selectedBars[i][1];
+	yCor[i] = selectedBars[i][2];
+	
+}
+
+		var line = vis.append("svg:line")
+							.attr("x1", xCor[0])
+							.attr("y1", yCor[0])
+							.attr("x2", xCor[1])
+							.attr("y2", yCor[1])
+							.attr("transform", "translate(-10,-15)")
+							.style("stroke","black")
+							.style("stroke-width", 5);
+							
+}
+
 function showGroupValue(selectedGroup)
 {
 	var rect = $(selectedGroup).children();
@@ -500,12 +523,15 @@ function trigger(){
 //	alert(stack);
 	
 //Daisy Jul3 DeEmphasizing
-	selectedBars = getSelectedBars([["Andrea", "2"],["Diana", "3"],["Average","2"]]);
+//	selectedBars = getSelectedBars([["Andrea", "2"],["Diana", "3"],["Average","2"]]);
 //	selectedBars = getSelectedBars([["Andrea", "3"]]);
-	deEmphRest(selectedBars);
-	alert(stack);
-	undoDeEmph(selectedBars);
-	alert(stack);
+//	deEmphRest(selectedBars);
+//	alert(stack);
+//	undoDeEmph(selectedBars);
+//	alert(stack);
+
+	selectedJBars = getSelectedJBars([["Andrea", "1"],["Diana", "6"]]);
+	lineComp(selectedJBars);
 
 }
 
