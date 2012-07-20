@@ -350,7 +350,7 @@ for (var i = 0; i < selectedBars.length; i++){
 							.attr("transform", "translate(-10,-15)")
 							.style("stroke","black")
 							.style("stroke-width", 5);
-							
+	stack.push("lineComp");			
 }
 
 function showGroupValue(selectedGroup)
@@ -529,10 +529,27 @@ function trigger(){
 //	alert(stack);
 //	undoDeEmph(selectedBars);
 //	alert(stack);
-
+	
 	selectedJBars = getSelectedJBars([["Andrea", "1"],["Diana", "6"]]);
-	lineComp(selectedJBars);
+//	lineComp(selectedJBars);
+//	showIndiValue(selectedJBars);
+//	drawArrow(selectedJBars);
+//	alert(stack);
+//	undoArrow();
+//	alert(stack);
+//	undoIndiValue();
+//	alert(stack);
+//	undoRefLine();
+//	alert(stack);
 
+function CallFunction() {
+  lineComp(selectedJBars);
+  setInterval("lineComp(selectedBars)", 1000);
+}
+
+var id = CallFunction();
+	
+//	selectedBars = getSelectedBars([["Diana", "1"],["Diana", "2"]]);
 }
 
 //BEN: Stop Blinking
