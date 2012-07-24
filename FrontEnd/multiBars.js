@@ -84,35 +84,6 @@ vis.append("g")
    	.attr("transform", "translate( 4," + h + ")")
    	.attr("font-size", "11px")
    	.call(xAxis);
-
-               
-/** UndoManager
-                var undoManager = new UndoManager();
-   
-                var btnUndo = document.getElementById('btnUndo');
-                var btnRedo = document.getElementById('btnRedo');
-                var btnClear = document.getElementById('btnClear');
-                
-                function updateUI() {
-                    btnUndo.disabled = !undoManager.hasUndo();
-                    btnRedo.disabled = !undoManager.hasRedo();
-                }
-                undoManager.setCallback(updateUI);
-
-                btnUndo.onclick = function() {
-                    undoManager.undo();
-                    updateUI();
-                };
-                btnRedo.onclick = function() {
-                    undoManager.redo();
-                    updateUI();
-                };
-                btnClear.onclick = function() {
-                    undoManager.clear();
-                    updateUI();
-                };
-                
-                updateUI();**/
            
 //BEN: Get multiple bars	
 function getSelectedBars(seriesValuesPairs){
@@ -458,14 +429,7 @@ function undoArrow(){
 }
 //BEN: Trigger
 function trigger(){
-	
-	//BEN: EXAMPLE 1: Get the 1st value for Diana and highlight
-//	selectedBars = getSelectedBars([["Diana", "0"]]);
-//	highlight(selectedBars);
-//	alert(stack);
-//	undoHighlight(selectedBars);
-//	alert(stack);
-		
+
 	//BEN: EXAMPLE 3: Get the 2nd and 3rd value for Diana and highlight
 //	selectedBars = getSelectedBars([["Diana", "1"],["Diana", "2"]]);
 //	highlight(selectedBars);
@@ -531,33 +495,25 @@ function trigger(){
 //	alert(stack);
 	
 	selectedJBars = getSelectedJBars([["Andrea", "1"],["Diana", "6"]]);
+	selectedBars = getSelectedBars([["Andrea", "1"],["Diana", "6"]]);
+
 //	lineComp(selectedJBars);
 //	showIndiValue(selectedJBars);
 //	drawArrow(selectedJBars);
 //	alert(stack);
-//	undoArrow();
+//	undoArrow()
 //	alert(stack);
-//	undoIndiValue();
-//	alert(stack);
-//	undoRefLine();
-//	alert(stack);
-
-function CallFunction() {
-  lineComp(selectedJBars);
-  setInterval("lineComp(selectedBars)", 1000);
-}
-
-var id = CallFunction();
 	
-//	selectedBars = getSelectedBars([["Diana", "1"],["Diana", "2"]]);
+
+  a = setInterval("lineComp(selectedJBars)", 1000);
+  clearTimeout(timeOutHandle);
+  b = setInterval("showIndiValue(selectedJBars)", 2000);
+	clearTimeout(timeOutHandle);
+	c = setInterval("undoIndiValue()", 3000);
+	clearTimeout(timeOutHandle);
 }
 
 //BEN: Stop Blinking
 function stopBlinking(){
 	clearTimeout(timeOutHandle);
 }
-
-/**function undo(theNode){
-//wanna get rid of myCircle
-theNode.parentNode.removeChild(myCircle);	
-}**/
