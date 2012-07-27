@@ -1,5 +1,5 @@
 var series, 
-    hours,
+    subjects,
     minVal,
     maxVal,
     w = 400,
@@ -13,6 +13,8 @@ var series,
     radius,
     radiusLength,
     ruleColor = "#CCC";
+    
+var seriesName = ["Average", "Andrea", "Diana"];
 var data = 
 [ [9.2, 12.1, 7.7, 9.5, 11.9, 11.5, 10, 11.3], 
 [11.1, 11, 14.45, 11.3, 10.3, 9.8, 9.1, 12.8],
@@ -30,21 +32,11 @@ var loadViz = function(){
 };
 
 function loadData(){
-    var randomFromTo = function randomFromTo(from, to){
-       return Math.floor(Math.random() * (to - from + 1) + from);
-    };
 
-    series = [
-      [],
-      []
-    ];
+    subjects = [];
 
-    hours = [];
-
-    for (i = 0; i < 24; i += 1) {
-        series[0][i] = randomFromTo(0,20);
-        series[1][i] = randomFromTo(5,15);
-        hours[i] = i; //in case we want to do different formatting
+    for (i = 0; i < 8; i += 1) {
+        subjects[i] = i; //in case we want to do different formatting
     }
 
     allArr = data[0].concat(data[1],data[2]);
@@ -55,11 +47,6 @@ function loadData(){
     //give 25% of range as buffer to top
     maxVal = maxVal + ((maxVal - minVal) * 0.25);
     minVal = 0;
-
-    //to complete the radial lines
-    for (i = 0; i < series.length; i += 1) {
-        series[i].push(series[i][0]);
-    }
 }
 
 function buildBase(){
@@ -128,10 +115,10 @@ function addAxes() {
       .text(String);
 
   lineAxes = vizBody.selectAll('.line-ticks')
-      .data(hours)
+      .data(subjects)
       .enter().append('svg:g')
       .attr("transform", function (d, i) {
-          return "rotate(" + ((i / hours.length * 360) - 90) +
+          return "rotate(" + ((i / subjects.length * 360) - 90) +
               ")translate(" + radius(maxVal) + ")";
       })
       .attr("class", "line-ticks");
@@ -145,38 +132,43 @@ function addAxes() {
       .text(String)
       .attr("text-anchor", "middle")
       .attr("transform", function (d, i) {
-          return (i / hours.length * 360) < 180 ? null : "rotate(180)";
+          return (i / subjects.length * 360) < 180 ? null : "rotate(180)";
       });
 }
 
 function draw() {
-  var groups,
-      lines,
-      linesToUpdate;
-
+  var groups;
+      
   highlightedDotSize = 4;
 
   groups = vizBody.selectAll('.series')
       .data(data).enter().append("svg:g")
       .attr('class', 'series')
       .style('fill',function(d, i) { return z(i); })
-      .style('stroke', function(d, i) { return z(i); });
- // groups.exit().remove();
+      .style('stroke', function(d, i) { return z(i); })
+      .attr("id", function(d, i) { return seriesName[i]; });
 
-  lines = groups.append('svg:path')
+var line = d3.svg.line.radial()
+    .interpolate("basis-closed")
+    .radius(radius)
+    .angle(function(d, i) { return angle(i); });
+
+var area = d3.svg.area.radial()
+    .interpolate(line.interpolate())
+    .innerRadius(radius(0))
+    .outerRadius(line.radius())
+    .angle(line.angle());
+
+
+var  lines = groups.append('svg:path')
       .attr("class", "line")
       .attr("d", d3.svg.line.radial()
-          .radius(function (d) {
-              return 0;
-          })
-          .angle(function (d, i) {
-              if (i === 24) {
-                  i = 0;
-              } //close the line
-              return (i / 24) * 2 * Math.PI;
-          }))
+          .radius(function (d) {return 0;})
+          .angle(function (d, i) { return (i / 8) * 2 * Math.PI;}))
       .style("stroke-width", 3)
       .style("fill", "none");
+      
+
 
   groups.selectAll(".curr-point")
       .data(function (d) {
@@ -185,7 +177,7 @@ function draw() {
       .enter().append("svg:circle")
       .attr("class", "curr-point")
       .attr("r", 0);
-
+//.....x
   groups.selectAll(".clicked-point")
       .data(function (d) {
           return [d[0]];
@@ -198,11 +190,12 @@ function draw() {
       .radius(function (d) {
           return radius(d);
       })
+      //this should close the line.. but it doesn't.
       .angle(function (d, i) {
-          if (i === 24) {
+          if (i === 8) {
               i = 0;
           } //close the line
-          return (i / 24) * 2 * Math.PI;
+          return (i / 8) * 2 * Math.PI;
       }));
 }
 
@@ -215,4 +208,7 @@ function trigger(){
       .attr("class", "circle")
       .style("stroke", ruleColor)
       .style("fill", "none");
+      
+      //colouring
+      lines.style("fill", null);
 }
