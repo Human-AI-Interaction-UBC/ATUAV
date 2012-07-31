@@ -434,8 +434,8 @@ Raphael.fn.arrow = function (x1, y1, x2, y2, size) {
 };
 
 
-Raphael.fn.arrowLine = function(){
-        var lineConnect = this.path("M"+x1 + " "+ y1 +"L" +(x2-x1) +" " +y2);
+Raphael.fn.arrowLine = function(x1,y1,x2,y2){
+        var lineConnect = this.path("M"+x1 + " "+ y1 +"L" +x2 +" " +y2);
         
         return [lineConnect];
 }
@@ -462,9 +462,12 @@ for (var i = 0; i < selectedBars.length; i++){
 	
 	 arrow[i] = linePaper.arrow(xCor[i]+barWidth/2,25,xCor[i]+barWidth/2,yCor[i],10);
 	 
-	 corLin[i] = [xCor[i]+barWidth/2,yCor[i]];
+	 corLin[i] = xCor[i]+barWidth/2;
+	 
 }
-
+var	minVal = d3.min(corLin);
+var maxVal = d3.max(corLin);
+var arrowLin = linePaper.path("M" + minVal+" "+ 25 +"L" + maxVal + " " + 25 +"Z");
 stack.push("drawArrowLine");
 
 }
@@ -521,7 +524,7 @@ function trigger(){
 	
 //Daisy Jun27 Arrow 
 //	selectedJBars = getSelectedJBars([["Andrea", "2"],["Diana", "3"]]);
-//	selectedJBars = getSelectedJBars([["Andrea", "1"],["Diana", "2"], ["Diana", "3"], ["Andrea", "0"]]);
+	selectedJBars = getSelectedJBars([["Andrea", "1"],["Diana", "2"], ["Diana", "3"], ["Andrea", "0"]]);
 //	drawArrow(selectedJBars);
 //	alert(stack);
 //	undoArrow();
@@ -535,7 +538,7 @@ function trigger(){
 //	undoDeEmph(selectedBars);
 //	alert(stack);
 	
-	selectedJBars = getSelectedJBars([["Andrea", "1"],["Diana", "6"]]);
+//	selectedJBars = getSelectedJBars([["Andrea", "1"],["Diana", "6"]]);
 	selectedBars = getSelectedBars([["Andrea", "1"],["Diana", "6"]]);
 
 //	lineComp(selectedJBars);
