@@ -47,6 +47,10 @@ function loadData(){
     //give 25% of range as buffer to top
     maxVal = maxVal + ((maxVal - minVal) * 0.25);
     minVal = 0;
+    
+    for (i = 0; i < data.length; i += 1) {
+        data[i].push(data[i][0]);
+    }
 }
 
 function buildBase(){
@@ -164,7 +168,13 @@ var  lines = groups.append('svg:path')
       .attr("class", "line")
       .attr("d", d3.svg.line.radial()
           .radius(function (d) {return 0;})
-          .angle(function (d, i) { return (i / 8) * 2 * Math.PI;}))
+          //.angle(function (d, i) { return (i / 8) * 2 * Math.PI;}))
+          .angle(function (d, i) {
+              if (i === 8) {
+                  i = 0;
+              } //close the line
+              return (i / 8) * 2 * Math.PI;
+          }))
       .style("stroke-width", 3)
       .style("fill", "none");
       

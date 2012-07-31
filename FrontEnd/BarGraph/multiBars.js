@@ -15,10 +15,8 @@ var subject = ["Physics", "Marine Biology", "Calculus", "Geometry", "Painting", 
 					"English Literature", "Anthropology"];				
 var stack = new Array;
 var paper ;
-//stack.push(2);       
-//stack.push(5);
-//var i = stack.pop();
-//alert(i);
+var linePaper;
+var barWidth;
 					
 var w = 625,
     h = 500,
@@ -119,6 +117,8 @@ function getSelectedJBars(seriesValuesPairs){
 		yCor[i] = $("#"+ seriesValuesPairs[i][0]).children("#value"+ seriesValuesPairs[i][1]).offset().top;		
 		
 	}
+	
+	barWidth = $("#"+ seriesValuesPairs[0][0]).children("#value"+ seriesValuesPairs[0][1]).attr("width");
 	
 	for (var i = 0; i<value.length; i++){
 		intValue[i] = Math.floor(value[i])
@@ -402,7 +402,6 @@ Raphael.fn.arrow = function (x1, y1, x2, y2, size) {
         return [linePath,arrowPath];
 };
 
-
 function drawArrow(selectedBars){
 	
 	var xCor = new Array;
@@ -423,9 +422,51 @@ stack.push("drawArrow");
 
 }
 
+Raphael.fn.arrow = function (x1, y1, x2, y2, size) {
+        var angle = Math.atan2(x1-x2,y2-y1);
+        angle = (angle / (2 * Math.PI)) * 360;
+        var arrowPath = this.path("M" + x2 + " " + y2 + " L" + (x2  - size) + " " + (y2  - size) + " L" + (x2  - size)  + " " + (y2  + size) + " L" + x2 + " " + y2 )
+        					.attr("fill","black")
+        					.rotate((90+angle),x2,y2);
+        var linePath = this.path("M" + x1 + " " + y1 + " L" + x2 + " " + y2);
+        
+        return [linePath,arrowPath];
+};
+
+
+Raphael.fn.arrowLine = function(){
+        var lineConnect = this.path("M"+x1 + " "+ y1 +"L" +(x2-x1) +" " +y2);
+        
+        return [lineConnect];
+}
+
 function undoArrow(){
 		paper.clear();
 		stack.pop();
+}
+
+
+
+function drawArrowLine(selectedBars){
+	
+	var xCor = new Array;
+	var yCor = new Array;
+	var arrow = new Array;
+	var corLin = new Array;
+	linePaper = new Raphael(0,0,625,500);
+	
+for (var i = 0; i < selectedBars.length; i++){
+	
+	xCor[i] = selectedBars[i][1];
+	yCor[i] = selectedBars[i][2];
+	
+	 arrow[i] = linePaper.arrow(xCor[i]+barWidth/2,25,xCor[i]+barWidth/2,yCor[i],10);
+	 
+	 corLin[i] = [xCor[i]+barWidth/2,yCor[i]];
+}
+
+stack.push("drawArrowLine");
+
 }
 //BEN: Trigger
 function trigger(){
@@ -505,12 +546,14 @@ function trigger(){
 //	alert(stack);
 	
 
-  a = setInterval("lineComp(selectedJBars)", 1000);
-  clearTimeout(timeOutHandle);
-  b = setInterval("showIndiValue(selectedJBars)", 2000);
-	clearTimeout(timeOutHandle);
-	c = setInterval("undoIndiValue()", 3000);
-	clearTimeout(timeOutHandle);
+//  a = setInterval("lineComp(selectedJBars)", 1000);
+//  clearTimeout(timeOutHandle);
+//  b = setInterval("showIndiValue(selectedJBars)", 2000);
+//	clearTimeout(timeOutHandle);
+//	c = setInterval("undoIndiValue()", 3000);
+//	clearTimeout(timeOutHandle);
+
+drawArrowLine(selectedJBars);
 }
 
 //BEN: Stop Blinking
