@@ -13,14 +13,20 @@ var series,
     radius,
     radiusLength,
     ruleColor = "#CCC";
+ var circleAxes;
+ var  lines;
     
 var seriesName = ["Average", "Andrea", "Diana"];
 var data = 
 [ [9.2, 12.1, 7.7, 9.5, 11.9, 11.5, 10, 11.3], 
 [11.1, 11, 14.45, 11.3, 10.3, 9.8, 9.1, 12.8],
 [8.6, 13.5, 13.5, 12, 14.3, 12.7, 11.9, 11.9] ];
+var subject = ["Physics", "Marine Biology", "Calculus", "Geometry", "Painting", "Phtography", 
+					"English Literature", "Anthropology"];		
 var r = d3.scale.linear().domain([0, 15]).range([ 0, h]);
 var z = d3.scale.category10();
+var score = d3.scale.linear().domain([0,15]).range([0, 100]);
+
 
 
 var loadViz = function(){
@@ -100,7 +106,6 @@ function setScales() {
 function addAxes() {
   var radialTicks = radius.ticks(5),
       i,
-      circleAxes,
       lineAxes;
 
   vizBody.selectAll('.circle-ticks').remove();
@@ -111,6 +116,7 @@ function addAxes() {
       .enter().append('svg:g')
       .attr("class", "circle-ticks");
 
+//change string range to 0-100
   circleAxes.append("svg:text")
       .attr("text-anchor", "middle")
       .attr("dy", function (d) {
@@ -132,8 +138,9 @@ function addAxes() {
       .style("stroke", ruleColor)
       .style("fill", "none");
 
+//change string to subject
   lineAxes.append('svg:text')
-      .text(String)
+      .text(function(i){ return subject[i];})
       .attr("text-anchor", "middle")
       .attr("transform", function (d, i) {
           return (i / subjects.length * 360) < 180 ? null : "rotate(180)";
@@ -164,7 +171,7 @@ var area = d3.svg.area.radial()
     .angle(line.angle());
 
 
-var  lines = groups.append('svg:path')
+  lines = groups.append('svg:path')
       .attr("class", "line")
       .attr("d", d3.svg.line.radial()
           .radius(function (d) {return 0;})
@@ -209,16 +216,29 @@ var  lines = groups.append('svg:path')
       }));
 }
 
-function trigger(){
-	
-  circleAxes.append("svg:circle")
+function referenceLine(){
+	circleAxes
+  .append("svg:circle")
       .attr("r", function (d, i) {
           return radius(d);
       })
       .attr("class", "circle")
       .style("stroke", ruleColor)
       .style("fill", "none");
-      
-      //colouring
+}
+
+function undoRefLine(){
+	
+}
+
+function colourFill(){
+	      //colouring
       lines.style("fill", null);
+
+}
+
+function trigger(){
+      
+      referenceLine();
+      //colourFill();
 }

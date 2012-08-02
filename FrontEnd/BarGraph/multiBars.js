@@ -26,17 +26,20 @@ var w = 625,
     x0 = d3.scale.ordinal().domain(d3.range(n)).rangeBands([0, w], .3),
     x1 = d3.scale.ordinal().domain(d3.range(m)).rangeBands([0, x0.rangeBand()]),
     score = d3.scale.linear().domain([0,500]).range([0, 100]);
+    score2 = d3.scale.linear().domain([0,15]).range([0, 100]);
     z = d3.scale.category10();
 
 var xAxis = d3.svg.axis()
 					.scale(x0)
 					.orient("bottom")
-					.ticks(m);
+					.ticks(m)
+					.tickFormat(function(i){ return subject[i];});
 
 var yAxis = d3.svg.axis()
 				.scale(y)
 				.orient("left")
-				.ticks(numTicks);
+				.ticks(numTicks)
+				.tickFormat(function(numTicks){ return score(numTicks); });
 				
 var vis = d3.select("body")
   .append("svg:svg")
@@ -469,9 +472,14 @@ var	minVal = d3.min(corLin);
 var maxVal = d3.max(corLin);
 var arrowLin = linePaper.path("M" + minVal+" "+ 25 +"L" + maxVal + " " + 25 +"Z");
 stack.push("drawArrowLine");
+}
+
+function undoArrowLine(){
+	linePaper.clear();
+	stack.pop();
 
 }
-//BEN: Trigger
+
 function trigger(){
 
 	//BEN: EXAMPLE 3: Get the 2nd and 3rd value for Diana and highlight
@@ -549,14 +557,18 @@ function trigger(){
 //	alert(stack);
 	
 
-//  a = setInterval("lineComp(selectedJBars)", 1000);
-//  clearTimeout(timeOutHandle);
-//  b = setInterval("showIndiValue(selectedJBars)", 2000);
-//	clearTimeout(timeOutHandle);
-//	c = setInterval("undoIndiValue()", 3000);
-//	clearTimeout(timeOutHandle);
+  	setInterval("lineComp(selectedJBars)", 1000);
+  	clearTimeout(timeOutHandle);
+    setInterval("showIndiValue(selectedJBars)", 2000);
+	clearInterval(timeOutHandle);
+	setInterval("drawArrow(selectedJBars)", 3000);
+	clearInterval(timeOutHandle);
+	setInterval("undoIndiValue()", 4000);
+	clearInterval(timeOutHandle);
+	setInterval("undoArrow()", 5000);
+	setInterval("drawArrowLine(selectedJBars)", 6000);
+	setInterval("undoArrowLine()", 5000);
 
-drawArrowLine(selectedJBars);
 }
 
 //BEN: Stop Blinking
