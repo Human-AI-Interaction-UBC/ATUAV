@@ -228,17 +228,20 @@ function referenceLine(){
 }
 
 function undoRefLine(){
-	
+	circleAxes.select(".circle").remove();
 }
 
 function colourFill(){
 	      //colouring
-      lines.style("fill", null);
+      lines.style("fill", null)
+      		.style("opacity", 0.3)
+      		.style("stroke", function(d, i) { return z(i); });
 
 }
 
 function trigger(){
       
       referenceLine();
-      //colourFill();
+      //undoRefLine()
+      colourFill();
 }

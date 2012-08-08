@@ -27,7 +27,9 @@ var w = 625,
     x1 = d3.scale.ordinal().domain(d3.range(m)).rangeBands([0, x0.rangeBand()]),
     score = d3.scale.linear().domain([0,500]).range([0, 100]);
     score2 = d3.scale.linear().domain([0,15]).range([0, 100]);
-    z = d3.scale.category10();
+    z = d3.scale.category20c();
+ //more intense colour
+ // z = d3.scale.category10();   
 
 var xAxis = d3.svg.axis()
 					.scale(x0)
@@ -57,7 +59,7 @@ var g = vis.selectAll("g")
     //this transform works as spread out the coordinates of different series
     .attr("transform", function(d, i) { return "translate(" + x1(i) + ",0)"; })
 //BEN: added id to series (i.e. "Average", "Andrea", "Diana"  in our case)
-	.attr("id", function(d, i) { return seriesName[i]; });
+	.attr("id", function(d, i) { return seriesName[i]; });	
 	
 var rect = g.selectAll("rect")
 //Object = the sec dimension in the two dimension array
@@ -67,7 +69,7 @@ var rect = g.selectAll("rect")
     .attr("transform", function(d, i) { return "translate(" + x0(i) + ", 0)"; })
     .attr("width", x1.rangeBand())
     .attr("height", y1)
-    .attr("y", function(d) { return h - y1(d); })
+    .attr("y", function(d) { return h- y1(d) ; })
 //the x-coor for all bars    
     .attr("x", 4)
 //BEN: added id to individual bars (between 0-7 in our case)
@@ -150,7 +152,7 @@ function contain(obj, array){
 function highlight(selectedBars){
 	for (var i=0; i<selectedBars.length; i++)
 	{
-		selectedBars[i].style("fill", "#ffff00");
+		selectedBars[i].style("fill", "yellow");
 	}
 	stack.push("highlight");
  }
@@ -480,6 +482,33 @@ function undoArrowLine(){
 
 }
 
+function compBars(){
+	
+	
+var gComp = vis.selectAll("g")
+    .data(data) 
+  .enter().append("svg:g") 
+    //this transform works as spread out the coordinates of different series
+    .attr("transform", function(d, i) { return "translate(" + x1(i) + ",0)"; })
+    .attr("id", function(d, i) { return seriesName[i]; });	
+
+
+	var rectComp = g.selectAll("rectComp")
+//Object = the sec dimension in the two dimension array
+    .data(Object)
+  .enter().append("svg:rect")
+  //this transform spreads out the different group
+    .attr("transform", function(d, i) { return "translate(" + x0(i) + ", 0)"; })
+    .attr("width", x1.rangeBand())
+    .attr("height", y)
+    .attr("y", 0)
+//the x-coor for all bars    
+    .attr("x", 4)
+    .attr("fill", "#D0D0D0 ")
+//BEN: added id to individual bars (between 0-7 in our case)
+	.attr("id", function(d, i) {return 'valueComp' + i;});  
+}
+
 function trigger(){
 
 	//BEN: EXAMPLE 3: Get the 2nd and 3rd value for Diana and highlight
@@ -546,6 +575,7 @@ function trigger(){
 //	undoDeEmph(selectedBars);
 //	alert(stack);
 	
+	
 //	selectedJBars = getSelectedJBars([["Andrea", "1"],["Diana", "6"]]);
 	selectedBars = getSelectedBars([["Andrea", "1"],["Diana", "6"]]);
 
@@ -557,7 +587,7 @@ function trigger(){
 //	alert(stack);
 	
 
-  	setInterval("lineComp(selectedJBars)", 1000);
+/**  	setInterval("lineComp(selectedJBars)", 1000);
   	clearTimeout(timeOutHandle);
     setInterval("showIndiValue(selectedJBars)", 2000);
 	clearInterval(timeOutHandle);
@@ -567,7 +597,12 @@ function trigger(){
 	clearInterval(timeOutHandle);
 	setInterval("undoArrow()", 5000);
 	setInterval("drawArrowLine(selectedJBars)", 6000);
-	setInterval("undoArrowLine()", 5000);
+	setInterval("undoArrowLine()", 7000);**/
+//	setInterval("deEmphRest(selectedBars)", 100);
+//	setInterval("undoDeEmph()", 200);
+//	highlight(selectedBars);
+//bolding(selectedBars);
+compBars();
 
 }
 
