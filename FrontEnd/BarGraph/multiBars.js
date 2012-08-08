@@ -482,15 +482,15 @@ function undoArrowLine(){
 
 }
 
-function compBars(){
+function compBars(callback){
 	
 	
 var gComp = vis.selectAll("g")
     .data(data) 
   .enter().append("svg:g") 
     //this transform works as spread out the coordinates of different series
-    .attr("transform", function(d, i) { return "translate(" + x1(i) + ",0)"; })
-    .attr("id", function(d, i) { return seriesName[i]; });	
+    .attr("transform", function(d, i) { return "translate(" + x1(i) + ",0)"; });
+
 
 
 	var rectComp = g.selectAll("rectComp")
@@ -506,7 +506,16 @@ var gComp = vis.selectAll("g")
     .attr("x", 4)
     .attr("fill", "#D0D0D0 ")
 //BEN: added id to individual bars (between 0-7 in our case)
-	.attr("id", function(d, i) {return 'valueComp' + i;});  
+    .attr("class", function(d, i) { return "compBars"; });	
+    
+    stack.push("compBars");
+    callback();
+
+}
+
+function undoCompBars(){
+	$(".compBars").remove();
+	stack.pop();
 }
 
 function trigger(){
@@ -587,23 +596,34 @@ function trigger(){
 //	alert(stack);
 	
 
-/**  	setInterval("lineComp(selectedJBars)", 1000);
+ 	setTimeout("lineComp(selectedJBars)", 1000);
   	clearTimeout(timeOutHandle);
-    setInterval("showIndiValue(selectedJBars)", 2000);
+    setTimeout("showIndiValue(selectedJBars)", 2000);
 	clearInterval(timeOutHandle);
-	setInterval("drawArrow(selectedJBars)", 3000);
+	setTimeout("drawArrow(selectedJBars)", 3000);
 	clearInterval(timeOutHandle);
-	setInterval("undoIndiValue()", 4000);
+	setTimeout("undoIndiValue()", 4000);
 	clearInterval(timeOutHandle);
-	setInterval("undoArrow()", 5000);
+	setTimeout("undoArrow()", 5000);
+	/**
 	setInterval("drawArrowLine(selectedJBars)", 6000);
 	setInterval("undoArrowLine()", 7000);**/
 //	setInterval("deEmphRest(selectedBars)", 100);
 //	setInterval("undoDeEmph()", 200);
 //	highlight(selectedBars);
-//bolding(selectedBars);
-compBars();
+//	bolding(selectedBars);
 
+/**window.onload = function () {
+	var int=self.setInterval(function(){compBars()},1000);
+	
+	window.clearInterval(int);
+
+	var int2=self.setInterval(function(){undoCompBars()},2000);
+	window.clearInterval(int2);
+	}**/
+//	deEmphRest(selectedBars);
+
+// 	compBars(undoCompBars);
 }
 
 //BEN: Stop Blinking
