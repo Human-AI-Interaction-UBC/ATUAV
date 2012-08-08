@@ -20,6 +20,7 @@ var barWidth;
 					
 var w = 625,
     h = 500,
+    strokeWidth=5,
     chartPadding = 25;
     y = d3.scale.linear().domain([0, 15]).range([ h,0]),
     y1 = d3.scale.linear().domain([0, 15]).range([ 0, h]),
@@ -168,8 +169,8 @@ function undoHighlight(selectedBars){
 function bolding(selectedBars){
 	for (var i=0; i<selectedBars.length; i++)
 	{
-		selectedBars[i].style("stroke-width", 3)
- 						.style("stroke", "red");
+		selectedBars[i].style("stroke-width", strokeWidth)
+ 						.style("stroke", "black");
 	}
 	stack.push("bolding");
  }
@@ -261,12 +262,19 @@ function referenceLine(selectedGroup){
 	
 	
 		var avgLine = vis.append("svg:line")
-							.attr("x1", 6)
+							.attr("x1", strokeWidth*2)
 							.attr("y1", h-avg)
 							.attr("x2", w)
 							.attr("y2", h-avg)
 							.style("stroke",colour)
-							.style("stroke-width", 5);
+							.style("stroke-width", strokeWidth);
+							
+						vis.append("svg:text")
+							.attr("class", "refLineText")
+							.attr("x",strokeWidth*2)
+							.attr("y", h-avg-strokeWidth)
+							.style("fill",colour)
+							.text("Average");
 							
 	var	min=hArr[0];
 	for(var i = 0; i<hArr.length; i++){
@@ -275,12 +283,19 @@ function referenceLine(selectedGroup){
 	} 
 							
 		var minLine = vis.append("svg:line")
-							.attr("x1", 6)
+							.attr("x1", strokeWidth*2)
 							.attr("y1", h-min)
 							.attr("x2", w)
 							.attr("y2", h-min)
 							.style("stroke", colour)
-							.style("stroke-width", 5);
+							.style("stroke-width", strokeWidth);
+							
+							vis.append("svg:text")
+							.attr("class", "refLineText")
+							.attr("x",strokeWidth*2)
+							.attr("y", h-min-strokeWidth)
+							.style("fill",colour)
+							.text("Minimum");
 							
 	
 	var max = hArr[0];
@@ -290,12 +305,19 @@ function referenceLine(selectedGroup){
 	}
 							
 		var maxLine = vis.append("svg:line")
-							.attr("x1", 6)
+							.attr("x1", strokeWidth*2)
 							.attr("y1", h-max)
 							.attr("x2", w)
 							.attr("y2", h-max)
 							.style("stroke", colour)
-							.style("stroke-width", 5); 
+							.style("stroke-width", strokeWidth);
+							 
+						vis.append("svg:text")
+							.attr("class", "refLineText")
+							.attr("x",strokeWidth*2)
+							.attr("y", h-max-strokeWidth)
+							.style("fill",colour)
+							.text("Maximum");
 
 	stack.push("referenceLine");
 }  
@@ -303,10 +325,51 @@ function referenceLine(selectedGroup){
 function undoRefLine(){
 	
 	d3.selectAll("line").remove();
+	$(".refLineText").remove();
 	stack.pop();
 }
 
-function lineComp(selectedBars){
+function referenceBlock(selectedGroup){
+	
+	var rect = $(selectedGroup).children();
+	
+	
+	var hArr = new Array;
+	var colour;
+	rect.each(function (i,d) { hArr[i] = $(this).attr("height")});
+	colour = $(selectedGroup).attr("fill");
+	var sum = 0;
+	
+	for(var i = 0; i<hArr.length; i++){
+			sum += parseFloat(hArr[i]);
+		}	
+	var avg = sum/hArr.length;
+	
+							
+	var	min=hArr[0];
+	for(var i = 0; i<hArr.length; i++){
+		if(hArr[i]<min)
+		min=hArr[i];
+	} 
+
+	
+	var max = hArr[0];
+	for(var i = 0; i<hArr.length; i++){
+		if(hArr[i]>max)
+		max=hArr[i];
+	}
+							
+		var refBlock = vis.append("svg:rect")
+							.attr("x", strokeWidth*2)
+							.attr("y", h-max)
+							.attr("width", w)
+							.attr("height", max-min)
+							.style("fill",colour)
+							.style("opacity", 0.2);
+
+	stack.push("referenceBlock");
+}  
+/**function lineComp(selectedBars){
 	
 	var xCor = new Array;
 	var yCor = new Array;
@@ -327,7 +390,7 @@ for (var i = 0; i < selectedBars.length; i++){
 							.style("stroke","black")
 							.style("stroke-width", 5);
 	stack.push("lineComp");			
-}
+}**/
 
 function showGroupValue(selectedGroup)
 {
@@ -355,7 +418,7 @@ function showGroupValue(selectedGroup)
  				.data(textData)
  				.enter().append("svg:text")
  				.attr("x", function(d){	return x0(d[1]) + 10 ;})
- 				.attr("y", function(d){	return d[2] -10 ; } )
+ 				.attr("y", function(d){	return d[2] -25 ; } )
  				.attr("dx", 3)
  				.attr("dy", ".35em")
  				.attr("font-family", "sans-serif")
@@ -380,7 +443,7 @@ function showIndiValue(selectedBars)
  				.data(selectedBars)
  				.enter().append("svg:text")
  				.attr("x", function(d){	return d[1]  - 13;})
- 				.attr("y", function(d){	return d[2] -10 ; } )
+ 				.attr("y", function(d){	return d[2] -25 ; } )
  				.attr("dx", 3)
  				.attr("dy", ".35em")
  				.attr("font-family", "sans-serif")
@@ -482,7 +545,7 @@ function undoArrowLine(){
 
 }
 
-function compBars(callback){
+function compBars(){
 	
 	
 var gComp = vis.selectAll("g")
@@ -509,7 +572,6 @@ var gComp = vis.selectAll("g")
     .attr("class", function(d, i) { return "compBars"; });	
     
     stack.push("compBars");
-    callback();
 
 }
 
@@ -533,34 +595,6 @@ function trigger(){
 //	blink(selectedBars);
 
 
-//Daisy Jun25 Print Value
-//	selectedGroup = "#Average";
-//	selectedGroup = "#Andrea";
-//	selectedGroup = "#Diana";
-//	showGroupValue(selectedGroup);
-//	alert(stack);
-//Jul 13 UndoGroupValue
-//	undogGroupValue();
-//	alert(stack);
-
-//Daisy Jun28 Print individual value
-//	selectedJBars = getSelectedJBars([["Andrea", "2"],["Average", "0"], ["Diana", "3"], ["Diana", "0"], ["Andrea", "0"]]);
-//	selectedJBars = getSelectedJBars([["Andrea", "1"],["Diana", "2"], ["Diana", "3"]]);
-//	showIndiValue(selectedJBars);
-//	alert(stack);
-//Jul11 UndoIndiValue 
-//	undoIndiValue();
-//	alert(stack);
-
-//Daisy Jun18 Draw Reference Line see if d3 works 
-//	selectedGroup = "#Average";
-//	selectedGroup = "#Andrea";
-//	selectedGroup = "#Diana";
-//	referenceLine(selectedGroup);
-//	alert(stack);
-//	undoRefLine();
-//	alert(stack);
-	
 //Daisy Jun21 Bolding
 //	selectedBars = getSelectedBars([["Andrea", "2"],["Diana", "3"]]);
 //	bolding(selectedBars);
@@ -570,7 +604,6 @@ function trigger(){
 	
 //Daisy Jun27 Arrow 
 //	selectedJBars = getSelectedJBars([["Andrea", "2"],["Diana", "3"]]);
-	selectedJBars = getSelectedJBars([["Andrea", "1"],["Diana", "2"], ["Diana", "3"], ["Andrea", "0"]]);
 //	drawArrow(selectedJBars);
 //	alert(stack);
 //	undoArrow();
@@ -586,7 +619,6 @@ function trigger(){
 	
 	
 //	selectedJBars = getSelectedJBars([["Andrea", "1"],["Diana", "6"]]);
-	selectedBars = getSelectedBars([["Andrea", "1"],["Diana", "6"]]);
 
 //	lineComp(selectedJBars);
 //	showIndiValue(selectedJBars);
@@ -595,35 +627,26 @@ function trigger(){
 //	undoArrow()
 //	alert(stack);
 	
-
- 	setTimeout("lineComp(selectedJBars)", 1000);
-  	clearTimeout(timeOutHandle);
-    setTimeout("showIndiValue(selectedJBars)", 2000);
-	clearInterval(timeOutHandle);
-	setTimeout("drawArrow(selectedJBars)", 3000);
-	clearInterval(timeOutHandle);
-	setTimeout("undoIndiValue()", 4000);
-	clearInterval(timeOutHandle);
-	setTimeout("undoArrow()", 5000);
-	/**
-	setInterval("drawArrowLine(selectedJBars)", 6000);
-	setInterval("undoArrowLine()", 7000);**/
-//	setInterval("deEmphRest(selectedBars)", 100);
-//	setInterval("undoDeEmph()", 200);
-//	highlight(selectedBars);
-//	bolding(selectedBars);
-
-/**window.onload = function () {
-	var int=self.setInterval(function(){compBars()},1000);
 	
-	window.clearInterval(int);
+	selectedJBars = getSelectedJBars([["Andrea", "1"],["Diana", "2"], ["Diana", "3"], ["Andrea", "0"]]);
+	selectedBars = getSelectedBars([["Andrea", "1"],["Diana", "6"]]);
+	selectedGroup = "#Diana";
+	referenceBlock(selectedGroup);
+	//referenceLine(selectedGroup);
+	//alert(stack);
+	//undoRefLine();
+	//alert(stack);
 
-	var int2=self.setInterval(function(){undoCompBars()},2000);
-	window.clearInterval(int2);
-	}**/
-//	deEmphRest(selectedBars);
+ 	/**setTimeout("bolding(selectedBars)", 1500);
+ 	setTimeout("highlight(selectedBars)", 2500);
+ 	setTimeout("deEmphRest(selectedBars)", 4500);
 
-// 	compBars(undoCompBars);
+    setTimeout("showIndiValue(selectedJBars)", 5500);
+	setTimeout("drawArrow(selectedJBars)", 6500);
+	setTimeout("compBars()", 7500);**/
+	//  	clearTimeout(timeOutHandle);
+
+
 }
 
 //BEN: Stop Blinking
