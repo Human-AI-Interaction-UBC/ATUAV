@@ -1,7 +1,6 @@
 var data = 
-[ [9.2, 12.1, 7.7, 9.5, 11.9, 11.5, 10, 11.3], 
-[11.1, 11, 14.45, 11.3, 10.3, 9.8, 9.1, 12.8],
-[8.6, 13.5, 13.5, 12, 14.3, 12.7, 11.9, 11.9] ];
+[ [8.9,9.4,11.64,10.6,10.8,9.1, 10,7.6], 
+[10.6, 14.2, 9.1, 11.8, 8.6, 12.1, 11.8, 14.8]];
 var numTicks = 3;
 var n = 8, // number of samples
     m = data.length; // number of series
@@ -10,7 +9,7 @@ var n = 8, // number of samples
 var timeOutHandle;
 
 //BEN: Added the series name
-var seriesName = ["Average", "Andrea", "Diana"];
+var seriesName = ["Average", "Andrea", "Diana"]
 
 var subject = ["Physics", "Marine Biology", "Calculus", "Geometry", "Painting", "Phtography", 
 					"English Literature", "Anthropology"];				
@@ -18,8 +17,7 @@ var stack = new Array;
 var paper ;
 var linePaper;
 var barWidth;
-			
-				
+					
 var w = 625,
     h = 500,
     strokeWidth=5,
@@ -246,26 +244,6 @@ function undoDeEmph(selectedBars){
 		});
 	stack.pop();
 }
-
-function drawLine(value, colour){
-	
-	vis.append("svg:line")
-		.attr("x1", strokeWidth*2)
-		.attr("y1", h-value)
-		.attr("x2", w)
-		.attr("y2", h-value)
-		.style("stroke",colour)
-		.style("stroke-width", strokeWidth);
-							
-	vis.append("svg:text")
-		.attr("class", "refLineText")
-		.attr("x",strokeWidth*2)
-		.attr("y", h-value-strokeWidth)
-		.style("fill",colour)
-		.text("Score: "+ Math.floor(score(value)));
-	
-}
-
 function referenceLine(selectedGroup){
 	
 	var rect = $(selectedGroup).children();
@@ -281,22 +259,65 @@ function referenceLine(selectedGroup){
 			sum += parseFloat(hArr[i]);
 		}	
 	var avg = sum/hArr.length;
-								
+	
+	
+		var avgLine = vis.append("svg:line")
+							.attr("x1", strokeWidth*2)
+							.attr("y1", h-avg)
+							.attr("x2", w)
+							.attr("y2", h-avg)
+							.style("stroke",colour)
+							.style("stroke-width", strokeWidth);
+							
+						vis.append("svg:text")
+							.attr("class", "refLineText")
+							.attr("x",strokeWidth*2)
+							.attr("y", h-avg-strokeWidth)
+							.style("fill",colour)
+							.text("Average: "+ Math.floor(score(avg)));
+							
 	var	min=hArr[0];
 	for(var i = 0; i<hArr.length; i++){
 		if(hArr[i]<min)
 		min=hArr[i];
 	} 
+							
+		var minLine = vis.append("svg:line")
+							.attr("x1", strokeWidth*2)
+							.attr("y1", h-min)
+							.attr("x2", w)
+							.attr("y2", h-min)
+							.style("stroke", colour)
+							.style("stroke-width", strokeWidth);
+							
+							vis.append("svg:text")
+							.attr("class", "refLineText")
+							.attr("x",strokeWidth*2)
+							.attr("y", h-min-strokeWidth)
+							.style("fill",colour)
+							.text("Minimum: " + Math.floor(score(min)));
+							
 	
 	var max = hArr[0];
 	for(var i = 0; i<hArr.length; i++){
 		if(hArr[i]>max)
 		max=hArr[i];
 	}
-	
-	drawLine(avg, colour);
-	drawLine(min, colour);		
-	drawLine(max, colour);					
+							
+		var maxLine = vis.append("svg:line")
+							.attr("x1", strokeWidth*2)
+							.attr("y1", h-max)
+							.attr("x2", w)
+							.attr("y2", h-max)
+							.style("stroke", colour)
+							.style("stroke-width", strokeWidth);
+							 
+						vis.append("svg:text")
+							.attr("class", "refLineText")
+							.attr("x",strokeWidth*2)
+							.attr("y", h-max-strokeWidth)
+							.style("fill",colour)
+							.text("Maximum: "+Math.floor(score(max)));
 
 	stack.push("referenceLine");
 }  
@@ -584,7 +605,7 @@ function trigger(){
 	alert(stack);**/
 	
 
-/** 	setTimeout("bolding(selectedBars)", 1500);
+ 	setTimeout("bolding(selectedBars)", 1500);
  	setTimeout("highlight(selectedBars)", 2500);
  	setTimeout("deEmphRest(selectedBars)", 4500);
     setTimeout("showIndiValue(selectedJBars)", 5500);
@@ -598,10 +619,10 @@ function trigger(){
 	setTimeout("undoIndiValue()",12500);
 	setTimeout("undoDeEmph(selectedBars)", 13500);
 	setTimeout("undoHighlight(selectedBars)", 14500);
-	setTimeout("undoBolding(selectedBars)",15500);**/
-	setTimeout("referenceLine(selectedGroup)", 500);
-	//setTimeout("undoRefLine()", 17500);
-	//setTimeout("referenceBlock(selectedGroup)", 18500);
+	setTimeout("undoBolding(selectedBars)",15500);
+	setTimeout("referenceLine(selectedGroup)", 16500);
+	setTimeout("undoRefLine()", 17500);
+	setTimeout("referenceBlock(selectedGroup)", 18500);
 	//  	clearTimeout(timeOutHandle);
 
 
