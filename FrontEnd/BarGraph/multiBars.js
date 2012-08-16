@@ -22,6 +22,8 @@ var barWidth;
 				
 var w = 625,
     h = 500,
+    bodyW = 875,
+    bodyH = 700,
     strokeWidth=5,
     chartPadding = 25;
     y = d3.scale.linear().domain([0, 15]).range([ h,0]),
@@ -30,9 +32,7 @@ var w = 625,
     x1 = d3.scale.ordinal().domain(d3.range(m)).rangeBands([0, x0.rangeBand()]),
     score = d3.scale.linear().domain([0,500]).range([0, 100]);
     score2 = d3.scale.linear().domain([0,15]).range([0, 100]);
-    z = d3.scale.category20c();
- //more intense colour
- // z = d3.scale.category10();   
+    z = d3.scale.category20c();   
 
 var xAxis = d3.svg.axis()
 					.scale(x0)
@@ -48,8 +48,8 @@ var yAxis = d3.svg.axis()
 				
 var vis = d3.select("body")
   .append("svg:svg")
-    .attr("width", w + 20)
-    .attr("height", h + 40)
+    .attr("width", bodyW)
+    .attr("height", bodyH)
   .append("svg:g")
     .attr("transform", "translate(10,10)");
 
@@ -90,7 +90,24 @@ vis.append("g")
    	.attr("transform", "translate( 4," + h + ")")
    	.attr("font-size", "11px")
    	.call(xAxis);
-           
+        
+        
+var legend = vis.selectAll("g.legend")
+       .data(seriesName)
+       .enter().append("svg:g")
+       .attr("class", "legend")
+       .attr("transform", function(d, i) { return "translate(" + h + "," + (i * 20 ) + ")"; });
+       
+       legend.append("svg:circle")
+       .attr("class", String)
+       .attr("r", 3)
+       .attr("fill",function(d, i) { return z(i); } );
+       
+       legend.append("svg:text")
+       .attr("x", 12)
+       .attr("dy", ".31em")
+       .text(function(d) { return d; });
+                  
 //BEN: Get multiple bars	
 function getSelectedBars(seriesValuesPairs){
 	
@@ -348,28 +365,6 @@ function referenceBlock(selectedGroup){
 
 	stack.push("referenceBlock");
 }  
-/**function lineComp(selectedBars){
-	
-	var xCor = new Array;
-	var yCor = new Array;
-	
-for (var i = 0; i < selectedBars.length; i++){
-	
-	xCor[i] = selectedBars[i][1];
-	yCor[i] = selectedBars[i][2];
-	
-}
-
-		var line = vis.append("svg:line")
-							.attr("x1", xCor[0])
-							.attr("y1", yCor[0])
-							.attr("x2", xCor[1])
-							.attr("y2", yCor[1])
-							.attr("transform", "translate(-10,-15)")
-							.style("stroke","black")
-							.style("stroke-width", 5);
-	stack.push("lineComp");			
-}**/
 
 function showGroupValue(selectedGroup)
 {
@@ -562,7 +557,6 @@ function undoCompBars(){
 //function d3Legend() {
   var margin = {top: 5, right: 0, bottom: 5, left: 10},
       height = 20,
-      color = d3.scale.category10().range(),
       dispatch = d3.dispatch('legendClick', 'legendMouseover', 'legendMouseout');
 
 
@@ -596,8 +590,8 @@ function undoCompBars(){
             dispatch.legendMouseout(d, i);
           });
       seriesEnter.append('circle')
-          .style('fill', function(d, i){ return d.color || color[i % 10] })
-          .style('stroke', function(d, i){ return d.color || color[i % 10] })
+          .style('fill', function(d, i){ return d.z || z[i % 10] })
+          .style('stroke', function(d, i){ return d.z || z[i % 10] })
           .attr('r', 5);
       seriesEnter.append('text')
           .text(function(d) { return d.label })
@@ -661,9 +655,9 @@ function undoCompBars(){
     return chart;
   };
 
-  chart.color = function(_) {
-    if (!arguments.length) return color;
-    color = _;
+  chart.z = function(_) {
+    if (!arguments.length) return z;
+    z = _;
     return chart;
   };
 
