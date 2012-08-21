@@ -167,8 +167,6 @@ function contain(obj, array){
 	return false;
 }
 
-
-//BEN: highlight selection
 function highlight(selectedBars){
 	for (var i=0; i<selectedBars.length; i++)
 	{
@@ -554,115 +552,22 @@ function undoCompBars(){
 	stack.pop();
 }
 
-//function d3Legend() {
-  var margin = {top: 5, right: 0, bottom: 5, left: 10},
-      height = 20,
-      dispatch = d3.dispatch('legendClick', 'legendMouseover', 'legendMouseout');
+function texture(selectedBars){
+	for (var i=0; i<selectedBars.length; i++)
+	{
+		selectedBars[i].attr("background", "pattern.jpeg");
+	}
+	stack.push("texture");
+ }
+ 
+function undoTexture(selectedBars){
+	for (var i=0; i<selectedBars.length; i++)
+	{
+		selectedBars[i].style("fill", null);
+	}
+	stack.pop();
+}
 
-
-  function chart(selection) {
-    selection.each(function(data) {
-      /**
-      *    Legend curently is setup to automaticaly expand vertically based on a max width.
-      *    Should implement legend where EITHER a maxWidth or a maxHeight is defined, then
-      *    the other dimension will automatically expand to fit, and anything that exceeds
-      *    that will automatically be clipped.
-      **/
-
-      var wrap = d3.select(this).selectAll('g.legend').data([data]);
-      var gEnter = wrap.enter().append('g').attr('class', 'legend').append('g');
-
-
-      var g = wrap.select('g')
-          .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-
-
-      var series = g.selectAll('.series')
-          .data(function(d) { return d });
-      var seriesEnter = series.enter().append('g').attr('class', 'series')
-          .on('click', function(d, i) {
-            dispatch.legendClick(d, i);
-          })
-          .on('mouseover', function(d, i) {
-            dispatch.legendMouseover(d, i);
-          })
-          .on('mouseout', function(d, i) {
-            dispatch.legendMouseout(d, i);
-          });
-      seriesEnter.append('circle')
-          .style('fill', function(d, i){ return d.z || z[i % 10] })
-          .style('stroke', function(d, i){ return d.z || z[i % 10] })
-          .attr('r', 5);
-      seriesEnter.append('text')
-          .text(function(d) { return d.label })
-          .attr('text-anchor', 'start')
-          .attr('dy', '.32em')
-          .attr('dx', '8');
-      series.classed('disabled', function(d) { return d.disabled });
-      series.exit().remove();
-
-
-      var ypos = 5,
-          newxpos = 5,
-          maxwidth = 0,
-          xpos;
-      series
-          .attr('transform', function(d, i) {
-             var length = d3.select(this).select('text').node().getComputedTextLength() + 28;
-             xpos = newxpos;
-
-             //TODO: 1) Make sure dot + text of every series fits horizontally, or clip text to fix
-             //      2) Consider making columns in line so dots line up
-             //         --all labels same width? or just all in the same column?
-             //         --optional, or forced always?
-             if (w < margin.left + margin.right + xpos + length) {
-               newxpos = xpos = 5;
-               ypos += 20;
-             }
-
-             newxpos += length;
-             if (newxpos > maxwidth) maxwidth = newxpos;
-
-             return 'translate(' + xpos + ',' + ypos + ')';
-          });
-
-      //position legend as far right as possible within the total width
-      g.attr('transform', 'translate(' + (w - margin.right - maxwidth) + ',' + margin.top + ')');
-
-      height = margin.top + margin.bottom + ypos + 15;
-    });
-
-    return chart;
-  }
-
-  chart.dispatch = dispatch;
-
-  chart.margin = function(_) {
-    if (!arguments.length) return margin;
-    margin = _;
-    return chart;
-  };
-
-  chart.width = function(_) {
-    if (!arguments.length) return width;
-    width = _;
-    return chart;
-  };
-
-  chart.height = function(_) {
-    if (!arguments.length) return height;
-    height = _;
-    return chart;
-  };
-
-  chart.z = function(_) {
-    if (!arguments.length) return z;
-    z = _;
-    return chart;
-  };
-
-//  return chart;
-//}
 
 function trigger(){
 	
@@ -683,13 +588,14 @@ function trigger(){
 	selectedJBars = getSelectedJBars([["Andrea", "1"],["Diana", "2"], ["Diana", "3"], ["Andrea", "0"]]);
 	selectedBars = getSelectedBars([["Andrea", "1"],["Diana", "6"]]);
 	selectedGroup = "#Diana";
+	texture(selectedBars);
 /**	drawArrowLine(selectedJBars);
 	alert(stack);
 	undoArrowLine();
 	alert(stack);**/
 	
 
-/** 	setTimeout("bolding(selectedBars)", 1500);
+/**	setTimeout("bolding(selectedBars)", 1500);
  	setTimeout("highlight(selectedBars)", 2500);
  	setTimeout("deEmphRest(selectedBars)", 4500);
     setTimeout("showIndiValue(selectedJBars)", 5500);
@@ -703,11 +609,11 @@ function trigger(){
 	setTimeout("undoIndiValue()",12500);
 	setTimeout("undoDeEmph(selectedBars)", 13500);
 	setTimeout("undoHighlight(selectedBars)", 14500);
-	setTimeout("undoBolding(selectedBars)",15500);**/
+	setTimeout("undoBolding(selectedBars)",15500);
 //	setTimeout("referenceLine(selectedGroup)", 500);
 	//setTimeout("undoRefLine()", 17500);
 	setTimeout("referenceBlock(selectedGroup)", 500);
-	//  	clearTimeout(timeOutHandle);
+	//  	clearTimeout(timeOutHandle);**/
 
 
 }
