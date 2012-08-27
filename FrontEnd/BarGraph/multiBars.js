@@ -323,7 +323,18 @@ function undoRefLine(){
 	stack.pop();
 }
 
-function referenceBlock(selectedGroup){
+function drawBlock(min, max, colour){
+	
+	var refBlock = vis.append("svg:rect")
+							.attr("x", strokeWidth*2)
+							.attr("y", h-max)
+							.attr("width", w)
+							.attr("height", max-min)
+							.style("fill",colour)
+							.style("opacity", 0.2);
+}
+
+function referenceGroupBlock(selectedGroup){
 	
 	var rect = $(selectedGroup).children();
 	
@@ -352,17 +363,32 @@ function referenceBlock(selectedGroup){
 		if(hArr[i]>max)
 		max=hArr[i];
 	}
-							
-		var refBlock = vis.append("svg:rect")
-							.attr("x", strokeWidth*2)
-							.attr("y", h-max)
-							.attr("width", w)
-							.attr("height", max-min)
-							.style("fill",colour)
-							.style("opacity", 0.2);
+	drawBlock(min, max, colour);
 
-	stack.push("referenceBlock");
+	stack.push("referenceGroupBlock");
 }  
+
+function referenceIndiBlock(selectedBars){
+
+	var xCor = new Array;
+	var yCor = new Array;
+	var corLin = new Array;
+	var colour = $(selectedGroup).attr("fill");
+
+	
+for (var i = 0; i < selectedBars.length; i++){
+	
+	yCor[i] = selectedBars[i][2];
+	 
+}
+var	minVal = d3.min(yCor);
+var maxVal = d3.max(yCor);
+
+//TODO what colour should it be when comparing two different series
+drawBlock(minVal, maxVal, colour);
+
+stack.push("referenceIndiBlock");
+}
 
 function showGroupValue(selectedGroup)
 {
@@ -568,6 +594,13 @@ function undoTexture(selectedBars){
 	stack.pop();
 }
 
+function hightLightLabel(label){
+	$("text:contains('"+label+"')").css("background-color", "yellow");
+}
+
+function undoHighLightLabe(label){
+	//TODO IMPLEMENT
+}
 
 function trigger(){
 	
@@ -588,7 +621,11 @@ function trigger(){
 	selectedJBars = getSelectedJBars([["Andrea", "1"],["Diana", "2"], ["Diana", "3"], ["Andrea", "0"]]);
 	selectedBars = getSelectedBars([["Andrea", "1"],["Diana", "6"]]);
 	selectedGroup = "#Diana";
-	texture(selectedBars);
+	label="Painting";
+//	texture(selectedBars);
+//	showGroupValue(selectedGroup);
+	showIndiValue(selectedJBars);
+	//compBars();
 /**	drawArrowLine(selectedJBars);
 	alert(stack);
 	undoArrowLine();
@@ -614,7 +651,13 @@ function trigger(){
 	//setTimeout("undoRefLine()", 17500);
 	setTimeout("referenceBlock(selectedGroup)", 500);
 	//  	clearTimeout(timeOutHandle);**/
-
+//selectedJBars = getSelectedJBars([["Andrea", "0"],["Diana", "0"]]);
+//drawArrowLine(selectedJBars);
+//selectedJBars = getSelectedJBars([["Andrea", "1"],["Diana", "1"]]);
+//drawArrowLine(selectedJBars);
+//referenceGroupBlock(selectedGroup);
+//referenceIndiBlock(selectedJBars);
+hightLightLabel(label);
 
 }
 
