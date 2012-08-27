@@ -13,7 +13,8 @@ var timeOutHandle;
 var seriesName = ["Average", "Andrea", "Diana"];
 
 var subject = ["Physics", "Marine Biology", "Calculus", "Geometry", "Painting", "Phtography", 
-					"English Literature", "Anthropology"];				
+					"English Literature", "Anthropology"];
+var grade = ["0","50","100"];		
 var stack = new Array;
 var paper ;
 var linePaper;
@@ -44,14 +45,15 @@ var yAxis = d3.svg.axis()
 				.scale(y)
 				.orient("left")
 				.ticks(numTicks)
-				.tickFormat(function(numTicks){ return score(numTicks); });
+				//.tickFormat(function(numbTicks){ return grade[numTicks];});
+				.tickFormat(function(numTicks){ return Math.floor(score2(numTicks)); });
 				
 var vis = d3.select("body")
   .append("svg:svg")
     .attr("width", bodyW)
     .attr("height", bodyH)
   .append("svg:g")
-    .attr("transform", "translate(10,10)");
+    .attr("transform", "translate(20,20)");
 
 
 
@@ -595,11 +597,14 @@ function undoTexture(selectedBars){
 }
 
 function hightLightLabel(label){
+	//TODO Attribute is set, but change isn't shown on page?!
 	$("text:contains('"+label+"')").css("background-color", "yellow");
 }
 
 function undoHighLightLabe(label){
 	//TODO IMPLEMENT
+	$("text:contains('"+label+"')").css("background-color", "white");
+
 }
 
 function trigger(){
