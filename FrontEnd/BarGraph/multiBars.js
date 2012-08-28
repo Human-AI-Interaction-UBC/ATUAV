@@ -98,10 +98,11 @@ var legend = vis.selectAll("g.legend")
        .data(seriesName)
        .enter().append("svg:g")
        .attr("class", "legend")
+       .attr("id", String)
        .attr("transform", function(d, i) { return "translate(" + h + "," + (i * 20 ) + ")"; });
        
        legend.append("svg:circle")
-       .attr("class", String)
+       //.attr("class", String)
        .attr("r", 3)
        .attr("fill",function(d, i) { return z(i); } );
        
@@ -431,7 +432,7 @@ function showGroupValue(selectedGroup)
  		stack.push("showGroupValue");		
 }
 
-function undogGroupValue(){
+function undoGroupValue(){
 	d3.select("g").selectAll(".groupTextID").remove();
 	stack.pop();
 }
