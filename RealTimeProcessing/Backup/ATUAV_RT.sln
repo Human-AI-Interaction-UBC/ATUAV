@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ATUAV_RT", "ATUAV_RT\ATUAV_RT.csproj", "{92A0ABA2-4F8D-4B2F-AF91-BC847CFA5E22}"
 EndProject
 Global

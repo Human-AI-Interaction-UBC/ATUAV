@@ -16,5 +16,4 @@ C:\Documents and Settings\Admin\My Documents\Visual Studio 2008\Projects\ATUAV_R
 C:\Documents and Settings\Admin\My Documents\Visual Studio 2008\Projects\ATUAV_RT\RealTimeProcessing\ATUAV_RT\obj\Debug\ATUAV_RT.csproj.ResolveComReference.cache
 C:\Documents and Settings\Admin\My Documents\Visual Studio 2008\Projects\ATUAV_RT\RealTimeProcessing\ATUAV_RT\obj\Debug\atuav-rt.exe
 C:\Documents and Settings\Admin\My Documents\Visual Studio 2008\Projects\ATUAV_RT\RealTimeProcessing\ATUAV_RT\obj\Debug\atuav-rt.pdb
-C:\Documents and Settings\Admin\My Documents\Visual Studio 2008\Projects\ATUAV_RT\RealTimeProcessing\ATUAV_RT\bin\Debug\Emdat.dll
-C:\Documents and Settings\Admin\My Documents\Visual Studio 2008\Projects\ATUAV_RT\RealTimeProcessing\ATUAV_RT\bin\Debug\Emdat.pdb
+C:\Documents and Settings\Admin\My Documents\Visual Studio 2008\Projects\ATUAV_RT\RealTimeProcessing\ATUAV_RT\bin\Debug\atuav-rt.exe.config

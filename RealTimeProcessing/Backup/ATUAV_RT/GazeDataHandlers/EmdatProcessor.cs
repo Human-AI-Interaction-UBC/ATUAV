@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.IO;
+using Emdat;
 using FixDet;
 using Tobii.Eyetracking.Sdk;
 using Tobii.Eyetracking.Sdk.Time;
-using IronPython.Hosting;
 
 namespace ATUAV_RT
 {
     class EmdatProcessor : GazeDataSynchronizedHandler, WindowingHandler
     {
+        private EmdatModule emdat = new EmdatModule();
         private bool collectingData;
         private string aoiFilePath;
         private string aoiDefinitions;
-        private int segmentId = 0;
         private LinkedList<SFDFixation> fixations = new LinkedList<SFDFixation>();
         private LinkedList<GazeDataItem> gazePoints = new LinkedList<GazeDataItem>();
 
@@ -52,53 +51,6 @@ namespace ATUAV_RT
             catch (Exception e)
             {
                 Console.WriteLine("AOI definitions could not be read: " + e.Message);
-            }
-        }
-
-        /// <summary>
-        /// Auto-incrementing segment counter
-        /// </summary>
-        private String SegmentId
-        {
-            get
-            {
-                return segmentId++.ToString();
-            }
-        }
-
-        /// <summary>
-        /// Converts gaze points into formatted string
-        /// </summary>
-        private String RawGazePoints
-        {
-            get
-            {
-                StringBuilder sb = new StringBuilder();
-                foreach (GazeDataItem gazePoint in gazePoints)
-                {
-                    // TODO verify format
-                    sb.AppendLine(gazePoint.LeftEyePosition3D + "\t" + gazePoint.LeftEyePosition3DRelative + "\t" + gazePoint.LeftGazePoint2D + "\t" + gazePoint.LeftGazePoint3D + "\t" + gazePoint.LeftPupilDiameter + "\t" + gazePoint.LeftValidity + "\t" + gazePoint.RightEyePosition3D + "\t" + gazePoint.RightEyePosition3DRelative + "\t" + gazePoint.RightGazePoint2D + "\t" + gazePoint.RightGazePoint3D + "\t" + gazePoint.RightPupilDiameter + "\t" + gazePoint.RightValidity + "\t" + gazePoint.TimeStamp);
-                }
-
-                return sb.ToString();
-            }
-        }
-
-        /// <summary>
-        /// Converts fixations into formatted string
-        /// </summary>
-        private String RawFixations
-        {
-            get
-            {
-                StringBuilder sb = new StringBuilder();
-                foreach (SFDFixation fixation in fixations)
-                {
-                    // TODO verify format
-                    sb.AppendLine(fixation.Duration + "\t" + fixation.Time + "\t" + fixation.X + "\t" + fixation.Y);
-                }
-
-                return sb.ToString();
             }
         }
 
@@ -160,14 +112,9 @@ namespace ATUAV_RT
         {
             lock (this)
             {
-                var python = Python.CreateRuntime();
-                dynamic emdat = python.UseFile("../../../../emdat.py");
-                dynamic features = emdat.generate_features(SegmentId, RawGazePoints, RawFixations, aoiDefinitions);
-                // TODO what to do after features have been generated? python cleanup?
-                // test
-                Console.WriteLine(features);
-                // endtest
-
+                // TODO convert gaze points and fixations to string form
+                string features = emdat.GenerateFeatures("segment_id", "raw_gaze_points", "raw_fixations", aoiDefinitions);
+                // TODO what to do after features have been generated?
                 if (!keepData)
                 {
                     fixations.Clear();
