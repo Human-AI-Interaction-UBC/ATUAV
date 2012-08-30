@@ -6,6 +6,7 @@ using FixDet;
 using Tobii.Eyetracking.Sdk;
 using Tobii.Eyetracking.Sdk.Time;
 using IronPython.Hosting;
+using Microsoft.Scripting.Hosting;
 
 namespace ATUAV_RT
 {
@@ -17,10 +18,24 @@ namespace ATUAV_RT
         private int segmentId = 0;
         private LinkedList<SFDFixation> fixations = new LinkedList<SFDFixation>();
         private LinkedList<GazeDataItem> gazePoints = new LinkedList<GazeDataItem>();
+        private ScriptEngine engine = Python.CreateEngine();
 
         public EmdatProcessor(SyncManager syncManager)
             : base(syncManager)
         {
+            // add script to sys.path
+            string dir = Path.GetDirectoryName("C:\\Documents and Settings\\Admin\\My Documents\\Visual Studio 2008\\Projects\\ATUAV_RT\\RealTimeProcessing\\emdat.py");
+            ICollection<string> paths = engine.GetSearchPaths();
+
+            if (!String.IsNullOrEmpty(dir))
+            {
+                paths.Add(dir);
+            }
+            else
+            {
+                paths.Add(Environment.CurrentDirectory);
+            }
+            engine.SetSearchPaths(paths);
         }
 
         /// <summary>
@@ -160,13 +175,11 @@ namespace ATUAV_RT
         {
             lock (this)
             {
-                var python = Python.CreateRuntime();
-                dynamic emdat = python.UseFile("../../../../emdat.py");
+                //dynamic data_structures = engine.Runtime.UseFile("../../../../EMDAT/data_structures.py");
+                dynamic emdat = engine.Runtime.UseFile("../../../../emdat.py");
                 dynamic features = emdat.generate_features(SegmentId, RawGazePoints, RawFixations, aoiDefinitions);
                 // TODO what to do after features have been generated? python cleanup?
-                // test
                 Console.WriteLine(features);
-                // endtest
 
                 if (!keepData)
                 {
