@@ -16,9 +16,13 @@ namespace ATUAV_RT
         private string aoiFilePath;
         private string aoiDefinitions;
         private int segmentId = 0;
+        private int gazePointCounter = 0;
+        private int fixationCounter = 0;
         private LinkedList<SFDFixation> fixations = new LinkedList<SFDFixation>();
         private LinkedList<GazeDataItem> gazePoints = new LinkedList<GazeDataItem>();
         private ScriptEngine engine = Python.CreateEngine();
+
+        public event EventHandler<String> FeaturesGenerated;
 
         public EmdatProcessor(SyncManager syncManager)
             : base(syncManager)
@@ -89,10 +93,11 @@ namespace ATUAV_RT
             get
             {
                 StringBuilder sb = new StringBuilder();
-                foreach (GazeDataItem gazePoint in gazePoints)
+                foreach (GazeDataItem gp in gazePoints)
                 {
                     // TODO verify format
-                    sb.AppendLine(gazePoint.LeftEyePosition3D + "\t" + gazePoint.LeftEyePosition3DRelative + "\t" + gazePoint.LeftGazePoint2D + "\t" + gazePoint.LeftGazePoint3D + "\t" + gazePoint.LeftPupilDiameter + "\t" + gazePoint.LeftValidity + "\t" + gazePoint.RightEyePosition3D + "\t" + gazePoint.RightEyePosition3DRelative + "\t" + gazePoint.RightGazePoint2D + "\t" + gazePoint.RightGazePoint3D + "\t" + gazePoint.RightPupilDiameter + "\t" + gazePoint.RightValidity + "\t" + gazePoint.TimeStamp);
+                    // [self.timestamp, self.datetimestamp, self.datetimestampstartoffset, self.number, self.gazepointxleft, self.gazepointyleft, self.camxleft, self.camyleft, self.distanceleft, self.pupilleft, self.validityleft, self.gazepointxright, self.gazepointyright, self.camxright, self.camyright, self.distanceright, self.pupilright, self.validityright, self.fixationindex, self.gazepointx, self.gazepointy,                                                                                                                                                                    self.event, self.eventkey, self.data1, self.data2, self.descriptor, self.stimuliname, self.stimuliid, self.mediawidth, self.mediaheight, self.mediaposx, self.mediaposy, self.mappedfixationpointx, self.mappedfixationpointy, self.fixationduration, self.aoiids, self.aoinames, self.webgroupimage, self.mappedgazedatapointx, self.mappedgazedatapointy, self.microsecondtimestamp, self.absolutemicrosecondtimestamp,_]
+                    sb.AppendLine(/*timestamp*/ "\t" + gp.TimeStamp + "\t" /*datetimestampstartoffset*/ + "\t" + (gazePointCounter++) + "\t" + gp.LeftGazePoint2D.X + "\t" + gp.LeftGazePoint2D.Y + "\t" /*camxleft*/ + "\t" /*camyleft*/ + "\t" /*distanceleft*/ + "\t" + gp.LeftPupilDiameter + "\t" + gp.LeftValidity + "\t" + gp.RightGazePoint2D.X + "\t" + gp.RightGazePoint2D.Y + "\t" /*camxright*/ + "\t" /*camyright*/ + "\t" /*distanceright*/ + "\t" + gp.RightPupilDiameter + "\t" + gp.RightValidity + "\t" /*fixationindex*/ + "\t" + gp.RightGazePoint2D.X + "\t" + gp.RightGazePoint2D.Y + "\t" /*event*/ + "\t" /*eventkey*/ + "\t" /*data1*/ + "\t" /*data2*/ + "\t" /*descriptor*/ + "\t" /*stimuliname*/ + "\t" /*stimuliid*/ + "\t" /*mediawidth*/ + "\t" /*mediaheight*/ + "\t" /*mediaposx*/ + "\t" /*mediaposy*/ + "\t" /*mappedfixationpointx*/ + "\t" /*mappedfixationpointy*/ + "\t" /*fixationduration*/ + "\t" /*aoiids*/ + "\t" /*aoinames*/ + "\t" /*webgroupimage*/ + "\t" /*mappedgazedatapointx*/ + "\t" /*mappedgazedatapointy*/ + "\t" /*microsecondtimestamp*/ + "\t" /*absolutemicrosecondtimestamp*/ + "\t");
                 }
 
                 return sb.ToString();
@@ -110,7 +115,8 @@ namespace ATUAV_RT
                 foreach (SFDFixation fixation in fixations)
                 {
                     // TODO verify format
-                    sb.AppendLine(fixation.Duration + "\t" + fixation.Time + "\t" + fixation.X + "\t" + fixation.Y);
+                    // [self.fixationindex, self.timestamp, self.fixationduration, self.mappedfixationpointx, self.mappedfixationpointy,_]
+                    sb.AppendLine((fixationCounter++) + "\t" + fixation.Time + "\t" + fixation.Duration + "\t" + fixation.X + "\t" + fixation.Y + "\t");
                 }
 
                 return sb.ToString();
@@ -175,11 +181,17 @@ namespace ATUAV_RT
         {
             lock (this)
             {
-                //dynamic data_structures = engine.Runtime.UseFile("../../../../EMDAT/data_structures.py");
                 dynamic emdat = engine.Runtime.UseFile("../../../../emdat.py");
                 dynamic features = emdat.generate_features(SegmentId, RawGazePoints, RawFixations, aoiDefinitions);
-                // TODO what to do after features have been generated? python cleanup?
+
+                // test
                 Console.WriteLine(features);
+                // test
+
+                if (FeaturesGenerated != null)
+                {
+                    FeaturesGenerated(this, features);
+                }
 
                 if (!keepData)
                 {
