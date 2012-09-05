@@ -110,6 +110,7 @@
     <Compile Include="EyetrackerErrors.cs" />
     <Compile Include="EyetrackerEvent.cs" />
     <Compile Include="GazeDataHandlers\EmdatProcessor.cs" />
+    <Compile Include="FeaturesGeneratedEventArgs.cs" />
     <Compile Include="GazeDataHandlers\FixationDetector.cs" />
     <Compile Include="GazeDataHandlers\GazeDataHandler.cs" />
     <Compile Include="GazeDataHandlers\GazeDataSynchronizedHandler.cs" />

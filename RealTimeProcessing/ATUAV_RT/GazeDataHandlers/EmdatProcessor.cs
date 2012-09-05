@@ -7,6 +7,7 @@ using Tobii.Eyetracking.Sdk;
 using Tobii.Eyetracking.Sdk.Time;
 using IronPython.Hosting;
 using Microsoft.Scripting.Hosting;
+using ATUAV_RT.GazeDataHandlers;
 
 namespace ATUAV_RT
 {
@@ -22,7 +23,7 @@ namespace ATUAV_RT
         private LinkedList<GazeDataItem> gazePoints = new LinkedList<GazeDataItem>();
         private ScriptEngine engine = Python.CreateEngine();
 
-        public event EventHandler<String> FeaturesGenerated;
+        public event EventHandler<FeaturesGeneratedEventArgs> FeaturesGenerated;
 
         public EmdatProcessor(SyncManager syncManager)
             : base(syncManager)
@@ -96,8 +97,9 @@ namespace ATUAV_RT
                 foreach (GazeDataItem gp in gazePoints)
                 {
                     // TODO verify format
+                    // TODO ensure same behaviour for remote to local time throughout program
                     // [self.timestamp, self.datetimestamp, self.datetimestampstartoffset, self.number, self.gazepointxleft, self.gazepointyleft, self.camxleft, self.camyleft, self.distanceleft, self.pupilleft, self.validityleft, self.gazepointxright, self.gazepointyright, self.camxright, self.camyright, self.distanceright, self.pupilright, self.validityright, self.fixationindex, self.gazepointx, self.gazepointy,                                                                                                                                                                    self.event, self.eventkey, self.data1, self.data2, self.descriptor, self.stimuliname, self.stimuliid, self.mediawidth, self.mediaheight, self.mediaposx, self.mediaposy, self.mappedfixationpointx, self.mappedfixationpointy, self.fixationduration, self.aoiids, self.aoinames, self.webgroupimage, self.mappedgazedatapointx, self.mappedgazedatapointy, self.microsecondtimestamp, self.absolutemicrosecondtimestamp,_]
-                    sb.AppendLine(/*timestamp*/ "\t" + gp.TimeStamp + "\t" /*datetimestampstartoffset*/ + "\t" + (gazePointCounter++) + "\t" + gp.LeftGazePoint2D.X + "\t" + gp.LeftGazePoint2D.Y + "\t" /*camxleft*/ + "\t" /*camyleft*/ + "\t" /*distanceleft*/ + "\t" + gp.LeftPupilDiameter + "\t" + gp.LeftValidity + "\t" + gp.RightGazePoint2D.X + "\t" + gp.RightGazePoint2D.Y + "\t" /*camxright*/ + "\t" /*camyright*/ + "\t" /*distanceright*/ + "\t" + gp.RightPupilDiameter + "\t" + gp.RightValidity + "\t" /*fixationindex*/ + "\t" + gp.RightGazePoint2D.X + "\t" + gp.RightGazePoint2D.Y + "\t" /*event*/ + "\t" /*eventkey*/ + "\t" /*data1*/ + "\t" /*data2*/ + "\t" /*descriptor*/ + "\t" /*stimuliname*/ + "\t" /*stimuliid*/ + "\t" /*mediawidth*/ + "\t" /*mediaheight*/ + "\t" /*mediaposx*/ + "\t" /*mediaposy*/ + "\t" /*mappedfixationpointx*/ + "\t" /*mappedfixationpointy*/ + "\t" /*fixationduration*/ + "\t" /*aoiids*/ + "\t" /*aoinames*/ + "\t" /*webgroupimage*/ + "\t" /*mappedgazedatapointx*/ + "\t" /*mappedgazedatapointy*/ + "\t" /*microsecondtimestamp*/ + "\t" /*absolutemicrosecondtimestamp*/ + "\t");
+                    sb.AppendLine(/*timestamp*/ "\t" + syncManager.RemoteToLocal(gp.TimeStamp) + "\t" /*datetimestampstartoffset*/ + "\t" + (gazePointCounter++) + "\t" + gp.LeftGazePoint2D.X + "\t" + gp.LeftGazePoint2D.Y + "\t" /*camxleft*/ + "\t" /*camyleft*/ + "\t" + gp.LeftEyePosition3D.Z + "\t" + gp.LeftPupilDiameter + "\t" + gp.LeftValidity + "\t" + gp.RightGazePoint2D.X + "\t" + gp.RightGazePoint2D.Y + "\t" /*camxright*/ + "\t" /*camyright*/ + "\t" + gp.RightEyePosition3D.Z + "\t" + gp.RightPupilDiameter + "\t" + gp.RightValidity + "\t" /*fixationindex*/ + "\t" + gp.RightGazePoint2D.X + "\t" + gp.RightGazePoint2D.Y + "\t" /*event*/ + "\t" /*eventkey*/ + "\t" /*data1*/ + "\t" /*data2*/ + "\t" /*descriptor*/ + "\t" /*stimuliname*/ + "\t" /*stimuliid*/ + "\t" /*mediawidth*/ + "\t" /*mediaheight*/ + "\t" /*mediaposx*/ + "\t" /*mediaposy*/ + "\t" /*mappedfixationpointx*/ + "\t" /*mappedfixationpointy*/ + "\t" /*fixationduration*/ + "\t" /*aoiids*/ + "\t" /*aoinames*/ + "\t" /*webgroupimage*/ + "\t" /*mappedgazedatapointx*/ + "\t" /*mappedgazedatapointy*/ + "\t" /*microsecondtimestamp*/ + "\t" /*absolutemicrosecondtimestamp*/ + "\t");
                 }
 
                 return sb.ToString();
