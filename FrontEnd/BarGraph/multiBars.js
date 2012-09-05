@@ -360,7 +360,7 @@ function drawBlock(min, max, colour){
 							.attr("x", strokeWidth*2)
 							.attr("y", h-max)
 							.attr("width", w)
-							.attr("height", max-min)
+							.attr("height", Math.abs(max-min))
 							.style("fill",colour)
 							.style("opacity", 0.2);
 							/**.attr("x", strokeWidth*2)
@@ -406,11 +406,11 @@ function referenceGroupBlock(selectedGroup){
 }  
 
 function referenceIndiBlock(selectedBars){
-//TODO position of the block is wrong,,,
+//TODO position of the block is wrong,,, Sept 4th still wrong...
 	var xCor = new Array;
 	var yCor = new Array;
 	var corLin = new Array;
-	var colour = $(selectedGroup).attr("fill");
+	//var colour = $(selectedBars[1]).attr("fill");
 
 	
 for (var i = 0; i < selectedBars.length; i++){
@@ -420,8 +420,10 @@ for (var i = 0; i < selectedBars.length; i++){
 }
 var	minVal = d3.min(yCor);
 var maxVal = d3.max(yCor);
+maxVal = pix2Score(maxVal);
+minVal = pix2Score(minVal);
 
-drawBlock(minVal,maxVal, colour);
+drawBlock(maxVal, minVal, "grey");
 
 stack.push("referenceIndiBlock");
 }
@@ -574,7 +576,6 @@ stack.push("drawArrowLine");
 }
 
 function drawArrowLineRelative(selectedBars){
-	//TODO implement
 	var xCor = new Array;
 	var yCor = new Array;
 	var arrow = new Array;
@@ -691,7 +692,7 @@ function trigger(){
 	selectedJBars = getSelectedJBars([["Andrea", "1"],["Diana", "2"], ["Diana", "3"], ["Andrea", "0"]]);
 	selectedBars = getSelectedBars([["Andrea", "1"],["Diana", "6"]]);
 
-
+	selectedGroup = "#Diana";
 	label="Painting";
 	selectedJLegend = getSelectedJLegend(["Class_Average", "Diana"]);
 //	drawArrow(selectedJLegend);
@@ -703,7 +704,7 @@ function trigger(){
 //	texture(selectedBars);
 	
 
-//	showIndiValue(selectedJBars);
+	showIndiValue(selectedJBars);
 //	compBars();
 //	drawArrow(selectedJBars);
 //	drawArrowLine(selectedJBars);
@@ -739,8 +740,8 @@ function trigger(){
 //drawArrowLine(selectedJBars);
 //selectedJBars = getSelectedJBars([["Andrea", "1"],["Diana", "1"]]);
 //drawArrowLine(selectedJBars);
-//referenceGroupBlock(selectedGroup);
-//referenceIndiBlock(selectedJBars);
+referenceGroupBlock(selectedGroup);
+referenceIndiBlock(selectedJBars);
 //hightLightLabel(label);
 
 }
@@ -779,7 +780,6 @@ function triggerC1(){
 }
 
 function triggerD1(){
-	//TODO select by series
 	selectedBars = getSelectedBars([["Andrea", "1"],["Andrea", "6"]]);
 	deEmphRest(selectedBars);
 	setTimeout("undoDeEmph(selectedBars)", 5000);
@@ -824,7 +824,7 @@ function triggerE2(){
 }
 
 function triggerE3(){
-	//TODO drawArrowLineRelative
+
 	selectedJBars1 = getSelectedJBars([["Andrea", "0"],["Class_Average", "0"],["Diana", "0"]]);
 	selectedJBars2 = getSelectedJBars([["Andrea", "1"],["Class_Average", "1"],["Diana", "1"]]);
 	selectedJBars3 = getSelectedJBars([["Andrea", "2"],["Class_Average", "2"],["Diana", "2"]]);
@@ -855,8 +855,7 @@ function triggerE3(){
 }
 
 function triggerF1(){
-	//TODO MAKE EVERYTHING TO RELATIVE!
-		selectedJBars1 = getSelectedJBars([["Andrea", "0"],["Diana", "0"]]);
+	selectedJBars1 = getSelectedJBars([["Andrea", "0"],["Diana", "0"]]);
 	selectedJBars2 = getSelectedJBars([["Andrea", "1"],["Diana", "1"]]);
 	selectedJBars3 = getSelectedJBars([["Andrea", "2"],["Diana", "2"]]);
 	selectedJBars4 = getSelectedJBars([["Andrea", "3"],["Diana", "3"]]);
@@ -865,33 +864,31 @@ function triggerF1(){
 	selectedJBars7 = getSelectedJBars([["Andrea", "6"],["Diana", "6"]]);
 	selectedJBars8 = getSelectedJBars([["Andrea", "7"],["Diana", "7"]]);
 
-	drawArrowLine(selectedJBars1);
-	drawArrowLine(selectedJBars2);
-	drawArrowLine(selectedJBars3);
-	drawArrowLine(selectedJBars4);
-	drawArrowLine(selectedJBars5);
-	drawArrowLine(selectedJBars6);
-	drawArrowLine(selectedJBars7);
-	drawArrowLine(selectedJBars8);
+	drawArrowLineRelative(selectedJBars1);
+	drawArrowLineRelative(selectedJBars2);
+	drawArrowLineRelative(selectedJBars3);
+	drawArrowLineRelative(selectedJBars4);
+	drawArrowLineRelative(selectedJBars5);
+	drawArrowLineRelative(selectedJBars6);
+	drawArrowLineRelative(selectedJBars7);
+	drawArrowLineRelative(selectedJBars8);
 }
 
 function triggerG1(){
-	//TODO relative as well
 	selectedJBars4 = getSelectedJBars([["Andrea", "4"],["Class_Average", "4"],["Diana", "4"]]);
 	selectedJBars6 = getSelectedJBars([["Andrea", "6"],["Class_Average", "6"],["Diana", "6"]]);
 
-	drawArrowLine(selectedJBars4);
-	drawArrowLine(selectedJBars6);
+	drawArrowLineRelative(selectedJBars4);
+	drawArrowLineRelative(selectedJBars6);
 
 }
 
 function triggerH1(){
-	//TODO relative 
 	selectedJBars1 = getSelectedJBars([["Andrea", "1"],["Diana", "1"]]);
 	selectedJBars3 = getSelectedJBars([["Andrea", "3"],["Diana", "3"]]);
 
-	drawArrowLine(selectedJBars1);
-	drawArrowLine(selectedJBars3);
+	drawArrowLineRelative(selectedJBars1);
+	drawArrowLineRelative(selectedJBars3);
 
 }
 //BEN: Stop Blinking
