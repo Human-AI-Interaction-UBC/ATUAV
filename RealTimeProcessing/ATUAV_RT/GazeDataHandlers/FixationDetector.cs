@@ -83,7 +83,6 @@ namespace ATUAV_RT
                 // convert timestamp
                 long microseconds = e.GazeDataItem.TimeStamp;
                 int milliseconds = (int)(microseconds / 1000);
-                milliseconds -= getTimestampOffset(milliseconds);
                 int time = milliseconds;
                 if (((microseconds / 100) % 10) >= 5) time++; // round
 
@@ -112,22 +111,6 @@ namespace ATUAV_RT
                     fixationDetector.addPoint(time, (int)rightX, (int)rightY);
                 }
             }
-        }
-
-        /// <summary>
-        /// Sets the first timestamp to be at time zero, offsets all
-        /// subsequent timestamps accordingly.
-        /// 
-        /// Only call this method when SyncManager is Synchronized.
-        /// </summary>
-        /// <returns>Offset in milliseconds</returns>
-        private int getTimestampOffset(int milliseconds)
-        {
-            if (timestampOffset == -1)
-            {
-                timestampOffset = milliseconds;
-            }
-            return timestampOffset;
         }
     }
 }

@@ -30,15 +30,9 @@ def generate_features(segment_id, raw_gaze_points, raw_fixations, raw_aois):
     """
     
     # convert inputs
-    gaze_points = map(Datapoint, raw_gaze_points.split("\r\n"))
-
-    #test
-    if True:
-        return len(gaze_points)
-    #test
-
+    gaze_points = map(Datapoint, raw_gaze_points.split('\n'))
     gaze_points = filter(lambda x: x.number != None, gaze_points)
-    fixations = map(lambda x: Fixation(x, 0), raw_fixations.split("\r\n"))
+    fixations = map(lambda x: Fixation(x, 0), raw_fixations.split('\n'))
     aois = EMDAT.Recording.read_aois(raw_aois)
     
     # generate features
@@ -48,10 +42,16 @@ def generate_features(segment_id, raw_gaze_points, raw_fixations, raw_aois):
     # convert features
     features = ''
     for i in xrange(len(feature_names)):
-        features += feature_names[i] + '=' + feature_values[i] + '\r\n'
+        features += feature_names[i] + '=' + feature_values[i] + '\n'
     
     # alt: convert to map
     # from: http://stackoverflow.com/questions/209840/map-two-lists-into-a-dictionary-in-python
     # map = dict(itertools.izip(feature_names, feature_values))
 
     return features
+
+if __name__ == "__main__":
+    """testing script"""
+    # 2 Datapoint
+    generate_features('0', '''1346969676421	0:55.39		0	-1	-1	0	0	0	-1	4	-1	-1	0	0	0	-1	4		-1	-1						ScreenRec	0	1280	1024	0	0				0	Content		-1	-1		1346969676421268	
+1346969676421	0:55.39		0	-1	-1	0	0	0	-1	4	-1	-1	0	0	0	-1	4		-1	-1						ScreenRec	0	1280	1024	0	0				0	Content		-1	-1		1346969676421268	''', '', '')

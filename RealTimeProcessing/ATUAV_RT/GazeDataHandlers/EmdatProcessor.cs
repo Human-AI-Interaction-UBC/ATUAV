@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 using System.IO;
+using System.Windows.Forms;
 using FixDet;
 using Tobii.Eyetracking.Sdk;
 using Tobii.Eyetracking.Sdk.Time;
@@ -96,12 +98,16 @@ namespace ATUAV_RT
                 StringBuilder sb = new StringBuilder();
                 foreach (GazeDataItem gp in gazePoints)
                 {
+                    long ms = gp.TimeStamp / 1000 + (gp.TimeStamp / 100 % 10 > 5 ? 1 : 0); // convert micro to milliseconds
+                    DateTime timestamp = new DateTime(syncManager.RemoteToLocal(gp.TimeStamp) * 10);
+                    string dateTimeStamp = timestamp.Hour + ":" + timestamp.Minute + "." + timestamp.Second;
+                    double mappedGazeDataPointX = (gp.LeftGazePoint2D.X + gp.RightGazePoint2D.X) / 2;
+                    double mappedGazeDataPointY = (gp.LeftGazePoint2D.Y + gp.RightGazePoint2D.Y) / 2;
                     // TODO verify format
-                    // TODO ensure same behaviour for remote to local time throughout program
                     // [self.timestamp, self.datetimestamp, self.datetimestampstartoffset, self.number, self.gazepointxleft, self.gazepointyleft, self.camxleft, self.camyleft, self.distanceleft, self.pupilleft, self.validityleft, self.gazepointxright, self.gazepointyright, self.camxright, self.camyright, self.distanceright, self.pupilright, self.validityright, self.fixationindex, self.gazepointx, self.gazepointy,                                                                                                                                                                    self.event, self.eventkey, self.data1, self.data2, self.descriptor, self.stimuliname, self.stimuliid, self.mediawidth, self.mediaheight, self.mediaposx, self.mediaposy, self.mappedfixationpointx, self.mappedfixationpointy, self.fixationduration, self.aoiids, self.aoinames, self.webgroupimage, self.mappedgazedatapointx, self.mappedgazedatapointy, self.microsecondtimestamp, self.absolutemicrosecondtimestamp,_]
-                    sb.AppendLine(/*timestamp*/ "\t" + syncManager.RemoteToLocal(gp.TimeStamp) + "\t" /*datetimestampstartoffset*/ + "\t" + (gazePointCounter++) + "\t" + gp.LeftGazePoint2D.X + "\t" + gp.LeftGazePoint2D.Y + "\t" /*camxleft*/ + "\t" /*camyleft*/ + "\t" + gp.LeftEyePosition3D.Z + "\t" + gp.LeftPupilDiameter + "\t" + gp.LeftValidity + "\t" + gp.RightGazePoint2D.X + "\t" + gp.RightGazePoint2D.Y + "\t" /*camxright*/ + "\t" /*camyright*/ + "\t" + gp.RightEyePosition3D.Z + "\t" + gp.RightPupilDiameter + "\t" + gp.RightValidity + "\t" /*fixationindex*/ + "\t" + gp.RightGazePoint2D.X + "\t" + gp.RightGazePoint2D.Y + "\t" /*event*/ + "\t" /*eventkey*/ + "\t" /*data1*/ + "\t" /*data2*/ + "\t" /*descriptor*/ + "\t" /*stimuliname*/ + "\t" /*stimuliid*/ + "\t" /*mediawidth*/ + "\t" /*mediaheight*/ + "\t" /*mediaposx*/ + "\t" /*mediaposy*/ + "\t" /*mappedfixationpointx*/ + "\t" /*mappedfixationpointy*/ + "\t" /*fixationduration*/ + "\t" /*aoiids*/ + "\t" /*aoinames*/ + "\t" /*webgroupimage*/ + "\t" /*mappedgazedatapointx*/ + "\t" /*mappedgazedatapointy*/ + "\t" /*microsecondtimestamp*/ + "\t" /*absolutemicrosecondtimestamp*/ + "\t");
+                    sb.AppendLine(ms + "\t" + dateTimeStamp + "\t" /*datetimestampstartoffset*/ + "\t" + (gazePointCounter++) + "\t" + gp.LeftGazePoint2D.X + "\t" + gp.LeftGazePoint2D.Y + "\t" + gp.LeftEyePosition3D.X + "\t" + gp.LeftEyePosition3D.Y + "\t" + gp.LeftEyePosition3D.Z + "\t" + gp.LeftPupilDiameter + "\t" + gp.LeftValidity + "\t" + gp.RightGazePoint2D.X + "\t" + gp.RightGazePoint2D.Y + "\t" + gp.RightEyePosition3D.X + "\t" + gp.RightEyePosition3D.Y + "\t" + gp.RightEyePosition3D.Z + "\t" + gp.RightPupilDiameter + "\t" + gp.RightValidity + "\t" /*fixationindex*/ + "\t" + gp.RightGazePoint2D.X + "\t" + gp.RightGazePoint2D.Y + "\t" /*event*/ + "\t" /*eventkey*/ + "\t" /*data1*/ + "\t" /*data2*/ + "\t" /*descriptor*/ + "\tScreenRec\t0\t" + Screen.PrimaryScreen.Bounds.Width + "\t" + Screen.PrimaryScreen.Bounds.Height + "\t0\t0\t" /*mappedfixationpointx*/ + "\t" /*mappedfixationpointy*/ + "\t" /*fixationduration*/ + "\t0\tContent\t" /*webgroupimage*/ + "\t" + mappedGazeDataPointX + "\t" + mappedGazeDataPointY + "\t" /*microsecondtimestamp*/ + "\t" + gp.TimeStamp + "\t");
                 }
-
+                sb.Remove(sb.Length - 1, 1); // remove last "\n"
                 return sb.ToString();
             }
         }
