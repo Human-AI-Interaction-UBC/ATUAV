@@ -6,7 +6,7 @@ namespace ATUAV_RT
     /// <summary>
     /// Wrapper class for GazeDataItems and SFDFixations.
     /// </summary>
-    class EyetrackerEvent
+    public class EyetrackerEvent
     {
         private GazeDataItem gdi;
         private SFDFixation fixation;

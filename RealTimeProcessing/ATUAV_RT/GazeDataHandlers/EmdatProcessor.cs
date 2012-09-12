@@ -13,11 +13,12 @@ using ATUAV_RT.GazeDataHandlers;
 
 namespace ATUAV_RT
 {
-    class EmdatProcessor : GazeDataSynchronizedHandler, WindowingHandler
+    public class EmdatProcessor : GazeDataSynchronizedHandler, WindowingHandler<Dictionary<String, String>>
     {
         private bool collectingData;
+        private bool cumulativeData;
         private string aoiFilePath;
-        private string aoiDefinitions;
+        private string aoiDefinitions = "";
         private int segmentId = 0;
         private int gazePointCounter = 0;
         private int fixationCounter = 0;
@@ -25,18 +26,20 @@ namespace ATUAV_RT
         private LinkedList<GazeDataItem> gazePoints = new LinkedList<GazeDataItem>();
         private ScriptEngine engine = Python.CreateEngine();
 
-        public event EventHandler<FeaturesGeneratedEventArgs> FeaturesGenerated;
-
         public EmdatProcessor(SyncManager syncManager)
             : base(syncManager)
         {
             // add script to sys.path
-            string dir = Path.GetDirectoryName("C:\\Documents and Settings\\Admin\\My Documents\\Visual Studio 2008\\Projects\\ATUAV_RT\\RealTimeProcessing\\emdat.py");
+            string scriptDir = Path.GetDirectoryName("C:\\Documents and Settings\\Admin\\My Documents\\Visual Studio 2008\\Projects\\ATUAV_RT\\RealTimeProcessing\\emdat.py");
+            string emdatDir = Path.GetDirectoryName("C:\\Documents and Settings\\Admin\\My Documents\\Visual Studio 2008\\Projects\\ATUAV_RT\\RealTimeProcessing\\EMDAT\\");
+            string pythonDir = Path.GetDirectoryName("C:\\Python26\\Lib\\");
             ICollection<string> paths = engine.GetSearchPaths();
 
-            if (!String.IsNullOrEmpty(dir))
+            if (!String.IsNullOrEmpty(scriptDir))
             {
-                paths.Add(dir);
+                paths.Add(scriptDir);
+                paths.Add(emdatDir);
+                paths.Add(pythonDir);
             }
             else
             {
@@ -103,11 +106,13 @@ namespace ATUAV_RT
                     string dateTimeStamp = timestamp.Hour + ":" + timestamp.Minute + "." + timestamp.Second;
                     double mappedGazeDataPointX = (gp.LeftGazePoint2D.X + gp.RightGazePoint2D.X) / 2;
                     double mappedGazeDataPointY = (gp.LeftGazePoint2D.Y + gp.RightGazePoint2D.Y) / 2;
-                    // TODO verify format
+                    
                     // [self.timestamp, self.datetimestamp, self.datetimestampstartoffset, self.number, self.gazepointxleft, self.gazepointyleft, self.camxleft, self.camyleft, self.distanceleft, self.pupilleft, self.validityleft, self.gazepointxright, self.gazepointyright, self.camxright, self.camyright, self.distanceright, self.pupilright, self.validityright, self.fixationindex, self.gazepointx, self.gazepointy,                                                                                                                                                                    self.event, self.eventkey, self.data1, self.data2, self.descriptor, self.stimuliname, self.stimuliid, self.mediawidth, self.mediaheight, self.mediaposx, self.mediaposy, self.mappedfixationpointx, self.mappedfixationpointy, self.fixationduration, self.aoiids, self.aoinames, self.webgroupimage, self.mappedgazedatapointx, self.mappedgazedatapointy, self.microsecondtimestamp, self.absolutemicrosecondtimestamp,_]
                     sb.AppendLine(ms + "\t" + dateTimeStamp + "\t" /*datetimestampstartoffset*/ + "\t" + (gazePointCounter++) + "\t" + gp.LeftGazePoint2D.X + "\t" + gp.LeftGazePoint2D.Y + "\t" + gp.LeftEyePosition3D.X + "\t" + gp.LeftEyePosition3D.Y + "\t" + gp.LeftEyePosition3D.Z + "\t" + gp.LeftPupilDiameter + "\t" + gp.LeftValidity + "\t" + gp.RightGazePoint2D.X + "\t" + gp.RightGazePoint2D.Y + "\t" + gp.RightEyePosition3D.X + "\t" + gp.RightEyePosition3D.Y + "\t" + gp.RightEyePosition3D.Z + "\t" + gp.RightPupilDiameter + "\t" + gp.RightValidity + "\t" /*fixationindex*/ + "\t" + gp.RightGazePoint2D.X + "\t" + gp.RightGazePoint2D.Y + "\t" /*event*/ + "\t" /*eventkey*/ + "\t" /*data1*/ + "\t" /*data2*/ + "\t" /*descriptor*/ + "\tScreenRec\t0\t" + Screen.PrimaryScreen.Bounds.Width + "\t" + Screen.PrimaryScreen.Bounds.Height + "\t0\t0\t" /*mappedfixationpointx*/ + "\t" /*mappedfixationpointy*/ + "\t" /*fixationduration*/ + "\t0\tContent\t" /*webgroupimage*/ + "\t" + mappedGazeDataPointX + "\t" + mappedGazeDataPointY + "\t" /*microsecondtimestamp*/ + "\t" + gp.TimeStamp + "\t");
                 }
-                sb.Remove(sb.Length - 1, 1); // remove last "\n"
+
+                if (sb.Length > 0)
+                    sb.Remove(sb.Length - 1, 1); // remove trailing "\n"
                 return sb.ToString();
             }
         }
@@ -122,11 +127,12 @@ namespace ATUAV_RT
                 StringBuilder sb = new StringBuilder();
                 foreach (SFDFixation fixation in fixations)
                 {
-                    // TODO verify format
                     // [self.fixationindex, self.timestamp, self.fixationduration, self.mappedfixationpointx, self.mappedfixationpointy,_]
                     sb.AppendLine((fixationCounter++) + "\t" + fixation.Time + "\t" + fixation.Duration + "\t" + fixation.X + "\t" + fixation.Y + "\t");
                 }
 
+                if (sb.Length > 0)
+                    sb.Remove(sb.Length - 1, 1); // remove trailing "\n"
                 return sb.ToString();
             }
         }
@@ -172,6 +178,19 @@ namespace ATUAV_RT
             }
         }
 
+        public bool CumulativeData
+        {
+            get
+            {
+                return cumulativeData;
+            }
+
+            set
+            {
+                cumulativeData = value;
+            }
+        }
+
         public void StartWindow()
         {
             lock (this)
@@ -184,28 +203,20 @@ namespace ATUAV_RT
         /// Uses EMDAT to process gaze point, fixation, and AOI data
         /// and generate features.
         /// </summary>
-        /// <param name="keepData">If true, collected data is kept for next window. Otherwise data is cleared.</param>
-        public void ProcessWindow(bool keepData)
+        public Dictionary<String, String> ProcessWindow()
         {
             lock (this)
             {
                 dynamic emdat = engine.Runtime.UseFile("../../../../emdat.py");
                 dynamic features = emdat.generate_features(SegmentId, RawGazePoints, RawFixations, aoiDefinitions);
 
-                // test
-                Console.WriteLine(features);
-                // test
-
-                if (FeaturesGenerated != null)
-                {
-                    FeaturesGenerated(this, features);
-                }
-
-                if (!keepData)
+                if (!cumulativeData)
                 {
                     fixations.Clear();
                     gazePoints.Clear();
                 }
+
+                return features;
             }
         }
 

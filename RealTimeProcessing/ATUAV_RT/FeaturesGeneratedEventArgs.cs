@@ -9,7 +9,7 @@ namespace ATUAV_RT.GazeDataHandlers
     /// Event arguments for when features are generated.
     /// Contains a dictionary of features and values in string format.
     /// </summary>
-    class FeaturesGeneratedEventArgs : EventArgs
+    public class FeaturesGeneratedEventArgs : EventArgs
     {
         private readonly Dictionary<String, String> features;
 

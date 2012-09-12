@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.ServiceModel;
+using System.ServiceModel.Description;
 using System.Threading;
 using NDesk.Options;
 using Tobii.Eyetracking.Sdk;
@@ -16,10 +18,13 @@ namespace ATUAV_RT
     /// - FixDet http://www.sis.uta.fi/~csolsp/projects.php
     /// - NDesk.Options http://www.ndesk.org/Options
     /// </summary>
-    class Program
+    public class Program
     {
         private static Clock clock;
+
+        // default settings
         private static string aoiFilePath;
+        private static Uri baseAddress;
         private static int windowDuration = 3000; // ms
         private static bool cumulativeWindows = false;
         private static bool help = false;
@@ -30,10 +35,25 @@ namespace ATUAV_RT
         /// <param name="args">Command line arguments</param>
         static void Main(string[] args)
         {
-            // parse arguments
+            if (parseArguments(args))
+            {
+                initTobiiSdk();
+                connectEyetrackers();
+                createWebService();
+            }
+        }
+
+        /// <summary>
+        /// Parses command line arguments.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns>True if program should continue, false if arguments could not be parsed or help option was called.</returns>
+        private static bool parseArguments(string[] args)
+        {
             var p = new OptionSet()
             {
                 { "a|aoi=", "{FILEPATH} for areas of interest definitions file", (string v) => aoiFilePath = Path.GetFullPath(v)},
+                { "b|baseAddress=", "{BASE_ADDRESS} for web service", (string v) => baseAddress = new Uri(v)},
                 { "c|cumulative", "windows collect data cumulatively", v => cumulativeWindows = v != null},
                 { "w|window=", "the {DURATION} of a window in ms (default=" + windowDuration + ")", (int v) => windowDuration = v },
                 { "h|help", v => help = v != null }
@@ -60,36 +80,23 @@ namespace ATUAV_RT
                 Console.WriteLine(e.Message);
                 Console.WriteLine("Try \'atuavrt --help\' for more information.");
                 Console.WriteLine();
-                return;
+                return false;
             }
 
             if (help)
             {
                 ShowHelp(p);
-                return;
+                return false;
             }
 
-            // initialize Tobii SDK
-            Library.Init();
-            clock = new Clock();
-
-            // find eyetrackers on LAN
-            EyetrackerBrowser browser = new EyetrackerBrowser(EventThreadingOptions.BackgroundThread);
-            browser.EyetrackerFound += EyetrackerFound;
-            browser.Start();
-
-            // keep main thread running (all events happen in background thread)
-            while (true)
-            {
-                Thread.Sleep(1000000);
-            }
+            return true;
         }
 
         /// <summary>
         /// Writes usage to console.
         /// </summary>
         /// <param name="options">Parsed command line arguments</param>
-        static void ShowHelp(OptionSet options)
+        private static void ShowHelp(OptionSet options)
         {
             Console.WriteLine("Usage: atuav_rt [OPTIONS]");
             Console.WriteLine("Process eyetracking data in real time");
@@ -98,12 +105,25 @@ namespace ATUAV_RT
             options.WriteOptionDescriptions(Console.Out);
         }
 
+        private static void initTobiiSdk()
+        {
+            Library.Init();
+            clock = new Clock();
+        }
+
+        private static void connectEyetrackers()
+        {
+            EyetrackerBrowser browser = new EyetrackerBrowser(EventThreadingOptions.BackgroundThread);
+            browser.EyetrackerFound += EyetrackerFound;
+            browser.Start();
+        }
+
         /// <summary>
         /// Connects to found eyetrackers, synchronizes CPU and eyetracker clocks, and attaches event handlers.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e">Contains found EyetrackerInfo</param>
-        static void EyetrackerFound(object sender, EyetrackerInfoEventArgs e)
+        private static void EyetrackerFound(object sender, EyetrackerInfoEventArgs e)
         {
             EyetrackerConnector connector = new EyetrackerConnector(e.EyetrackerInfo);
             connector.Connect();
@@ -143,11 +163,36 @@ namespace ATUAV_RT
             fixations.FixDetector.FixationEnd += processor.FixationEnd;
             
             processor.StartWindow();
-            while (true)
+            /*while (true)
             {
                 Thread.Sleep(windowDuration);
                 processor.ProcessWindow(cumulativeWindows);
             }//*/
+        }
+
+        private static void createWebService()
+        {
+            using (ServiceHost host = new ServiceHost(typeof(AtuavWebServiceImp), baseAddress))
+            {
+                // Enable metadata publishing
+                ServiceMetadataBehavior behavior = new ServiceMetadataBehavior();
+                behavior.HttpGetEnabled = true;
+                behavior.MetadataExporter.PolicyVersion = PolicyVersion.Policy15;
+                host.Description.Behaviors.Add(behavior);
+
+                // Open the ServiceHost to start listening for messages. Since
+                // no endpoints are explicitly configured, the runtime will create
+                // one endpoint per base address for each service contract implemented
+                // by the service.
+                host.Open();
+
+                Console.WriteLine("The service is ready at {0}", baseAddress);
+                Console.WriteLine("Press <Enter> to stop the service.");
+                Console.ReadLine();
+
+                // Close the ServiceHost.
+                host.Close();
+            }
         }
     }
 }

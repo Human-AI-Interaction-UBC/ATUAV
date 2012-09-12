@@ -15,13 +15,12 @@ namespace ATUAV_RT
     /// 
     /// Documentation available through download link above.
     /// </summary>
-    class FixationDetector : GazeDataSynchronizedHandler
+    public class FixationDetector : GazeDataSynchronizedHandler
     {
         private static readonly double SCREEN_HEIGHT = 1024; // Tobii T120 Eye Tracker
         private static readonly double SCREEN_WIDTH = 1280;  // Tobii T120 Eye Tracker
 
         private readonly FixDetector fixationDetector;
-        private int timestampOffset = -1;
 
         /// <summary>
         /// Initializes fixation detector to Tobii Studio default

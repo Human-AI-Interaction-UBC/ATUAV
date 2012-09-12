@@ -8,7 +8,7 @@ namespace ATUAV_RT
     /// Ensures a common structure for synchronizing CPU and eyetracker clocks
     /// and common name for method GazeDataReceived.
     /// </summary>
-    abstract class GazeDataHandler
+    public abstract class GazeDataHandler
     {
         /// <summary>
         /// Use for checking CPU/eyetracker clock synchronization.

@@ -10,7 +10,7 @@ namespace ATUAV_RT
     /// Gaze data and frame rate change events can be subscribed to through
     /// the Eyetracker property.
     /// </summary>
-    class EyetrackerConnector
+    public class EyetrackerConnector
     {
         private EyetrackerInfo info;
         private IEyetracker eyetracker;

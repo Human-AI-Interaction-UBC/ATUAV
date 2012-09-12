@@ -11,7 +11,7 @@ namespace ATUAV_RT
     /// Detailed explanation of synchronization available in Tobii SDK 3.0 Developer Guide.
     /// http://www.tobii.com/Global/Analysis/Downloads/User_Manuals_and_Guides/Tobii%20SDK%203.0%20Release%20Candidate%201%20Developers%20Guide.pdf
     /// </summary>
-    abstract class GazeDataSynchronizedHandler : GazeDataHandler
+    public abstract class GazeDataSynchronizedHandler : GazeDataHandler
     {
         public GazeDataSynchronizedHandler(SyncManager syncManager)
             : base(syncManager)

@@ -4,7 +4,7 @@ namespace ATUAV_RT
     /// <summary>
     /// Utility class for dealing with eyetracker errors.
     /// </summary>
-    static class EyetrackerErrors
+    public static class EyetrackerErrors
     {
         /// <summary>
         /// Converts an eyetracker error code into a human readable description.

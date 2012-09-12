@@ -10,9 +10,10 @@ namespace ATUAV_RT
     /// Example GazeDataHandler that collects gaze data in dynamically sized windows
     /// and prints each window to console.
     /// </summary>
-    class WindowingConsolePrinter : ConsolePrinter, WindowingHandler
+    public class WindowingConsolePrinter : ConsolePrinter, WindowingHandler<Object>
     {
         private bool collectingData = false;
+        private bool cumulativeData = false;
         private readonly LinkedList<EyetrackerEvent> events = new LinkedList<EyetrackerEvent>();
 
         public WindowingConsolePrinter(SyncManager syncManager)
@@ -81,9 +82,6 @@ namespace ATUAV_RT
 
         #region WindowingHandler Members
 
-        /// <summary>
-        /// True if window is open and data is being collected, false otherwise.
-        /// </summary>
         public bool CollectingData
         {
             get
@@ -95,10 +93,19 @@ namespace ATUAV_RT
             }
         }
 
-        /// <summary>
-        /// Start collecting data in a new window.
-        /// Clears any existing data.
-        /// </summary>
+        public bool CumulativeData
+        {
+            get
+            {
+                return cumulativeData;
+            }
+
+            set
+            {
+                cumulativeData = value;
+            }
+        }
+
         public void StartWindow()
         {
             lock (this)
@@ -111,21 +118,21 @@ namespace ATUAV_RT
         /// Prints the accumulated fixation and gaze data events without dropping intermittent events.
         /// </summary>
         /// <param name="keepData">If true, collected data is kept for next window. Otherwise data is cleared.</param>
-        public void ProcessWindow(bool keepData)
+        /// <returns>null</returns>
+        public Object ProcessWindow()
         {
             lock (this)
             {
                 PrintData();
-                if (!keepData)
+                if (!cumulativeData)
                 {
                     events.Clear();
                 }
             }
+
+            return null;
         }
 
-        /// <summary>
-        /// Stops collecting data. Does not clear existing data.
-        /// </summary>
         public void StopWindow()
         {
             lock (this)
