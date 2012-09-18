@@ -7,16 +7,30 @@ namespace ATUAV_RT
 {
     public class AtuavWebServiceImp : AtuavWebService
     {
-        public void DefineVisualization(string visualization)
+        /// <summary>
+        /// Sets the eyetracker to track
+        /// </summary>
+        /// <param name="productId"></param>
+        /// <returns>empty string if successful, error string if unsuccessful</returns>
+        public string SetEyetracker(string productId)
         {
-            // TODO give definition to decision engine so it can decide on relevant interventions
+            Program.InterventionEngine.CurrentEyetracker = productId;
+            if (Program.InterventionEngine.CurrentEyetracker != productId)
+            {
+                return "error: eyetracker not connected";
+            }
+
+            return "";
+        }
+
+        public void SetVisualization(string visualization)
+        {
+            Program.InterventionEngine.SetVisualization(visualization);
         }
 
         public string GetIntervention()
         {
-            // TODO get intervention from decision engine
-
-            return "atuav";
+            return Program.InterventionEngine.GetIntervetion();
         }
     }
 }

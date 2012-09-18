@@ -21,13 +21,21 @@ namespace ATUAV_RT
     public class Program
     {
         private static Clock clock;
+        private static readonly InterventionEngine interventionEngine = new InterventionEngine();
 
         // default settings
         private static string aoiFilePath;
         private static Uri baseAddress;
-        private static int windowDuration = 3000; // ms
         private static bool cumulativeWindows = false;
         private static bool help = false;
+
+        public static InterventionEngine InterventionEngine
+        {
+            get
+            {
+                return interventionEngine;
+            }
+        }
 
         /// <summary>
         /// Parses arguments and finds connected Eyetrackers.
@@ -55,7 +63,6 @@ namespace ATUAV_RT
                 { "a|aoi=", "{FILEPATH} for areas of interest definitions file", (string v) => aoiFilePath = Path.GetFullPath(v)},
                 { "b|baseAddress=", "{BASE_ADDRESS} for web service", (string v) => baseAddress = new Uri(v)},
                 { "c|cumulative", "windows collect data cumulatively", v => cumulativeWindows = v != null},
-                { "w|window=", "the {DURATION} of a window in ms (default=" + windowDuration + ")", (int v) => windowDuration = v },
                 { "h|help", v => help = v != null }
             };
 
@@ -135,24 +142,7 @@ namespace ATUAV_RT
             FixationDetector fixations = new FixationDetector(syncManager);
             connector.Eyetracker.GazeDataReceived += fixations.GazeDataReceived;
 
-            /*/ 1. print each event to console
-            ConsolePrinter printer = new ConsolePrinter(syncManager);
-            //connector.Eyetracker.GazeDataReceived += printer.GazeDataReceived;
-            fixations.FixDetector.FixationEnd += printer.FixationEnd;//*/
-
-            /*/ 2. windowed print to console
-            WindowingConsolePrinter printer = new WindowingConsolePrinter(syncManager);
-            //connector.Eyetracker.GazeDataReceived += printer.GazeDataReceived;
-            fixations.FixDetector.FixationEnd += printer.FixationEnd;
-            
-            printer.StartWindow();
-            while (true)
-            {
-                Thread.Sleep(windowDuration);
-                printer.ProcessWindow(cumulativeWindows);
-            }//*/
-
-            // 3. process windows with EMDAT
+            // process windows with EMDAT
             EmdatProcessor processor = new EmdatProcessor(syncManager);
             if (aoiFilePath != null)
             {
@@ -161,13 +151,9 @@ namespace ATUAV_RT
 
             connector.Eyetracker.GazeDataReceived += processor.GazeDataReceived;
             fixations.FixDetector.FixationEnd += processor.FixationEnd;
-            
+            interventionEngine.Processors.Add(e.EyetrackerInfo.ProductId, processor);
+
             processor.StartWindow();
-            /*while (true)
-            {
-                Thread.Sleep(windowDuration);
-                processor.ProcessWindow(cumulativeWindows);
-            }//*/
         }
 
         private static void createWebService()

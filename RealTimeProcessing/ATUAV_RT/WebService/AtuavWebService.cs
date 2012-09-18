@@ -10,7 +10,10 @@ namespace ATUAV_RT
     public interface AtuavWebService
     {
         [OperationContract]
-        void DefineVisualization(string visualization);
+        string SetEyetracker(string productId);
+
+        [OperationContract]
+        void SetVisualization(string visualization);
 
         [OperationContract]
         string GetIntervention();
