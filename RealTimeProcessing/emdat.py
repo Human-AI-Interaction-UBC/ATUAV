@@ -3,12 +3,11 @@ UBC Eye Movement Data Analysis Toolkit
 Oliver Schmid - oliver.schmd@gmail.com
 
 Programmatic interface for generating machine learning features from real-time Tobii data.
-
-TODO? from EMDAT import Recording, Segment
 """
+from EMDAT.src.data_structures import Datapoint, Fixation
+from EMDAT.src.Segment import Segment
+import EMDAT.src.Recording
 import itertools
-from EMDAT import Segment, Recording
-from EMDAT.data_structures import Datapoint, Fixation
 
 def generate_features(segment_id, raw_gaze_points, raw_fixations, raw_aois):
     """
@@ -28,10 +27,6 @@ def generate_features(segment_id, raw_gaze_points, raw_fixations, raw_aois):
     
     @return dictionary of feature value pairs. Features and values are in string format.
     """
-    #test
-    if True:
-        return dict(segment_id=segment_id)
-    #test
 
     # init
     gaze_points = []
