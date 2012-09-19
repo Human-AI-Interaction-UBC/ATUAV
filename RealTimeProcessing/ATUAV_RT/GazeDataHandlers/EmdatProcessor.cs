@@ -13,7 +13,7 @@ using ATUAV_RT.GazeDataHandlers;
 
 namespace ATUAV_RT
 {
-    public class EmdatProcessor : GazeDataSynchronizedHandler, WindowingHandler<Dictionary<String, String>>
+    public class EmdatProcessor : GazeDataSynchronizedHandler, WindowingHandler<IDictionary<object, object>>
     {
         private bool collectingData;
         private bool cumulativeData;
@@ -203,13 +203,13 @@ namespace ATUAV_RT
         /// Uses EMDAT to process gaze point, fixation, and AOI data
         /// and generate features.
         /// </summary>
-        public Dictionary<String, String> ProcessWindow()
+        public IDictionary<object, object> ProcessWindow()
         {
             lock (this)
             {
                 dynamic emdat = engine.Runtime.UseFile("../../../../emdat.py");
-                dynamic features = emdat.generate_features(SegmentId, RawGazePoints, RawFixations, aoiDefinitions);
-
+                IDictionary<object, object> features = emdat.generate_features(SegmentId, RawGazePoints, RawFixations, aoiDefinitions);
+                
                 if (!cumulativeData)
                 {
                     fixations.Clear();

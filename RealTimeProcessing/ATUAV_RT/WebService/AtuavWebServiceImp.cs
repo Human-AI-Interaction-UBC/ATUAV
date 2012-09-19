@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.ServiceModel.Activation;
 
 namespace ATUAV_RT
 {
+    [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
     public class AtuavWebServiceImp : AtuavWebService
     {
         /// <summary>
@@ -30,7 +32,7 @@ namespace ATUAV_RT
 
         public string GetIntervention()
         {
-            return Program.InterventionEngine.GetIntervetion();
+            return Program.InterventionEngine.GetIntervention();
         }
     }
 }

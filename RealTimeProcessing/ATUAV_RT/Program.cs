@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.ServiceModel;
 using System.ServiceModel.Description;
+using System.ServiceModel.Web;
 using System.Threading;
 using NDesk.Options;
 using Tobii.Eyetracking.Sdk;
@@ -158,14 +159,8 @@ namespace ATUAV_RT
 
         private static void createWebService()
         {
-            using (ServiceHost host = new ServiceHost(typeof(AtuavWebServiceImp), baseAddress))
+            using (WebServiceHost host = new WebServiceHost(typeof(AtuavWebServiceImp), baseAddress))
             {
-                // Enable metadata publishing
-                ServiceMetadataBehavior behavior = new ServiceMetadataBehavior();
-                behavior.HttpGetEnabled = true;
-                behavior.MetadataExporter.PolicyVersion = PolicyVersion.Policy15;
-                host.Description.Behaviors.Add(behavior);
-
                 // Open the ServiceHost to start listening for messages. Since
                 // no endpoints are explicitly configured, the runtime will create
                 // one endpoint per base address for each service contract implemented

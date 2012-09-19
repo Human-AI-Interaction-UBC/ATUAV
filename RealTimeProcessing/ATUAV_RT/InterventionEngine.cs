@@ -10,7 +10,7 @@ namespace ATUAV_RT
     /// </summary>
     public class InterventionEngine
     {
-        String currentEyetracker;
+        String currentEyetracker = "TT120-204-80900268";
         Dictionary<String, EmdatProcessor> processors = new Dictionary<String, EmdatProcessor>();
 
         /// <summary>
@@ -53,11 +53,11 @@ namespace ATUAV_RT
             // TODO
         }
 
-        public string GetIntervetion()
+        public string GetIntervention()
         {
-            Dictionary<String, String> features = CurrentProcessor.ProcessWindow();
+            IDictionary<object, object> features = CurrentProcessor.ProcessWindow();
             // TODO perform learning on generated features
-            return "atuav";
+            return features.ToString();
         }
     }
 }
