@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Text;
 using System.IO;
+using System.Text;
 using System.Windows.Forms;
 using FixDet;
-using Tobii.Eyetracking.Sdk;
-using Tobii.Eyetracking.Sdk.Time;
 using IronPython.Hosting;
 using Microsoft.Scripting.Hosting;
-using ATUAV_RT.GazeDataHandlers;
+using Tobii.Eyetracking.Sdk;
+using Tobii.Eyetracking.Sdk.Time;
 
 namespace ATUAV_RT
 {
@@ -25,16 +23,17 @@ namespace ATUAV_RT
         private LinkedList<SFDFixation> fixations = new LinkedList<SFDFixation>();
         private LinkedList<GazeDataItem> gazePoints = new LinkedList<GazeDataItem>();
         private ScriptEngine engine = Python.CreateEngine();
+        private dynamic emdat;
 
         public EmdatProcessor(SyncManager syncManager)
             : base(syncManager)
         {
-            // add script to sys.path
+            // set module search paths
             string scriptDir = Path.GetDirectoryName("C:\\Documents and Settings\\Admin\\My Documents\\Visual Studio 2008\\Projects\\ATUAV_RT\\RealTimeProcessing\\emdat.py");
             string emdatDir = Path.GetDirectoryName("C:\\Documents and Settings\\Admin\\My Documents\\Visual Studio 2008\\Projects\\ATUAV_RT\\RealTimeProcessing\\EMDAT\\src\\");
             string pythonDir = Path.GetDirectoryName("C:\\Python26\\Lib\\");
-            ICollection<string> paths = engine.GetSearchPaths();
 
+            ICollection<string> paths = engine.GetSearchPaths();
             if (!String.IsNullOrEmpty(scriptDir))
             {
                 paths.Add(scriptDir);
@@ -46,6 +45,9 @@ namespace ATUAV_RT
                 paths.Add(Environment.CurrentDirectory);
             }
             engine.SetSearchPaths(paths);
+            
+            // import modules
+            emdat = engine.ImportModule("emdat");
         }
 
         /// <summary>
@@ -112,7 +114,7 @@ namespace ATUAV_RT
                 }
 
                 if (sb.Length > 0)
-                    sb.Remove(sb.Length - 1, 1); // remove trailing "\n"
+                    sb.Length = sb.Length - 2; // remove trailing "\r\n"
                 return sb.ToString();
             }
         }
@@ -132,7 +134,7 @@ namespace ATUAV_RT
                 }
 
                 if (sb.Length > 0)
-                    sb.Remove(sb.Length - 1, 1); // remove trailing "\n"
+                    sb.Length = sb.Length - 2; // remove trailing "\r\n"
                 return sb.ToString();
             }
         }
@@ -207,9 +209,10 @@ namespace ATUAV_RT
         {
             lock (this)
             {
-                dynamic emdat = engine.Runtime.UseFile("../../../../emdat.py");
+                Console.WriteLine("Before EMDAT: " + DateTime.Now);
                 IDictionary<object, object> features = emdat.generate_features(SegmentId, RawGazePoints, RawFixations, aoiDefinitions);
-                
+                Console.WriteLine("After EMDAT: " + DateTime.Now);
+
                 if (!cumulativeData)
                 {
                     fixations.Clear();
