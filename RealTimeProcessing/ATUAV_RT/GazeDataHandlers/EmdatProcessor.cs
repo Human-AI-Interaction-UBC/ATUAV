@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 using FixDet;
 using IronPython.Hosting;
+using IronPython.Runtime;
 using Microsoft.Scripting.Hosting;
 using Tobii.Eyetracking.Sdk;
 using Tobii.Eyetracking.Sdk.Time;
@@ -14,11 +15,11 @@ namespace ATUAV_RT
     public class EmdatProcessor : GazeDataSynchronizedHandler, WindowingHandler<IDictionary<object, object>>
     {
         private bool collectingData;
-        private bool cumulativeData;
+        private bool cumulativeData = false;
         private string aoiFilePath;
         private string aoiDefinitions = "";
         private int segmentId = 0;
-        private int gazePointCounter = 0;
+        private int gazePointNumber = 0;
         private int fixationCounter = 0;
         private LinkedList<SFDFixation> fixations = new LinkedList<SFDFixation>();
         private LinkedList<GazeDataItem> gazePoints = new LinkedList<GazeDataItem>();
@@ -28,6 +29,10 @@ namespace ATUAV_RT
         public EmdatProcessor(SyncManager syncManager)
             : base(syncManager)
         {
+            // redirect python stdin/stdout
+            engine.Runtime.IO.SetOutput(Console.OpenStandardOutput(), Console.OutputEncoding);
+            engine.Runtime.IO.SetErrorOutput(Console.OpenStandardError(), Console.OutputEncoding);
+
             // set module search paths
             string scriptDir = Path.GetDirectoryName("C:\\Documents and Settings\\Admin\\My Documents\\Visual Studio 2008\\Projects\\ATUAV_RT\\RealTimeProcessing\\emdat.py");
             string emdatDir = Path.GetDirectoryName("C:\\Documents and Settings\\Admin\\My Documents\\Visual Studio 2008\\Projects\\ATUAV_RT\\RealTimeProcessing\\EMDAT\\src\\");
@@ -96,26 +101,62 @@ namespace ATUAV_RT
         /// <summary>
         /// Converts gaze points into formatted string
         /// </summary>
-        private String RawGazePoints
+        private object[][] RawGazePoints
         {
             get
             {
-                StringBuilder sb = new StringBuilder();
-                foreach (GazeDataItem gp in gazePoints)
+                List<object[]> gazePoints = new List<object[]>();
+                foreach (GazeDataItem data in this.gazePoints)
                 {
-                    long ms = gp.TimeStamp / 1000 + (gp.TimeStamp / 100 % 10 > 5 ? 1 : 0); // convert micro to milliseconds
-                    DateTime timestamp = new DateTime(syncManager.RemoteToLocal(gp.TimeStamp) * 10);
-                    string dateTimeStamp = timestamp.Hour + ":" + timestamp.Minute + "." + timestamp.Second;
-                    double mappedGazeDataPointX = (gp.LeftGazePoint2D.X + gp.RightGazePoint2D.X) / 2;
-                    double mappedGazeDataPointY = (gp.LeftGazePoint2D.Y + gp.RightGazePoint2D.Y) / 2;
+                    DateTime timestamp = new DateTime(syncManager.RemoteToLocal(data.TimeStamp) * 10);
                     
-                    // [self.timestamp, self.datetimestamp, self.datetimestampstartoffset, self.number, self.gazepointxleft, self.gazepointyleft, self.camxleft, self.camyleft, self.distanceleft, self.pupilleft, self.validityleft, self.gazepointxright, self.gazepointyright, self.camxright, self.camyright, self.distanceright, self.pupilright, self.validityright, self.fixationindex, self.gazepointx, self.gazepointy,                                                                                                                                                                    self.event, self.eventkey, self.data1, self.data2, self.descriptor, self.stimuliname, self.stimuliid, self.mediawidth, self.mediaheight, self.mediaposx, self.mediaposy, self.mappedfixationpointx, self.mappedfixationpointy, self.fixationduration, self.aoiids, self.aoinames, self.webgroupimage, self.mappedgazedatapointx, self.mappedgazedatapointy, self.microsecondtimestamp, self.absolutemicrosecondtimestamp,_]
-                    sb.AppendLine(ms + "\t" + dateTimeStamp + "\t" /*datetimestampstartoffset*/ + "\t" + (gazePointCounter++) + "\t" + gp.LeftGazePoint2D.X + "\t" + gp.LeftGazePoint2D.Y + "\t" + gp.LeftEyePosition3D.X + "\t" + gp.LeftEyePosition3D.Y + "\t" + gp.LeftEyePosition3D.Z + "\t" + gp.LeftPupilDiameter + "\t" + gp.LeftValidity + "\t" + gp.RightGazePoint2D.X + "\t" + gp.RightGazePoint2D.Y + "\t" + gp.RightEyePosition3D.X + "\t" + gp.RightEyePosition3D.Y + "\t" + gp.RightEyePosition3D.Z + "\t" + gp.RightPupilDiameter + "\t" + gp.RightValidity + "\t" /*fixationindex*/ + "\t" + gp.RightGazePoint2D.X + "\t" + gp.RightGazePoint2D.Y + "\t" /*event*/ + "\t" /*eventkey*/ + "\t" /*data1*/ + "\t" /*data2*/ + "\t" /*descriptor*/ + "\tScreenRec\t0\t" + Screen.PrimaryScreen.Bounds.Width + "\t" + Screen.PrimaryScreen.Bounds.Height + "\t0\t0\t" /*mappedfixationpointx*/ + "\t" /*mappedfixationpointy*/ + "\t" /*fixationduration*/ + "\t0\tContent\t" /*webgroupimage*/ + "\t" + mappedGazeDataPointX + "\t" + mappedGazeDataPointY + "\t" /*microsecondtimestamp*/ + "\t" + gp.TimeStamp + "\t");
+                    object[] gp = new object[43];
+                    gp[0]  = (int)(data.TimeStamp / 1000 + (data.TimeStamp / 100 % 10 > 5 ? 1 : 0)); // timestamp
+                    gp[1]  = timestamp.Hour + ":" + timestamp.Minute + "." + timestamp.Second; // datetimestamp
+                    gp[2]  = ""; // datetimestampstartoffset
+                    gp[3]  = gazePointNumber++; // number
+                    gp[4]  = (float)data.LeftGazePoint2D.X; // gazepointxleft
+                    gp[5]  = (float)data.LeftGazePoint2D.Y; // gazepointyleft
+                    gp[6]  = (float)data.LeftEyePosition3D.X; // camxleft
+                    gp[7]  = (float)data.LeftEyePosition3D.Y; // camyleft
+                    gp[8]  = (float)data.LeftEyePosition3D.Z; // distanceleft
+                    gp[9]  = data.LeftPupilDiameter; // pupilleft
+                    gp[10] = data.LeftValidity; // validityleft
+                    gp[11] = (float)data.RightGazePoint2D.X; // gazepointxright
+                    gp[12] = (float)data.RightGazePoint2D.Y; // gazepointyright
+                    gp[13] = (float)data.RightEyePosition3D.X; // camxright
+                    gp[14] = (float)data.RightEyePosition3D.Y; // camyright
+                    gp[15] = (float)data.RightEyePosition3D.Z; // distanceright
+                    gp[16] = data.RightPupilDiameter; // pupilright
+                    gp[17] = data.RightValidity; // validityright
+                    gp[18] = ""; // fixationindex
+                    gp[19] = data.RightGazePoint2D.X; // gazepointx TODO average both eyes?
+                    gp[20] = data.RightGazePoint2D.Y; // gazepointy TODO average both eyes?
+                    gp[21] = ""; // event
+                    gp[22] = ""; // eventkey
+                    gp[23] = ""; // data1
+                    gp[24] = ""; // data2
+                    gp[25] = ""; // descriptor
+                    gp[26] = "ScreenRec"; // stimuliname
+                    gp[27] = 0; // stimuliid
+                    gp[28] = Screen.PrimaryScreen.Bounds.Width; // mediawidth
+                    gp[29] = Screen.PrimaryScreen.Bounds.Height; // mediaheight
+                    gp[30] = 0; // mediaposx
+                    gp[31] = 0; // mediaposy
+                    gp[32] = ""; // mappedfixationpointx
+                    gp[33] = ""; // mappedfixationpointy
+                    gp[34] = ""; // fixationduration
+                    gp[35] = 0; // aoiids
+                    gp[36] = "Content"; // aoinames
+                    gp[37] = ""; // webgroupimage
+                    gp[38] = (int)((data.LeftGazePoint2D.X + data.RightGazePoint2D.X) / 2); // mappedgazedatapointx
+                    gp[39] = (int)((data.LeftGazePoint2D.Y + data.RightGazePoint2D.Y) / 2); // mappedgazedatapointy
+                    gp[40] = ""; // microsecondtimestamp
+                    gp[41] = timestamp; // absolutemicrosecondtimestamp
+                    gp[42] = "";
+                    gazePoints.Add(gp);
                 }
-
-                if (sb.Length > 0)
-                    sb.Length = sb.Length - 2; // remove trailing "\r\n"
-                return sb.ToString();
+                return gazePoints.ToArray();
             }
         }
 
@@ -209,10 +250,8 @@ namespace ATUAV_RT
         {
             lock (this)
             {
-                Console.WriteLine("Before EMDAT: " + DateTime.Now);
                 IDictionary<object, object> features = emdat.generate_features(SegmentId, RawGazePoints, RawFixations, aoiDefinitions);
-                Console.WriteLine("After EMDAT: " + DateTime.Now);
-
+                
                 if (!cumulativeData)
                 {
                     fixations.Clear();

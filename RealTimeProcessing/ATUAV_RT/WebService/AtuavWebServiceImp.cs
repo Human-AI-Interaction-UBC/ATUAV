@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 using System.ServiceModel.Activation;
 
 namespace ATUAV_RT
@@ -30,9 +27,14 @@ namespace ATUAV_RT
             Program.InterventionEngine.SetVisualization(visualization);
         }
 
-        public string GetIntervention()
+        public Stream GetIntervention(string callback)
         {
-            return Program.InterventionEngine.GetIntervention();
+            MemoryStream ms = new MemoryStream();
+            StreamWriter sw = new StreamWriter(ms);
+            sw.Write(Program.InterventionEngine.GetIntervention(callback));
+            sw.Flush();
+            ms.Position = 0;
+            return ms;
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace ATUAV_RT
@@ -53,11 +52,18 @@ namespace ATUAV_RT
             // TODO
         }
 
-        public string GetIntervention()
+        public string GetIntervention(string callback)
         {
             IDictionary<object, object> features = CurrentProcessor.ProcessWindow();
             // TODO perform learning on generated features
-            return features.ToString();
+
+            StringBuilder sb = new StringBuilder();
+            foreach (KeyValuePair<object, object> pair in features)
+            {
+                sb.Append("\"" + pair.Key + "\": \"" + pair.Value + "\",");
+            }
+
+            return callback + "({" + sb.ToString().Remove(sb.Length-1) + "})";
         }
     }
 }

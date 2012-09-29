@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.IO;
 using System.ServiceModel;
 using System.ServiceModel.Web;
-using System.Text;
 
 namespace ATUAV_RT
 {
@@ -19,7 +16,7 @@ namespace ATUAV_RT
         void SetVisualization(string visualization);
 
         [OperationContract]
-        [WebGet(UriTemplate = "/intervention")]
-        string GetIntervention();
+        [WebGet(UriTemplate = "/intervention?callback={callback}")]
+        Stream GetIntervention(string callback);
     }
 }

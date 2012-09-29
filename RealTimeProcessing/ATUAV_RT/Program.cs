@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.ServiceModel;
-using System.ServiceModel.Description;
 using System.ServiceModel.Web;
-using System.Threading;
 using NDesk.Options;
 using Tobii.Eyetracking.Sdk;
 using Tobii.Eyetracking.Sdk.Time;
@@ -145,6 +142,7 @@ namespace ATUAV_RT
 
             // process windows with EMDAT
             EmdatProcessor processor = new EmdatProcessor(syncManager);
+            processor.CumulativeData = cumulativeWindows;
             if (aoiFilePath != null)
             {
                 processor.AoiFilePath = aoiFilePath;
