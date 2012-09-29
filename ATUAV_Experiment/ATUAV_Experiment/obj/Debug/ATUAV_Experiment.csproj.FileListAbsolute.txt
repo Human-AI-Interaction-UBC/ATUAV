@@ -1,0 +1,10 @@
+c:\documents and settings\admin\my documents\visual studio 2010\Projects\ATUAV_Experiment\ATUAV_Experiment\bin\ATUAV_Experiment.dll
+c:\documents and settings\admin\my documents\visual studio 2010\Projects\ATUAV_Experiment\ATUAV_Experiment\bin\ATUAV_Experiment.pdb
+c:\documents and settings\admin\my documents\visual studio 2010\Projects\ATUAV_Experiment\ATUAV_Experiment\obj\Debug\ResolveAssemblyReference.cache
+c:\documents and settings\admin\my documents\visual studio 2010\Projects\ATUAV_Experiment\ATUAV_Experiment\obj\Debug\ATUAV_Experiment.dll
+c:\documents and settings\admin\my documents\visual studio 2010\Projects\ATUAV_Experiment\ATUAV_Experiment\obj\Debug\ATUAV_Experiment.pdb
+C:\Documents and Settings\Admin\My Documents\Visual Studio 2008\Projects\ATUAV_RT\ATUAV_Experiment\ATUAV_Experiment\bin\ATUAV_Experiment.dll
+C:\Documents and Settings\Admin\My Documents\Visual Studio 2008\Projects\ATUAV_RT\ATUAV_Experiment\ATUAV_Experiment\bin\ATUAV_Experiment.pdb
+C:\Documents and Settings\Admin\My Documents\Visual Studio 2008\Projects\ATUAV_RT\ATUAV_Experiment\ATUAV_Experiment\obj\Debug\ResolveAssemblyReference.cache
+C:\Documents and Settings\Admin\My Documents\Visual Studio 2008\Projects\ATUAV_RT\ATUAV_Experiment\ATUAV_Experiment\obj\Debug\ATUAV_Experiment.dll
+C:\Documents and Settings\Admin\My Documents\Visual Studio 2008\Projects\ATUAV_RT\ATUAV_Experiment\ATUAV_Experiment\obj\Debug\ATUAV_Experiment.pdb
