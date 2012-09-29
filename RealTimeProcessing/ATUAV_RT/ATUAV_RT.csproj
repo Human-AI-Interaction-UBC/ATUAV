@@ -148,7 +148,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GazeDataHandlers\WindowingHandler.cs" />
     <Compile Include="WebService\AtuavWebServiceImp.cs" />
-    <Compile Include="WebService\FrontEndHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="FixDet">

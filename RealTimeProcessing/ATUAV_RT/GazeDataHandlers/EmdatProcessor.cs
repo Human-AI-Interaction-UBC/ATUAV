@@ -109,51 +109,52 @@ namespace ATUAV_RT
                 foreach (GazeDataItem data in this.gazePoints)
                 {
                     DateTime timestamp = new DateTime(syncManager.RemoteToLocal(data.TimeStamp) * 10);
-                    
-                    object[] gp = new object[43];
-                    gp[0]  = (int)(data.TimeStamp / 1000 + (data.TimeStamp / 100 % 10 > 5 ? 1 : 0)); // timestamp
-                    gp[1]  = timestamp.Hour + ":" + timestamp.Minute + "." + timestamp.Second; // datetimestamp
-                    gp[2]  = ""; // datetimestampstartoffset
-                    gp[3]  = gazePointNumber++; // number
-                    gp[4]  = (float)data.LeftGazePoint2D.X; // gazepointxleft
-                    gp[5]  = (float)data.LeftGazePoint2D.Y; // gazepointyleft
-                    gp[6]  = (float)data.LeftEyePosition3D.X; // camxleft
-                    gp[7]  = (float)data.LeftEyePosition3D.Y; // camyleft
-                    gp[8]  = (float)data.LeftEyePosition3D.Z; // distanceleft
-                    gp[9]  = data.LeftPupilDiameter; // pupilleft
-                    gp[10] = data.LeftValidity; // validityleft
-                    gp[11] = (float)data.RightGazePoint2D.X; // gazepointxright
-                    gp[12] = (float)data.RightGazePoint2D.Y; // gazepointyright
-                    gp[13] = (float)data.RightEyePosition3D.X; // camxright
-                    gp[14] = (float)data.RightEyePosition3D.Y; // camyright
-                    gp[15] = (float)data.RightEyePosition3D.Z; // distanceright
-                    gp[16] = data.RightPupilDiameter; // pupilright
-                    gp[17] = data.RightValidity; // validityright
-                    gp[18] = ""; // fixationindex
-                    gp[19] = data.RightGazePoint2D.X; // gazepointx TODO average both eyes?
-                    gp[20] = data.RightGazePoint2D.Y; // gazepointy TODO average both eyes?
-                    gp[21] = ""; // event
-                    gp[22] = ""; // eventkey
-                    gp[23] = ""; // data1
-                    gp[24] = ""; // data2
-                    gp[25] = ""; // descriptor
-                    gp[26] = "ScreenRec"; // stimuliname
-                    gp[27] = 0; // stimuliid
-                    gp[28] = Screen.PrimaryScreen.Bounds.Width; // mediawidth
-                    gp[29] = Screen.PrimaryScreen.Bounds.Height; // mediaheight
-                    gp[30] = 0; // mediaposx
-                    gp[31] = 0; // mediaposy
-                    gp[32] = ""; // mappedfixationpointx
-                    gp[33] = ""; // mappedfixationpointy
-                    gp[34] = ""; // fixationduration
-                    gp[35] = 0; // aoiids
-                    gp[36] = "Content"; // aoinames
-                    gp[37] = ""; // webgroupimage
-                    gp[38] = (int)((data.LeftGazePoint2D.X + data.RightGazePoint2D.X) / 2); // mappedgazedatapointx
-                    gp[39] = (int)((data.LeftGazePoint2D.Y + data.RightGazePoint2D.Y) / 2); // mappedgazedatapointy
-                    gp[40] = ""; // microsecondtimestamp
-                    gp[41] = timestamp; // absolutemicrosecondtimestamp
-                    gp[42] = "";
+
+                    object[] gp = new object[] {
+                        (int)(data.TimeStamp / 1000 + (data.TimeStamp / 100 % 10 > 5 ? 1 : 0)), // timestamp
+                        timestamp.Hour + ":" + timestamp.Minute + "." + timestamp.Second, // datetimestamp
+                        "", // datetimestampstartoffset
+                        gazePointNumber++, // number
+                        (float)data.LeftGazePoint2D.X, // gazepointxleft
+                        (float)data.LeftGazePoint2D.Y, // gazepointyleft
+                        (float)data.LeftEyePosition3D.X, // camxleft
+                        (float)data.LeftEyePosition3D.Y, // camyleft
+                        (float)data.LeftEyePosition3D.Z, // distanceleft
+                        data.LeftPupilDiameter, // pupilleft
+                        data.LeftValidity, // validityleft
+                        (float)data.RightGazePoint2D.X, // gazepointxright
+                        (float)data.RightGazePoint2D.Y, // gazepointyright
+                        (float)data.RightEyePosition3D.X, // camxright
+                        (float)data.RightEyePosition3D.Y, // camyright
+                        (float)data.RightEyePosition3D.Z, // distanceright
+                        data.RightPupilDiameter, // pupilright
+                        data.RightValidity, // validityright
+                        0, // fixationindex
+                        (int)data.RightGazePoint2D.X, // gazepointx TODO average both eyes?
+                        (int)data.RightGazePoint2D.Y, // gazepointy TODO average both eyes?
+                        "", // event
+                        "", // eventkey
+                        "", // data1
+                        "", // data2
+                        "", // descriptor
+                        "ScreenRec", // stimuliname
+                        0, // stimuliid
+                        Screen.PrimaryScreen.Bounds.Width, // mediawidth
+                        Screen.PrimaryScreen.Bounds.Height, // mediaheight
+                        0, // mediaposx
+                        0, // mediaposy
+                        0, // mappedfixationpointx
+                        0, // mappedfixationpointy
+                        0, // fixationduration
+                        0, // aoiids
+                        "Content", // aoinames
+                        "", // webgroupimage
+                        (int)((data.LeftGazePoint2D.X + data.RightGazePoint2D.X) / 2), // mappedgazedatapointx
+                        (int)((data.LeftGazePoint2D.Y + data.RightGazePoint2D.Y) / 2), // mappedgazedatapointy
+                        "", // microsecondtimestamp
+                        timestamp, // absolutemicrosecondtimestamp
+                        ""
+                    };
                     gazePoints.Add(gp);
                 }
                 return gazePoints.ToArray();

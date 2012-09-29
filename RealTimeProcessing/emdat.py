@@ -4,7 +4,7 @@ Oliver Schmid - oliver.schmd@gmail.com
 
 Programmatic interface for generating machine learning features from real-time Tobii data.
 """
-from EMDAT.src.data_structures import Datapoint, Fixation
+from EMDAT.src.data_structures import Datapoint, Fixation, datapoint_from_string
 from EMDAT.src.Segment import Segment
 from EMDAT.src.Recording import read_aoilines
 from itertools import izip
@@ -29,9 +29,9 @@ def generate_features(segment_id, raw_gaze_points, raw_fixations, raw_aois):
     """
 
     # init
-    gaze_points = [] if len(raw_gaze_points) == 0 else map(Datapoint, raw_gaze_points)
-    fixations = [] if len(raw_fixations) == 0 else map(Fixation, raw_fixations.split('\n'))
-    aois = [] if len(raw_aois) == 0 else read_aoilines(raw_aois)
+    gaze_points = map(Datapoint, raw_gaze_points) if len(raw_gaze_points) > 0 else []
+    fixations = map(Fixation, raw_fixations.split('\n')) if len(raw_fixations) > 0 else []
+    aois = read_aoilines(raw_aois) if len(raw_aois) > 0 else []
     
     # generate features
     return parse_as_segment(segment_id, gaze_points, fixations, aois)
@@ -49,7 +49,7 @@ def parse_as_segment(segment_id, gaze_points, fixations, aois):
 def test():
     """testing script"""
 
-    gaze_points = map(Datapoint, '''1348606769563	23:42.54		0	-1	-1	0	0	0	-1	4	-1	-1	0	0	0	-1	4		-1	-1						ScreenRec	0	1280	1024	0	0				0	Content		-1	-1		1348606769562858	
+    alldata = '''1348606769563	23:42.54		0	-1	-1	0	0	0	-1	4	-1	-1	0	0	0	-1	4		-1	-1						ScreenRec	0	1280	1024	0	0				0	Content		-1	-1		1348606769562858	
 1348606769571	23:42.54		1	-1	-1	0	0	0	-1	4	0.31218794483766	0.903827903119918	0	0	0	3.074707	4		0.31218794483766	0.903827903119918						ScreenRec	0	1280	1024	0	0				0	Content		-0.34390602758117	-0.0480860484400409		1348606769571109	
 1348606769579	23:42.54		2	-1	-1	0	0	0	-1	4	-1	-1	0	0	0	-1	4		-1	-1						ScreenRec	0	1280	1024	0	0				0	Content		-1	-1		1348606769579482	
 1348606769588	23:42.54		3	-1	-1	0	0	0	-1	4	-1	-1	0	0	0	-1	4		-1	-1						ScreenRec	0	1280	1024	0	0				0	Content		-1	-1		1348606769587729	
@@ -448,7 +448,9 @@ def test():
 1348606772860	23:42.57		396	0.127450661989542	0.209635598815566	0	0	0	2.457199	4	-0.00216506644119363	-0.336909809049303	-32.9419472903548	53.2248236923656	527.780912942284	3.085052	0		-0.00216506644119363	-0.336909809049303						ScreenRec	0	1280	1024	0	0				0	Content		0.0626427977741741	-0.063637105116868		1348606772860193	
 1348606772868	23:42.57		397	-1	-1	0	0	0	-1	4	-0.00676463386730575	-0.2415953677164	-30.4445446780035	51.2843923745011	508.155274226894	2.98381	0		-0.00676463386730575	-0.2415953677164						ScreenRec	0	1280	1024	0	0				0	Content		-0.503382316933653	-0.6207976838582		1348606772868577	
 1348606772877	23:42.57		398	0.129608391471265	0.210068940276187	0	0	0	2.474655	4	-0.00392889887871206	-0.341038462544475	-32.9419850213737	53.2608477378715	527.974838483216	3.070694	0		-0.00392889887871206	-0.341038462544475						ScreenRec	0	1280	1024	0	0				0	Content		0.0628397462962766	-0.0654847611341438		1348606772876818	
-1348606772885	23:42.57		399	-1	-1	0	0	0	-1	4	-0.0105527971870742	-0.242623249593635	-30.4609084103133	51.3261104770675	508.401960898341	2.97496	0		-0.0105527971870742	-0.242623249593635						ScreenRec	0	1280	1024	0	0				0	Content		-0.505276398593537	-0.621311624796817		1348606772885200	'''.split('\r\n'))
+1348606772885	23:42.57		399	-1	-1	0	0	0	-1	4	-0.0105527971870742	-0.242623249593635	-30.4609084103133	51.3261104770675	508.401960898341	2.97496	0		-0.0105527971870742	-0.242623249593635						ScreenRec	0	1280	1024	0	0				0	Content		-0.505276398593537	-0.621311624796817		1348606772885200	'''
+
+    gaze_points = map(datapoint_from_string, alldata.split('\n'))
     fixations = []
     aois = read_aoilines('''	df_high	df_low	labels	legend	text
 bar_uniform_1	([(160, 129), (1000, 129), (1000, 344), (160, 344)], [])	([(160, 344), (1000, 344), (1000, 556), (160, 556)], [])	([(160, 558), (898, 558), (898, 602), (160, 602)], [])	([(1018, 495), (1196, 495), (1196, 584), (1018, 584)], [])	([(375, 615), (900, 615), (900, 650), (375, 650)], [])
