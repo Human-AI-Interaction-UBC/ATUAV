@@ -19,7 +19,7 @@
     <VerifyUploadedFiles>false</VerifyUploadedFiles>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <StartArguments>-b http://localhost:8080/atuav -a RealTimeProcessing/atuav.aoi</StartArguments>
+    <StartArguments>-b http://localhost:8080/atuav -a RealTimeProcessing/left_right.aoi</StartArguments>
     <StartWorkingDirectory>C:\Documents and Settings\Admin\My Documents\Visual Studio 2008\Projects\ATUAV_RT\</StartWorkingDirectory>
   </PropertyGroup>
 </Project>

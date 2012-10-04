@@ -130,8 +130,8 @@ namespace ATUAV_RT
                         data.RightPupilDiameter, // pupilright
                         data.RightValidity, // validityright
                         0, // fixationindex
-                        (int)data.RightGazePoint2D.X, // gazepointx TODO average both eyes?
-                        (int)data.RightGazePoint2D.Y, // gazepointy TODO average both eyes?
+                        (float)data.RightGazePoint2D.X, // gazepointx TODO average both eyes?
+                        (float)data.RightGazePoint2D.Y, // gazepointy TODO average both eyes?
                         "", // event
                         "", // eventkey
                         "", // data1
@@ -143,17 +143,16 @@ namespace ATUAV_RT
                         Screen.PrimaryScreen.Bounds.Height, // mediaheight
                         0, // mediaposx
                         0, // mediaposy
-                        0, // mappedfixationpointx
-                        0, // mappedfixationpointy
-                        0, // fixationduration
-                        0, // aoiids
+                        null, // mappedfixationpointx
+                        null, // mappedfixationpointy
+                        null, // fixationduration
+                        "", // aoiids
                         "Content", // aoinames
                         "", // webgroupimage
                         (int)((data.LeftGazePoint2D.X + data.RightGazePoint2D.X) / 2), // mappedgazedatapointx
                         (int)((data.LeftGazePoint2D.Y + data.RightGazePoint2D.Y) / 2), // mappedgazedatapointy
-                        "", // microsecondtimestamp
-                        timestamp, // absolutemicrosecondtimestamp
-                        ""
+                        null, // microsecondtimestamp
+                        timestamp // absolutemicrosecondtimestamp
                     };
                     gazePoints.Add(gp);
                 }
