@@ -40,10 +40,16 @@ def generate_features(segment_id, raw_gaze_points, raw_fixations, raw_aois):
 def parse_as_segment(segment_id, gaze_points, fixations, aois):
     """separated for testing purposes"""
 
-    segment = Segment(segment_id, gaze_points, fixations, aois)
-    feature_names, feature_values = segment.get_features()
-    features = dict(izip(feature_names, feature_values))
-    return features
+    try:
+        segment = Segment(segment_id, gaze_points, fixations, aois)
+        feature_names, feature_values = segment.get_features()
+        features = dict(izip(feature_names, feature_values))
+        return features
+    except Exception as e:
+        if e[0] == "Zero length segment":
+            return None
+        else:
+            raise e
 
 
 def test():
