@@ -458,8 +458,8 @@ def test():
 
     gaze_points = map(datapoint_from_string, alldata.split('\n'))
     fixations = []
-    aois = read_aoilines(["left\t0,0 640,0 640,1024 0,1024",
-                          "right\t641,0 1280,0 1280,1024 641,1024"])
+    aois = read_aoilines(["left\t0,0\t640,0\t640,1024\t0,1024",
+                          "right\t641,0\t1280,0\t1280,1024\t641,1024"])
     print parse_as_segment('2', gaze_points, fixations, aois)
 
 
