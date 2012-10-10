@@ -4,7 +4,7 @@ Oliver Schmid - oliver.schmd@gmail.com
 
 Programmatic interface for generating machine learning features from real-time Tobii data.
 """
-from EMDAT.src.data_structures import Datapoint, Fixation, datapoint_from_string
+from EMDAT.src.data_structures import Datapoint, Fixation
 from EMDAT.src.Segment import Segment
 from EMDAT.src.Recording import read_aoilines
 from itertools import izip
@@ -29,7 +29,7 @@ def generate_features(segment_id, raw_gaze_points, raw_fixations, raw_aois):
     """
     
     # init
-    gaze_points = map(Datapoint, raw_gaze_points) if len(raw_gaze_points) > 0 else []
+    gaze_points = map(lambda data: Datapoint("", data), raw_gaze_points) if len(raw_gaze_points) > 0 else []
     fixations = map(Fixation, raw_fixations.split('\n')) if len(raw_fixations) > 0 else []
     aois = read_aoilines(raw_aois.split("\r\n")) if len(raw_aois) > 0 else []
     
@@ -456,7 +456,7 @@ def test():
 1348606772877	23:42.57		398	0.129608391471265	0.210068940276187	0	0	0	2.474655	4	-0.00392889887871206	-0.341038462544475	-32.9419850213737	53.2608477378715	527.974838483216	3.070694	0		-0.00392889887871206	-0.341038462544475						ScreenRec	0	1280	1024	0	0				0	Content		0.0628397462962766	-0.0654847611341438		1348606772876818	
 1348606772885	23:42.57		399	-1	-1	0	0	0	-1	4	-0.0105527971870742	-0.242623249593635	-30.4609084103133	51.3261104770675	508.401960898341	2.97496	0		-0.0105527971870742	-0.242623249593635						ScreenRec	0	1280	1024	0	0				0	Content		-0.505276398593537	-0.621311624796817		1348606772885200	'''
 
-    gaze_points = map(datapoint_from_string, alldata.split('\n'))
+    gaze_points = map(Datapoint, alldata.split('\n'))
     fixations = map(Fixation, ["0	26	516	639	428	", 
                  "1	542	475	585	428	",
                  "2	1017	333	631	510	",
