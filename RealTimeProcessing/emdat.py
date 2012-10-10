@@ -27,11 +27,11 @@ def generate_features(segment_id, raw_gaze_points, raw_fixations, raw_aois):
     
     @return dictionary of feature value pairs. Features and values are in string format.
     """
-
+    
     # init
     gaze_points = map(Datapoint, raw_gaze_points) if len(raw_gaze_points) > 0 else []
     fixations = map(Fixation, raw_fixations.split('\n')) if len(raw_fixations) > 0 else []
-    aois = read_aoilines(raw_aois) if len(raw_aois) > 0 else []
+    aois = read_aoilines(raw_aois.split("\r\n")) if len(raw_aois) > 0 else []
     
     # generate features
     return parse_as_segment(segment_id, gaze_points, fixations, aois)
@@ -457,10 +457,14 @@ def test():
 1348606772885	23:42.57		399	-1	-1	0	0	0	-1	4	-0.0105527971870742	-0.242623249593635	-30.4609084103133	51.3261104770675	508.401960898341	2.97496	0		-0.0105527971870742	-0.242623249593635						ScreenRec	0	1280	1024	0	0				0	Content		-0.505276398593537	-0.621311624796817		1348606772885200	'''
 
     gaze_points = map(datapoint_from_string, alldata.split('\n'))
-    fixations = []
+    fixations = map(Fixation, ["0	26	516	639	428	", 
+                 "1	542	475	585	428	",
+                 "2	1017	333	631	510	",
+                 "3	1350	458	605	669	",
+                 "4	1808	233	690	650	"])
     aois = read_aoilines(["left\t0,0\t640,0\t640,1024\t0,1024",
                           "right\t641,0\t1280,0\t1280,1024\t641,1024"])
-    print parse_as_segment('2', gaze_points, fixations, aois)
+    print parse_as_segment('0', gaze_points, fixations, aois)
 
 
 if __name__ == "__main__":
