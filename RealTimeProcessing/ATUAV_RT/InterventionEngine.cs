@@ -47,20 +47,26 @@ namespace ATUAV_RT
             }
         }
 
-        public void SetVisualization(string visualization)
-        {
-            // TODO
-        }
-
         public string GetIntervention(string callback)
         {
-            IDictionary<object, object> features = CurrentProcessor.ProcessWindow();
-            // TODO perform learning on generated features
+            // TODO
+            return null;
+        }
 
+        public string GetFeatures(string callback)
+        {
+            IDictionary<object, object> features = CurrentProcessor.ProcessWindow();
+            
+            // sort by key
+            String[] sortedFeatures = new String[features.Count];
+            features.Keys.CopyTo(sortedFeatures, 0);
+            Array.Sort(sortedFeatures);
+
+            // convert to JSON
             StringBuilder sb = new StringBuilder();
-            foreach (KeyValuePair<object, object> pair in features)
+            foreach (String feature in sortedFeatures)
             {
-                sb.Append("\"" + pair.Key + "\": \"" + pair.Value + "\",");
+                sb.Append("\"" + feature + "\": \"" + features[feature] + "\",");
             }
 
             return callback + "({" + sb.ToString().Remove(sb.Length-1) + "})";

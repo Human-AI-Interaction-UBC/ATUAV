@@ -22,9 +22,23 @@ namespace ATUAV_RT
             return "";
         }
 
-        public void SetVisualization(string visualization)
+        /// <summary>
+        /// Set AOIs through web service.
+        /// </summary>
+        /// <param name="aois"></param>
+        public void SetAreasOfInterest(string aois)
         {
-            Program.InterventionEngine.SetVisualization(visualization);
+            Program.InterventionEngine.CurrentProcessor.AoiDefinitions = aois;
+        }
+
+        public Stream GetFeatures(string callback)
+        {
+            MemoryStream ms = new MemoryStream();
+            StreamWriter sw = new StreamWriter(ms);
+            sw.Write(Program.InterventionEngine.GetFeatures(callback));
+            sw.Flush();
+            ms.Position = 0;
+            return ms;
         }
 
         public Stream GetIntervention(string callback)

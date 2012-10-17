@@ -57,6 +57,7 @@
     <Content Include="Account\Register.aspx" />
     <Content Include="Infovis\duoBars.js" />
     <Content Include="Infovis\duoIndex.html" />
+    <Content Include="Infovis\observer.htm" />
     <Content Include="Infovis\index.html" />
     <Content Include="Infovis\LiveTest.htm" />
     <Content Include="Infovis\multiBars.js" />

@@ -8,12 +8,18 @@ namespace ATUAV_RT
     public interface AtuavWebService
     {
         [OperationContract]
-        [WebGet(UriTemplate = "/eyetracker/{productId}")]
+        [WebGet(UriTemplate = "/eyetracker={productId}")]
         string SetEyetracker(string productId);
 
         [OperationContract]
-        [WebGet(UriTemplate = "/visualization/{visualization}")]
-        void SetVisualization(string visualization);
+        [WebInvoke(Method = "POST", 
+            UriTemplate = "/aois", 
+            RequestFormat = WebMessageFormat.Json)]
+        void SetAreasOfInterest(string aois);
+
+        [OperationContract]
+        [WebGet(UriTemplate = "/features?callback={callback}")]
+        Stream GetFeatures(string callback);
 
         [OperationContract]
         [WebGet(UriTemplate = "/intervention?callback={callback}")]

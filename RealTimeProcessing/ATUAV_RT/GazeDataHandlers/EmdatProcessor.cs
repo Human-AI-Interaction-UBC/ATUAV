@@ -16,7 +16,6 @@ namespace ATUAV_RT
     {
         private bool collectingData;
         private bool cumulativeData = false;
-        private string aoiFilePath;
         private string aoiDefinitions = "";
         private int segmentId = 0;
         private int gazePointNumber = 0;
@@ -55,35 +54,27 @@ namespace ATUAV_RT
             emdat = engine.ImportModule("emdat");
         }
 
-        /// <summary>
-        /// Path to Areas of Interest definitions file.
-        /// </summary>
-        public string AoiFilePath
+        public string AoiDefinitions
         {
             get
             {
-                return aoiFilePath;
+                return aoiDefinitions;
             }
-
             set
             {
-                aoiFilePath = value;
-                readAoiDefinitions();
+                lock(this) 
+                {
+                    aoiDefinitions = value;
+                }
             }
         }
 
-        private void readAoiDefinitions()
+        public void ClearData()
         {
-            try
+            lock (this)
             {
-                using (StreamReader sr = new StreamReader(aoiFilePath))
-                {
-                    aoiDefinitions = sr.ReadToEnd();
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("AOI definitions could not be read: " + e.Message);
+                fixations.Clear();
+                gazePoints.Clear();
             }
         }
 
@@ -251,7 +242,6 @@ namespace ATUAV_RT
             lock (this)
             {
                 IDictionary<object, object> features = emdat.generate_features(SegmentId, RawGazePoints, RawFixations, aoiDefinitions);
-                
                 if (!cumulativeData)
                 {
                     fixations.Clear();

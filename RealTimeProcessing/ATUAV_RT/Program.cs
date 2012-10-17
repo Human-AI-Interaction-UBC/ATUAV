@@ -20,18 +20,21 @@ namespace ATUAV_RT
     {
         private static Clock clock;
         private static readonly InterventionEngine interventionEngine = new InterventionEngine();
-
-        // default settings
-        private static string aoiFilePath;
-        private static Uri baseAddress;
-        private static bool cumulativeWindows = false;
-        private static bool help = false;
+        private static Settings settings = new Settings();
 
         public static InterventionEngine InterventionEngine
         {
             get
             {
                 return interventionEngine;
+            }
+        }
+
+        public static Settings Settings
+        {
+            get
+            {
+                return settings;
             }
         }
 
@@ -56,22 +59,37 @@ namespace ATUAV_RT
         /// <returns>True if program should continue, false if arguments could not be parsed or help option was called.</returns>
         private static bool parseArguments(string[] args)
         {
+            string aoiFilePath = null;
+            bool help = false;
             var p = new OptionSet()
             {
                 { "a|aoi=", "{FILEPATH} for areas of interest definitions file", (string v) => aoiFilePath = Path.GetFullPath(v)},
-                { "b|baseAddress=", "{BASE_ADDRESS} for web service", (string v) => baseAddress = new Uri(v)},
-                { "c|cumulative", "windows collect data cumulatively", v => cumulativeWindows = v != null},
+                { "b|baseAddress=", "{BASE_ADDRESS} for web service", (string v) => Settings.BaseAddress = new Uri(v)},
+                { "c|cumulative", "windows collect data cumulatively", v => Settings.Cumulative = v != null},
                 { "h|help", v => help = v != null }
             };
+
+            if (help)
+            {
+                ShowHelp(p);
+                return false;
+            }
 
             try
             {
                 List<string> extra = p.Parse(args);
 
                 // check if aoiFilePath points to actual file
-                if (aoiFilePath != null && !File.Exists(aoiFilePath))
+                if (aoiFilePath != null)
                 {
-                    throw new OptionException("AOI file does not exist. Verify file path.", "a");
+                    if (File.Exists(aoiFilePath))
+                    {
+                        ReadAoiDefinitions(aoiFilePath);
+                    }
+                    else
+                    {
+                        throw new OptionException("AOI file does not exist. Verify file path.", "a");
+                    }
                 }
 
                 // check for unparsed arguments
@@ -88,13 +106,22 @@ namespace ATUAV_RT
                 return false;
             }
 
-            if (help)
-            {
-                ShowHelp(p);
-                return false;
-            }
-
             return true;
+        }
+
+        private static void ReadAoiDefinitions(string aoiFilePath)
+        {
+            try
+            {
+                using (StreamReader sr = new StreamReader(aoiFilePath))
+                {
+                    Settings.AoiDefinitions = sr.ReadToEnd();
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("AOI definitions could not be read: " + e.Message);
+            }
         }
 
         /// <summary>
@@ -142,22 +169,17 @@ namespace ATUAV_RT
 
             // process windows with EMDAT
             EmdatProcessor processor = new EmdatProcessor(syncManager);
-            processor.CumulativeData = cumulativeWindows;
-            if (aoiFilePath != null)
-            {
-                processor.AoiFilePath = aoiFilePath;
-            }
-
+            processor.AoiDefinitions = Settings.AoiDefinitions;
+            processor.CumulativeData = Settings.Cumulative;
             connector.Eyetracker.GazeDataReceived += processor.GazeDataReceived;
             fixations.FixDetector.FixationEnd += processor.FixationEnd;
             interventionEngine.Processors.Add(e.EyetrackerInfo.ProductId, processor);
-
             processor.StartWindow();
         }
 
         private static void createWebService()
         {
-            using (WebServiceHost host = new WebServiceHost(typeof(AtuavWebServiceImp), baseAddress))
+            using (WebServiceHost host = new WebServiceHost(typeof(AtuavWebServiceImp), Settings.BaseAddress))
             {
                 // Open the ServiceHost to start listening for messages. Since
                 // no endpoints are explicitly configured, the runtime will create
@@ -165,7 +187,7 @@ namespace ATUAV_RT
                 // by the service.
                 host.Open();
 
-                Console.WriteLine("The service is ready at {0}", baseAddress);
+                Console.WriteLine("The service is ready at {0}", Settings.BaseAddress);
                 Console.WriteLine("Press <Enter> to stop the service.");
                 Console.ReadLine();
 

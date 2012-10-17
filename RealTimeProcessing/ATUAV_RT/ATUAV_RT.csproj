@@ -133,6 +133,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="InterventionEngine.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="WebService\AtuavWebService.cs" />
     <Compile Include="EyetrackerConnector.cs" />
     <Compile Include="EyetrackerErrors.cs" />
@@ -148,6 +149,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GazeDataHandlers\WindowingHandler.cs" />
     <Compile Include="WebService\AtuavWebServiceImp.cs" />
+    <Compile Include="Interventions\Intervention.cs" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="FixDet">
