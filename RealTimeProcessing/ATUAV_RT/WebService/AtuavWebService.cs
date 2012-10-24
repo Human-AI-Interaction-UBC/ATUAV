@@ -18,11 +18,11 @@ namespace ATUAV_RT
         void SetAreasOfInterest(string aois);
 
         [OperationContract]
-        [WebGet(UriTemplate = "/features?callback={callback}")]
-        Stream GetFeatures(string callback);
+        [WebGet(UriTemplate = "/features?id={id}&callback={callback}")]
+        Stream GetFeatures(string id, string callback);
 
         [OperationContract]
-        [WebGet(UriTemplate = "/intervention?callback={callback}")]
-        Stream GetIntervention(string callback);
+        [WebGet(UriTemplate = "/intervention?id={id}&callback={callback}")]
+        Stream GetIntervention(string id, string callback);
     }
 }

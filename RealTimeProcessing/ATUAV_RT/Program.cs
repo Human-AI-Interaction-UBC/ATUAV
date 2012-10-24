@@ -19,14 +19,14 @@ namespace ATUAV_RT
     public class Program
     {
         private static Clock clock;
-        private static readonly InterventionEngine interventionEngine = new InterventionEngine();
         private static Settings settings = new Settings();
+        private static readonly Dictionary<String, EmdatProcessor> processors = new Dictionary<String, EmdatProcessor>();
 
-        public static InterventionEngine InterventionEngine
+        public static Dictionary<String, EmdatProcessor> Processors
         {
             get
             {
-                return interventionEngine;
+                return processors;
             }
         }
 
@@ -178,7 +178,7 @@ namespace ATUAV_RT
             processor.CumulativeData = Settings.Cumulative;
             connector.Eyetracker.GazeDataReceived += processor.GazeDataReceived;
             fixations.FixDetector.FixationEnd += processor.FixationEnd;
-            interventionEngine.Processors.Add(e.EyetrackerInfo.ProductId, processor);
+            Processors.Add("observer", processor);
             processor.StartWindow();
         }
 
