@@ -9,8 +9,6 @@ namespace ATUAV_RT
     /// </summary>
     public class InterventionEngine
     {
-        String currentEyetracker = "TT120-204-80900268";
-
         public static string GetInterventions(IDictionary<Object, Object> features)
         {
             return "";

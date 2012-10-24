@@ -60,12 +60,14 @@ namespace ATUAV_RT
         private static bool parseArguments(string[] args)
         {
             string aoiFilePath = null;
+            string processorFilePath = null;
             bool help = false;
             var p = new OptionSet()
             {
-                { "a|aoi=", "{FILEPATH} for areas of interest definitions file", (string v) => aoiFilePath = Path.GetFullPath(v)},
+                { "a|aois=", "{FILEPATH} for areas of interest definitions file", (string v) => aoiFilePath = Path.GetFullPath(v)},
                 { "b|baseAddress=", "{BASE_ADDRESS} for web service", (string v) => Settings.BaseAddress = new Uri(v)},
                 { "c|cumulative", "windows collect data cumulatively", v => Settings.Cumulative = v != null},
+                { "p|processors=", "{FILEPATH} for processor definitions file", (string v) => processorFilePath = Path.GetFullPath(v)},
                 { "h|help", v => help = v != null }
             };
 
@@ -89,6 +91,19 @@ namespace ATUAV_RT
                     else
                     {
                         throw new OptionException("AOI file does not exist. Verify file path.", "a");
+                    }
+                }
+
+                // check if processorFilePath points to actual file
+                if (processorFilePath != null)
+                {
+                    if (File.Exists(processorFilePath))
+                    {
+                        ReadProcessorDefinitions(processorFilePath);
+                    }
+                    else
+                    {
+                        throw new OptionException("Processor file does not exist. Verify file path.", "p");
                     }
                 }
 
@@ -122,6 +137,27 @@ namespace ATUAV_RT
             {
                 Console.WriteLine("AOI definitions could not be read: " + e.Message);
             }
+        }
+
+        private static void ReadProcessorDefinitions(string processorFilePath)
+        {
+            try
+            {
+                using (StreamReader sr = new StreamReader(processorFilePath))
+                {
+                    while (!sr.EndOfStream)
+                    {
+                        string[] line = sr.ReadLine().Split("\t".ToCharArray(), 2);
+                        string[] procIds = line[1].Split(",".ToCharArray());
+                        Settings.ProcessorDefinitions[line[0]] = procIds;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Processor definitions could not be read: " + e.Message);
+            }
+
         }
 
         /// <summary>
@@ -167,19 +203,22 @@ namespace ATUAV_RT
             FixationDetector fixations = new FixationDetector(syncManager);
             connector.Eyetracker.GazeDataReceived += fixations.GazeDataReceived;
 
-            /*/ print
-            ConsolePrinter printer = new ConsolePrinter(syncManager);
-            connector.Eyetracker.GazeDataReceived += printer.GazeDataReceived;
-            fixations.FixDetector.FixationEnd += printer.FixationEnd;//*/
-
-            // process windows with EMDAT
-            EmdatProcessor processor = new EmdatProcessor(syncManager);
-            processor.AoiDefinitions = Settings.AoiDefinitions;
-            processor.CumulativeData = Settings.Cumulative;
-            connector.Eyetracker.GazeDataReceived += processor.GazeDataReceived;
-            fixations.FixDetector.FixationEnd += processor.FixationEnd;
-            Processors.Add("observer", processor);
-            processor.StartWindow();
+            foreach (KeyValuePair<String, String[]> definition in Settings.ProcessorDefinitions)
+            {
+                if (connector.Info.ProductId == definition.Key)
+                {
+                    foreach (String id in definition.Value)
+                    {
+                        EmdatProcessor processor = new EmdatProcessor(syncManager);
+                        processor.AoiDefinitions = Settings.AoiDefinitions;
+                        processor.CumulativeData = Settings.Cumulative;
+                        connector.Eyetracker.GazeDataReceived += processor.GazeDataReceived;
+                        fixations.FixDetector.FixationEnd += processor.FixationEnd;
+                        Processors.Add(id, processor);
+                        processor.StartWindow();
+                    }
+                }
+            }
         }
 
         private static void createWebService()
