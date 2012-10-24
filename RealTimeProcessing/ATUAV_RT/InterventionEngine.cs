@@ -55,7 +55,7 @@ namespace ATUAV_RT
 
         public string GetFeatures(string callback)
         {
-            IDictionary<object, object> features = CurrentProcessor.ProcessWindow();
+            IDictionary<object, object> features = CurrentProcessor.Features;
             
             // sort by key
             String[] sortedFeatures = new String[features.Count];

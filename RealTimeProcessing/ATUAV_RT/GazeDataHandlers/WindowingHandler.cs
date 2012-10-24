@@ -6,7 +6,7 @@ namespace ATUAV_RT
     /// Interface for GazeDataHandlers that process data in windows (i.e. data is collected for a time then processed all at once).
     /// The duration of a window is decided outside of the handler.
     /// </summary>
-    public interface WindowingHandler<T>
+    public interface WindowingHandler
     {
         /// <summary>
         /// If true, window is open and data is being collected.
@@ -36,7 +36,7 @@ namespace ATUAV_RT
         /// Pauses data collection, processes accumulated data and starts a new window. No data events should be dropped during process step.
         /// Some WindowingHandlers return a value, read relevant documentation to determine class.
         /// </summary>
-        T ProcessWindow();
+        void ProcessWindow();
 
         /// <summary>
         /// Stops collecting data. Collected data remains cached and is NOT cleared.

@@ -33,6 +33,8 @@ namespace ATUAV_RT
 
         public Stream GetFeatures(string callback)
         {
+            Program.InterventionEngine.CurrentProcessor.ProcessWindow();
+
             MemoryStream ms = new MemoryStream();
             StreamWriter sw = new StreamWriter(ms);
             sw.Write(Program.InterventionEngine.GetFeatures(callback));

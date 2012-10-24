@@ -10,7 +10,7 @@ namespace ATUAV_RT
     /// Example GazeDataHandler that collects gaze data in dynamically sized windows
     /// and prints each window to console.
     /// </summary>
-    public class WindowingConsolePrinter : ConsolePrinter, WindowingHandler<Object>
+    public class WindowingConsolePrinter : ConsolePrinter, WindowingHandler
     {
         private bool collectingData = false;
         private bool cumulativeData = false;
@@ -119,7 +119,7 @@ namespace ATUAV_RT
         /// </summary>
         /// <param name="keepData">If true, collected data is kept for next window. Otherwise data is cleared.</param>
         /// <returns>null</returns>
-        public Object ProcessWindow()
+        public void ProcessWindow()
         {
             lock (this)
             {
@@ -129,8 +129,6 @@ namespace ATUAV_RT
                     events.Clear();
                 }
             }
-
-            return null;
         }
 
         public void StopWindow()

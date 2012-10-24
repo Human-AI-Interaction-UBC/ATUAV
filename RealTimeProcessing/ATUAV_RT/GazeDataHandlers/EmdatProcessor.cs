@@ -12,7 +12,7 @@ using Tobii.Eyetracking.Sdk.Time;
 
 namespace ATUAV_RT
 {
-    public class EmdatProcessor : GazeDataSynchronizedHandler, WindowingHandler<IDictionary<object, object>>
+    public class EmdatProcessor : GazeDataSynchronizedHandler, WindowingHandler
     {
         private bool collectingData;
         private bool cumulativeData = false;
@@ -24,6 +24,7 @@ namespace ATUAV_RT
         private LinkedList<GazeDataItem> gazePoints = new LinkedList<GazeDataItem>();
         private ScriptEngine engine = Python.CreateEngine();
         private dynamic emdat;
+        private IDictionary<object, object> features = new Dictionary<Object, Object>();
 
         public EmdatProcessor(SyncManager syncManager)
             : base(syncManager)
@@ -66,6 +67,14 @@ namespace ATUAV_RT
                 {
                     aoiDefinitions = value;
                 }
+            }
+        }
+
+        public IDictionary<Object, Object> Features
+        {
+            get
+            {
+                return features;
             }
         }
 
@@ -237,18 +246,16 @@ namespace ATUAV_RT
         /// Uses EMDAT to process gaze point, fixation, and AOI data
         /// and generate features.
         /// </summary>
-        public IDictionary<object, object> ProcessWindow()
+        public void ProcessWindow()
         {
             lock (this)
             {
-                IDictionary<object, object> features = emdat.generate_features(SegmentId, RawGazePoints, RawFixations, aoiDefinitions);
+                features = emdat.generate_features(SegmentId, RawGazePoints, RawFixations, aoiDefinitions);
                 if (!cumulativeData)
                 {
                     fixations.Clear();
                     gazePoints.Clear();
                 }
-
-                return features;
             }
         }
 
