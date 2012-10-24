@@ -28,7 +28,7 @@ namespace ATUAV_RT
         /// <param name="syncManager"></param>
         public FixationDetector(SyncManager syncManager) : base(syncManager)
         {
-            fixationDetector = new FixDetectorClass();
+            fixationDetector = new FixDetector();
             fixationDetector.init();
 
             // mimic Tobii Fixation Filter
