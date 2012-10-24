@@ -23,9 +23,9 @@ namespace ATUAV_RT
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        protected override void GazeDataReceivedSynchronized(object sender, GazeDataEventArgs e)
+        protected override void GazeDataReceivedSynchronized(object sender, GazeDataItem gazePoint)
         {
-            Print(e.GazeDataItem);
+            Print(gazePoint);
         }
 
         /// <summary>

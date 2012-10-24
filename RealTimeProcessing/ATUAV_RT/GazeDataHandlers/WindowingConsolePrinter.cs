@@ -26,13 +26,13 @@ namespace ATUAV_RT
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e">Contains gaze data item</param>
-        protected override void GazeDataReceivedSynchronized(object sender, GazeDataEventArgs e)
+        protected override void GazeDataReceivedSynchronized(object sender, GazeDataItem gazePoint)
         {
             lock (this)
             {
                 if (collectingData)
                 {
-                    events.AddLast(new EyetrackerEvent(e.GazeDataItem));
+                    events.AddLast(new EyetrackerEvent(gazePoint));
                 }
             }
         }

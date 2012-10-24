@@ -180,13 +180,13 @@ namespace ATUAV_RT
             }
         }
 
-        protected override void GazeDataReceivedSynchronized(object sender, GazeDataEventArgs e)
+        protected override void GazeDataReceivedSynchronized(object sender, GazeDataItem gazePoint)
         {
             lock (this)
             {
                 if (collectingData)
                 {
-                    gazePoints.AddLast(e.GazeDataItem);
+                    gazePoints.AddLast(gazePoint);
                 }
             }
         }

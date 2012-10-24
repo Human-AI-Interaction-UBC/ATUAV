@@ -74,37 +74,37 @@ namespace ATUAV_RT
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e">GazeDataItem to process</param>
-        protected override void GazeDataReceivedSynchronized(object sender, GazeDataEventArgs e)
+        protected override void GazeDataReceivedSynchronized(object sender, GazeDataItem gazePoint)
         {
             // ignore gaze data with low validity
-            if (e.GazeDataItem.LeftValidity < 2 || e.GazeDataItem.RightValidity < 2)
+            if (gazePoint.LeftValidity < 2 || gazePoint.RightValidity < 2)
             {
                 // convert timestamp
-                long microseconds = e.GazeDataItem.TimeStamp;
+                long microseconds = gazePoint.TimeStamp;
                 int milliseconds = (int)(microseconds / 1000);
                 int time = milliseconds;
                 if (((microseconds / 100) % 10) >= 5) time++; // round
 
                 // convert normalized screen coordinates (float between [0 - 1]) to pixel coordinates
                 // coordinates (0, 0) designate the top left corner
-                double leftX = e.GazeDataItem.LeftGazePoint2D.X * SCREEN_WIDTH;
-                double leftY = e.GazeDataItem.LeftGazePoint2D.Y * SCREEN_HEIGHT;
-                double rightX = e.GazeDataItem.RightGazePoint2D.X * SCREEN_WIDTH;
-                double rightY = e.GazeDataItem.RightGazePoint2D.Y * SCREEN_HEIGHT;
+                double leftX = gazePoint.LeftGazePoint2D.X * SCREEN_WIDTH;
+                double leftY = gazePoint.LeftGazePoint2D.Y * SCREEN_HEIGHT;
+                double rightX = gazePoint.RightGazePoint2D.X * SCREEN_WIDTH;
+                double rightY = gazePoint.RightGazePoint2D.Y * SCREEN_HEIGHT;
 
-                if (e.GazeDataItem.LeftValidity < 2 && e.GazeDataItem.RightValidity < 2)
+                if (gazePoint.LeftValidity < 2 && gazePoint.RightValidity < 2)
                 {
                     // average left and right eyes
                     int x = (int)((leftX + rightX) / 2);
                     int y = (int)((leftY + rightY) / 2);
                     fixationDetector.addPoint(time, x, y);
                 }
-                else if (e.GazeDataItem.LeftValidity < 2)
+                else if (gazePoint.LeftValidity < 2)
                 {
                     // use only left eye
                     fixationDetector.addPoint(time, (int)leftX, (int)leftY);
                 }
-                else if (e.GazeDataItem.RightValidity < 2)
+                else if (gazePoint.RightValidity < 2)
                 {
                     // use only right eye
                     fixationDetector.addPoint(time, (int)rightX, (int)rightY);

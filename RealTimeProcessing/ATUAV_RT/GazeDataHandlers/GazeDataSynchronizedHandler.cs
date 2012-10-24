@@ -27,7 +27,7 @@ namespace ATUAV_RT
         {
             if (syncManager.SyncState.StateFlag == SyncStateFlag.Synchronized)
             {
-                GazeDataReceivedSynchronized(sender, e);
+                GazeDataReceivedSynchronized(sender, e.GazeDataItem);
             }
         }
 
@@ -35,7 +35,7 @@ namespace ATUAV_RT
         /// Method to implement that handles the received eyetracker gaze data.
         /// </summary>
         /// <param name="sender"></param>
-        /// <param name="e">Contains the gaze data item</param>
-        protected abstract void GazeDataReceivedSynchronized(object sender, GazeDataEventArgs e);
+        /// <param name="gazePoint"></param>
+        protected abstract void GazeDataReceivedSynchronized(object sender, GazeDataItem gazePoint);
     }
 }
