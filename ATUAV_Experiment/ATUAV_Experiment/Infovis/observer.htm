@@ -1,33 +1,55 @@
 ﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+    <title>Observer</title>
     <script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
 	<style type="text/css">
-		text {
-		font-size: 1em;
-		font-family: Helvetica, Arial, Sans-Serif;
+		text
+		{
+		    font-size: 1em;
+		    font-family: Helvetica, Arial, Sans-Serif;
+		}
+		#featuresPanel
+		{
+		    position:absolute;
+		    top:5%;
+		    left:5%;
+		}
+		#aoiCounterPanel 
+		{
+		    position:absolute;
+		    top:5%;
+		    left:50%;
 		}
 	</style>
-    <title>Ajax example</title>
   </head>
   <body>
-    <b>Live Statistics</b>
-    <br />
-    <div id='results'></div>
+    <div id='featuresPanel'>
+    <b>Live Statistics</b><br />
+    <div id='features'></div>
+    </div>
+
+    <div id='aoiCounterPanel'>
+    <b>AOI Fixations</b><br />
+    <div id='aoiCounters'></div>
+    </div>
+
 	<script type="text/javascript">
-        function pollRawEMDATOutput(address) {
-            $.getJSON(address + "?callback=?", null, function (data) {
+	    var address = "http://localhost:8080/atuav"
+
+        function pollFeatures() {
+            $.getJSON(address + "/features?callback=?", null, function (data) {
                 var value_string = "";
                 for (var key in data) {
                     if (data.hasOwnProperty(key)) {
-                        value_string += (key + ":" + data[key] + "</br>");
+                        value_string += (key + ":" + data[key] + "<br/>");
                     }
                 }
-                $("#results").html(value_string);
+                $("#features").html(value_string);
             });
         }
-        //poll features every 5 seconds
-        setInterval(function () { pollRawEMDATOutput("http://localhost:8080/atuav/features"); }, 5000);
+
+        setInterval(pollFeatures, 5000);
     </script>
 </body>
 </html>
