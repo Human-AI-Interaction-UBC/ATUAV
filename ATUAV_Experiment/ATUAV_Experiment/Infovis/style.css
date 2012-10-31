@@ -1,0 +1,19 @@
+﻿text
+{
+    font-size: 1em;
+	font-family: Helvetica, Arial, Sans-Serif;
+}
+
+#featuresPanel
+{
+    position:absolute;
+    top:5%;
+    left:5%;
+}
+
+#aoiCounterPanel 
+{
+    position:absolute;
+    top:5%;
+    left:50%;
+}

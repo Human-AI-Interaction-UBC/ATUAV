@@ -61,10 +61,12 @@
     <Content Include="Infovis\index.html" />
     <Content Include="Infovis\LiveTest.htm" />
     <Content Include="Infovis\multiBars.js" />
+    <Content Include="Infovis\observer.js" />
     <Content Include="Infovis\old_multibars.js" />
     <Content Include="Infovis\pattern.jpeg" />
     <Content Include="Infovis\pattern.png" />
     <Content Include="Infovis\raphael.js" />
+    <Content Include="Infovis\style.css" />
     <Content Include="Infovis\undomanager.js" />
     <Content Include="Styles\Site.css" />
     <Content Include="Default.aspx" />
