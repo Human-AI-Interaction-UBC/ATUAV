@@ -108,11 +108,12 @@ namespace ATUAV_RT
                 List<object[]> gazePoints = new List<object[]>();
                 foreach (GazeDataItem data in this.gazePoints)
                 {
-                    DateTime timestamp = new DateTime(syncManager.RemoteToLocal(data.TimeStamp) * 10);
+                    long timestamp = syncManager.RemoteToLocal(data.TimeStamp);
+                    DateTime time = new DateTime(timestamp * 10);
 
                     object[] gp = new object[] {
-                        (int)(data.TimeStamp / 1000 + (data.TimeStamp / 100 % 10 > 5 ? 1 : 0)), // timestamp
-                        timestamp.Hour + ":" + timestamp.Minute + "." + timestamp.Second, // datetimestamp
+                        (int)(timestamp / 1000 + (timestamp / 100 % 10 > 5 ? 1 : 0)), // timestamp
+                        time.Hour + ":" + time.Minute + "." + time.Second, // datetimestamp
                         "", // datetimestampstartoffset
                         gazePointNumber++, // number
                         (float)data.LeftGazePoint2D.X, // gazepointxleft
@@ -152,7 +153,7 @@ namespace ATUAV_RT
                         (int)((data.LeftGazePoint2D.X + data.RightGazePoint2D.X) / 2), // mappedgazedatapointx
                         (int)((data.LeftGazePoint2D.Y + data.RightGazePoint2D.Y) / 2), // mappedgazedatapointy
                         null, // microsecondtimestamp
-                        timestamp // absolutemicrosecondtimestamp
+                        time // absolutemicrosecondtimestamp
                     };
                     gazePoints.Add(gp);
                 }

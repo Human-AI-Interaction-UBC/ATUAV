@@ -80,7 +80,7 @@ namespace ATUAV_RT
             if (gazePoint.LeftValidity < 2 || gazePoint.RightValidity < 2)
             {
                 // convert timestamp
-                long microseconds = gazePoint.TimeStamp;
+                long microseconds = syncManager.RemoteToLocal(gazePoint.TimeStamp);
                 int milliseconds = (int)(microseconds / 1000);
                 int time = milliseconds;
                 if (((microseconds / 100) % 10) >= 5) time++; // round

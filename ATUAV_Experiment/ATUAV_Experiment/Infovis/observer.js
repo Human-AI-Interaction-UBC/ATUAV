@@ -1,14 +1,15 @@
 ﻿var address = "http://localhost:8080/atuav"
+var id = "observer"
 
 function pollFeatures() {
-    $.getJSON(address + "/features?id=observer&callback=?", null, function (data) {
-        var value_string = "";
+    $.getJSON(address + "/features?id=" + id + "&callback=?", null, function(data) {
+        var features = "";
         for (var key in data) {
             if (data.hasOwnProperty(key)) {
-                value_string += (key + ":" + data[key] + "<br/>");
+                features += (key + ": " + data[key] + "<br/>");
             }
         }
-        $("#features").html(value_string);
+        $("#features").html(features);
     });
 }
 
