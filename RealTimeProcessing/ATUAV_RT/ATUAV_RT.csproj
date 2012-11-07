@@ -133,6 +133,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Database.cs" />
+    <Compile Include="EmdatProcessorSettings.cs" />
     <Compile Include="Interventions\InterventionEngine.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="WebService\AtuavWebService.cs" />

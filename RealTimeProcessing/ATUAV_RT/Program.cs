@@ -64,7 +64,6 @@ namespace ATUAV_RT
             var p = new OptionSet()
             {
                 { "b|baseAddress=", "{BASE_ADDRESS} for web service", (string v) => Settings.BaseAddress = new Uri(v)},
-                { "c|cumulative", "windows collect data cumulatively", v => Settings.Cumulative = v != null},
                 { "p|processors=", "{FILEPATH} for processor definitions file", (string v) => processorFilePath = Path.GetFullPath(v)},
                 { "h|help", v => help = v != null }
             };
@@ -118,8 +117,14 @@ namespace ATUAV_RT
                     while (!sr.EndOfStream)
                     {
                         string[] line = sr.ReadLine().Split("\t".ToCharArray(), 2);
-                        string[] procIds = line[1].Split(",".ToCharArray());
-                        Settings.ProcessorDefinitions[line[0]] = procIds;
+                        string eyetrackerProductId = line[0];
+                        string[] processorDefinitions = line[1].Split(",".ToCharArray());
+                        List<EmdatProcessorSettings> processorSettings = new List<EmdatProcessorSettings>(processorDefinitions.Length);
+                        foreach (string processorDefinition in processorDefinitions)
+                        {
+                            processorSettings.Add(new EmdatProcessorSettings(processorDefinition, processorDefinition.EndsWith("-c")));
+                        }
+                        Settings.ProcessorDefinitions[eyetrackerProductId] = processorSettings;
                     }
                 }
             }
@@ -173,18 +178,15 @@ namespace ATUAV_RT
             FixationDetector fixations = new FixationDetector(syncManager);
             connector.Eyetracker.GazeDataReceived += fixations.GazeDataReceived;
 
-            foreach (KeyValuePair<String, String[]> definition in Settings.ProcessorDefinitions)
+            if (Settings.ProcessorDefinitions.ContainsKey(connector.Info.ProductId))
             {
-                if (connector.Info.ProductId == definition.Key)
+                foreach (EmdatProcessorSettings settings in Settings.ProcessorDefinitions[connector.Info.ProductId])
                 {
-                    foreach (String id in definition.Value)
-                    {
-                        EmdatProcessor processor = new EmdatProcessor(syncManager);
-                        processor.CumulativeData = Settings.Cumulative;
-                        connector.Eyetracker.GazeDataReceived += processor.GazeDataReceived;
-                        fixations.FixDetector.FixationEnd += processor.FixationEnd;
-                        Processors.Add(id, processor);
-                    }
+                    EmdatProcessor processor = new EmdatProcessor(syncManager);
+                    processor.CumulativeData = settings.Cumulative;
+                    connector.Eyetracker.GazeDataReceived += processor.GazeDataReceived;
+                    fixations.FixDetector.FixationEnd += processor.FixationEnd;
+                    Processors.Add(settings.ProcessorId, processor);
                 }
             }
         }

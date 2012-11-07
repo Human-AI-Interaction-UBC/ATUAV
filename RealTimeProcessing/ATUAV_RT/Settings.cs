@@ -8,7 +8,6 @@ namespace ATUAV_RT
     public class Settings
     {
         public Uri BaseAddress;
-        public bool Cumulative = false;
-        public Dictionary<String, String[]> ProcessorDefinitions = new Dictionary<String, String[]>();
+        public Dictionary<String, List<EmdatProcessorSettings>> ProcessorDefinitions = new Dictionary<String, List<EmdatProcessorSettings>>();
     }
 }
