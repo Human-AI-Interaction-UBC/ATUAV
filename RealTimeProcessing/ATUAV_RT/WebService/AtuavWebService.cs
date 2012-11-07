@@ -8,21 +8,23 @@ namespace ATUAV_RT
     public interface AtuavWebService
     {
         [OperationContract]
-        [WebGet(UriTemplate = "/eyetracker={productId}")]
-        string SetEyetracker(string productId);
+        [WebGet(UriTemplate = "/start?userId={userId}&taskId={taskId}&aois={aois}")]
+        void StartTask(string userId, string taskId, string aois);
 
         [OperationContract]
-        [WebInvoke(Method = "POST", 
-            UriTemplate = "/aois", 
-            RequestFormat = WebMessageFormat.Json)]
-        void SetAreasOfInterest(string aois);
+        [WebGet(UriTemplate = "/condition?processorId={processorId}&condition={condition}&callback={callback}")]
+        Stream Condition(string processorId, string condition, string callback);
 
         [OperationContract]
-        [WebGet(UriTemplate = "/features?id={id}&callback={callback}")]
-        Stream GetFeatures(string id, string callback);
+        [WebGet(UriTemplate = "/stop")]
+        void StopTask();
 
         [OperationContract]
-        [WebGet(UriTemplate = "/intervention?id={id}&callback={callback}")]
-        Stream GetIntervention(string id, string callback);
+        [WebGet(UriTemplate = "/features?processorId={processorId}&callback={callback}")]
+        Stream GetFeatures(string processorId, string callback);
+
+        [OperationContract]
+        [WebGet(UriTemplate = "/intervention?processorId={processorId}&callback={callback}")]
+        Stream GetIntervention(string processorId, string callback);
     }
 }

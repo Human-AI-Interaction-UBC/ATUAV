@@ -9,38 +9,44 @@ namespace ATUAV_RT
     [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
     public class AtuavWebServiceImp : AtuavWebService
     {
-        /// <summary>
-        /// Sets the eyetracker to track
-        /// </summary>
-        /// <param name="productId"></param>
-        /// <returns>empty string if successful, error string if unsuccessful</returns>
-        public string SetEyetracker(string productId)
+        public void StartTask(string userId, string taskId, string aois)
         {
-            /*Program.InterventionEngine.CurrentEyetracker = productId;
-            if (Program.InterventionEngine.CurrentEyetracker != productId)
+            Database.UserId = userId;
+            Database.TaskId = taskId;
+            foreach (EmdatProcessor processor in Program.Processors.Values)
             {
-                return "error: eyetracker not connected";
-            }*/
-
-            return "";
+                processor.AoiDefinitions = aois;
+                processor.StartWindow();
+            }
         }
 
-        /// <summary>
-        /// Set AOIs through web service.
-        /// </summary>
-        /// <param name="aois"></param>
-        public void SetAreasOfInterest(string aois)
+        public Stream Condition(string processorId, string condition, string callback)
         {
-            //Program.InterventionEngine.CurrentProcessor.AoiDefinitions = aois;
+            MemoryStream ms = new MemoryStream();
+            StreamWriter sw = new StreamWriter(ms);
+            sw.Write(callback + "(");
+            // TODO if condition met write "true" else write "false"
+            sw.Write(")");
+            sw.Flush();
+            ms.Position = 0;
+            return ms;
         }
 
-        public Stream GetFeatures(string id, string callback)
+        public void StopTask()
+        {
+            foreach (EmdatProcessor processor in Program.Processors.Values)
+            {
+                processor.StopWindow();
+            }
+        }
+
+        public Stream GetFeatures(string processorId, string callback)
         {
             MemoryStream ms = new MemoryStream();
             StreamWriter sw = new StreamWriter(ms);
             sw.Write(callback + "({");
 
-            EmdatProcessor processor = Program.Processors[id];
+            EmdatProcessor processor = Program.Processors[processorId];
             if (processor != null)
             {
                 processor.ProcessWindow();
@@ -68,13 +74,13 @@ namespace ATUAV_RT
             return ms;
         }
 
-        public Stream GetIntervention(string id, string callback)
+        public Stream GetIntervention(string processorId, string callback)
         {
             MemoryStream ms = new MemoryStream();
             StreamWriter sw = new StreamWriter(ms);
             sw.Write(callback);
 
-            EmdatProcessor processor = Program.Processors[id];
+            EmdatProcessor processor = Program.Processors[processorId];
             if (processor != null)
             {
                 processor.ProcessWindow();

@@ -59,12 +59,10 @@ namespace ATUAV_RT
         /// <returns>True if program should continue, false if arguments could not be parsed or help option was called.</returns>
         private static bool parseArguments(string[] args)
         {
-            string aoiFilePath = null;
             string processorFilePath = null;
             bool help = false;
             var p = new OptionSet()
             {
-                { "a|aois=", "{FILEPATH} for areas of interest definitions file", (string v) => aoiFilePath = Path.GetFullPath(v)},
                 { "b|baseAddress=", "{BASE_ADDRESS} for web service", (string v) => Settings.BaseAddress = new Uri(v)},
                 { "c|cumulative", "windows collect data cumulatively", v => Settings.Cumulative = v != null},
                 { "p|processors=", "{FILEPATH} for processor definitions file", (string v) => processorFilePath = Path.GetFullPath(v)},
@@ -80,19 +78,6 @@ namespace ATUAV_RT
             try
             {
                 List<string> extra = p.Parse(args);
-
-                // check if aoiFilePath points to actual file
-                if (aoiFilePath != null)
-                {
-                    if (File.Exists(aoiFilePath))
-                    {
-                        ReadAoiDefinitions(aoiFilePath);
-                    }
-                    else
-                    {
-                        throw new OptionException("AOI file does not exist. Verify file path.", "a");
-                    }
-                }
 
                 // check if processorFilePath points to actual file
                 if (processorFilePath != null)
@@ -122,21 +107,6 @@ namespace ATUAV_RT
             }
 
             return true;
-        }
-
-        private static void ReadAoiDefinitions(string aoiFilePath)
-        {
-            try
-            {
-                using (StreamReader sr = new StreamReader(aoiFilePath))
-                {
-                    Settings.AoiDefinitions = sr.ReadToEnd();
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("AOI definitions could not be read: " + e.Message);
-            }
         }
 
         private static void ReadProcessorDefinitions(string processorFilePath)
@@ -210,12 +180,10 @@ namespace ATUAV_RT
                     foreach (String id in definition.Value)
                     {
                         EmdatProcessor processor = new EmdatProcessor(syncManager);
-                        processor.AoiDefinitions = Settings.AoiDefinitions;
                         processor.CumulativeData = Settings.Cumulative;
                         connector.Eyetracker.GazeDataReceived += processor.GazeDataReceived;
                         fixations.FixDetector.FixationEnd += processor.FixationEnd;
                         Processors.Add(id, processor);
-                        processor.StartWindow();
                     }
                 }
             }
