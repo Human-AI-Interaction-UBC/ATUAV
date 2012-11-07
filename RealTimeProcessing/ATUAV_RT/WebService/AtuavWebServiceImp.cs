@@ -73,23 +73,5 @@ namespace ATUAV_RT
             ms.Position = 0;
             return ms;
         }
-
-        public Stream GetIntervention(string processorId, string callback)
-        {
-            MemoryStream ms = new MemoryStream();
-            StreamWriter sw = new StreamWriter(ms);
-            sw.Write(callback);
-
-            EmdatProcessor processor = Program.Processors[processorId];
-            if (processor != null)
-            {
-                processor.ProcessWindow();
-                sw.Write(InterventionEngine.GetInterventions(processor.Features));
-            }
-            
-            sw.Flush();
-            ms.Position = 0;
-            return ms;
-        }
     }
 }

@@ -22,9 +22,5 @@ namespace ATUAV_RT
         [OperationContract]
         [WebGet(UriTemplate = "/features?processorId={processorId}&callback={callback}")]
         Stream GetFeatures(string processorId, string callback);
-
-        [OperationContract]
-        [WebGet(UriTemplate = "/intervention?processorId={processorId}&callback={callback}")]
-        Stream GetIntervention(string processorId, string callback);
     }
 }
