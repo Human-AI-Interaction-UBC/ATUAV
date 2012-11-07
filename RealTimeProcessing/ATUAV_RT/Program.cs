@@ -21,12 +21,21 @@ namespace ATUAV_RT
         private static Clock clock;
         private static Settings settings = new Settings();
         private static readonly Dictionary<String, EmdatProcessor> processors = new Dictionary<String, EmdatProcessor>();
+        private static readonly Dictionary<String, Condition> conditions = new Dictionary<string, Condition>();
 
         public static Dictionary<String, EmdatProcessor> Processors
         {
             get
             {
                 return processors;
+            }
+        }
+
+        public static Dictionary<String, Condition> Conditions
+        {
+            get
+            {
+                return conditions;
             }
         }
 

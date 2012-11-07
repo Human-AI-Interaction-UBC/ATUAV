@@ -132,6 +132,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Conditions\ConditionImp.cs" />
+    <Compile Include="Conditions\ShowIntervention.cs" />
+    <Compile Include="Conditions\ShowText.cs" />
     <Compile Include="Database.cs" />
     <Compile Include="EmdatProcessorSettings.cs" />
     <Compile Include="Settings.cs" />

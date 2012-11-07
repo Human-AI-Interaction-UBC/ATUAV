@@ -25,7 +25,14 @@ namespace ATUAV_RT
             MemoryStream ms = new MemoryStream();
             StreamWriter sw = new StreamWriter(ms);
             sw.Write(callback + "(");
-            // TODO if condition met write "true" else write "false"
+            if (Program.Conditions.ContainsKey(condition))
+            {
+                sw.Write(Program.Conditions[condition].Met);
+            }
+            else
+            {
+                sw.Write("false");
+            }
             sw.Write(")");
             sw.Flush();
             ms.Position = 0;
