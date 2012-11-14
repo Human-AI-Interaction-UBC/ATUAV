@@ -2,8 +2,8 @@
 var processorId = "observer";
 var trackedSumFeatures = []
 
-function startTask(userId, taskId, aois) {
-    $.get(address + "/start?userId=" + userId + "&taskId=" + taskId + "&aois=" + aois)
+function startTask(runId, aois) {
+    $.get(address + "/start?runId=" + runId + "&aois=" + aois)
 }
 
 function pollFeatures() {
@@ -37,6 +37,6 @@ function updateTrackedSumFeature(feature, value) {
 
 $(document).ready(function () {
     addTrackedSumFeatures();
-    startTask("test_user", "test_task", "left\\t0,0\\t640,0\\t640,1024\\t0,1024\\r\\nright\\t641,0\\t1280,0\\t1280,1024\\t641,1024")
+    startTask(0, "left\\t0,0\\t640,0\\t640,1024\\t0,1024\\r\\nright\\t641,0\\t1280,0\\t1280,1024\\t641,1024")
     setInterval(pollFeatures, 5000);
 });

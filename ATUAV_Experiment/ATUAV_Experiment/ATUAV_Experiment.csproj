@@ -55,6 +55,10 @@
     <Content Include="Account\ChangePasswordSuccess.aspx" />
     <Content Include="Account\Login.aspx" />
     <Content Include="Account\Register.aspx" />
+    <Content Include="App_Data\Experiment.mdf" />
+    <Content Include="App_Data\Experiment_log.ldf">
+      <DependentUpon>Experiment.mdf</DependentUpon>
+    </Content>
     <Content Include="Infovis\duoBars.js" />
     <Content Include="Infovis\duoIndex.html" />
     <Content Include="Infovis\observer.htm" />
@@ -137,9 +141,7 @@
       <DependentUpon>Site.Master</DependentUpon>
     </Compile>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="Account\Web.config" />
     <Content Include="Site.Master" />

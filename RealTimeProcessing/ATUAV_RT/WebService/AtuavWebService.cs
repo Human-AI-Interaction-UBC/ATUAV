@@ -8,8 +8,8 @@ namespace ATUAV_RT
     public interface AtuavWebService
     {
         [OperationContract]
-        [WebGet(UriTemplate = "/start?userId={userId}&taskId={taskId}&aois={aois}")]
-        void StartTask(string userId, string taskId, string aois);
+        [WebGet(UriTemplate = "/start?runId={runId}&aois={aois}")]
+        void StartTask(int runId, string aois);
 
         [OperationContract]
         [WebGet(UriTemplate = "/condition?processorId={processorId}&condition={condition}&callback={callback}")]

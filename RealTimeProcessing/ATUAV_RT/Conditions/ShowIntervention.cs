@@ -23,8 +23,13 @@ namespace ATUAV_RT
 		{
 			get
 			{
-				// TODO
-				return false;
+                processor.ProcessWindow();
+                object feature = processor.Features["text_numfixations"];
+                if (feature is int)
+                {
+                    return (int)feature > 5;
+                }
+                return false;
 			}
 		}
 	}

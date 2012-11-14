@@ -9,10 +9,9 @@ namespace ATUAV_RT
     [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
     public class AtuavWebServiceImp : AtuavWebService
     {
-        public void StartTask(string userId, string taskId, string aois)
+        public void StartTask(int runId, string aois)
         {
-            Database.UserId = userId;
-            Database.TaskId = taskId;
+            Database.RunId = runId;
             aois = decodeEscapedCharacters(aois);
             foreach (EmdatProcessor processor in Program.Processors.Values)
             {
@@ -29,6 +28,7 @@ namespace ATUAV_RT
             Condition c = Program.Processors[processorId].Conditions[condition];
             if (c != null && c.Met)
             {
+                recordCondition(condition);
                 sw.Write("true");
             }
             else
@@ -39,6 +39,18 @@ namespace ATUAV_RT
             sw.Flush();
             ms.Position = 0;
             return ms;
+        }
+
+        private void recordCondition(string condition)
+        {
+            try
+            {
+                Database.InsertCondition(condition, DateTime.Now);
+            }
+            catch (Exception e)
+            {
+                System.Console.WriteLine(e);
+            }
         }
 
         public void StopTask()
