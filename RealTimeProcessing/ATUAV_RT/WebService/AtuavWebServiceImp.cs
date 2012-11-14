@@ -11,7 +11,7 @@ namespace ATUAV_RT
     {
         public void StartTask(int runId, string aois)
         {
-            Database.RunId = runId;
+            Program.Database.RunId = runId;
             aois = decodeEscapedCharacters(aois);
             foreach (EmdatProcessor processor in Program.Processors.Values)
             {
@@ -25,8 +25,8 @@ namespace ATUAV_RT
             MemoryStream ms = new MemoryStream();
             StreamWriter sw = new StreamWriter(ms);
             sw.Write(callback + "(");
-            Condition c = Program.Processors[processorId].Conditions[condition];
-            if (c != null && c.Met)
+            EmdatProcessor processor = Program.Processors[processorId];
+            if (processor != null && processor.CollectingData && processor.Conditions[condition] != null && processor.Conditions[condition].Met)
             {
                 recordCondition(condition);
                 sw.Write("true");
@@ -45,7 +45,7 @@ namespace ATUAV_RT
         {
             try
             {
-                Database.InsertCondition(condition, DateTime.Now);
+                Program.Database.InsertCondition(condition, DateTime.Now);
             }
             catch (Exception e)
             {
@@ -70,7 +70,7 @@ namespace ATUAV_RT
             if (processorId != null)
             {
                 EmdatProcessor processor = Program.Processors[processorId];
-                if (processor != null)
+                if (processor != null && processor.CollectingData)
                 {
                     processor.ProcessWindow();
                     IDictionary<Object, Object> features = processor.Features;

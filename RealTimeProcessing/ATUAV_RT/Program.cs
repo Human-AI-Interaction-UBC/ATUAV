@@ -19,6 +19,7 @@ namespace ATUAV_RT
     public class Program
     {
         private static Clock clock;
+        private static Database database = new Database();
         private static Settings settings = new Settings();
         private static readonly Dictionary<String, EmdatProcessor> processors = new Dictionary<String, EmdatProcessor>();
         private static readonly Dictionary<String, Condition> conditions = new Dictionary<string, Condition>();
@@ -36,6 +37,14 @@ namespace ATUAV_RT
             get
             {
                 return conditions;
+            }
+        }
+
+        public static Database Database
+        {
+            get
+            {
+                return database;
             }
         }
 

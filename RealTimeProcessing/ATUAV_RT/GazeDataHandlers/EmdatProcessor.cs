@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using FixDet;
@@ -14,6 +15,8 @@ namespace ATUAV_RT
 {
     public class EmdatProcessor : GazeDataSynchronizedHandler, WindowingHandler
     {
+        private static List<Type> allConditionTypes = null;
+
         private bool collectingData;
         private bool cumulativeData = false;
         private string aoiDefinitions = "";
@@ -56,11 +59,31 @@ namespace ATUAV_RT
             emdat = engine.ImportModule("emdat");
 			
 			// add conditions
-			Condition showText = new ShowText(this);
-			conditions.Add(showText.Id, showText);
-			
-			Condition showIntervention = new ShowIntervention(this);
-			conditions.Add(showIntervention.Id, showIntervention);
+            foreach (Type type in AllConditionTypes)
+            {
+                ConstructorInfo info = type.GetConstructor(new[] { typeof(EmdatProcessor) });
+                Condition condition = (Condition) info.Invoke(new object[] { this } );
+                conditions.Add(condition.Id, condition);
+            }
+        }
+
+        private static List<Type> AllConditionTypes
+        {
+            get
+            {
+                if (allConditionTypes == null)
+                {
+                    allConditionTypes = new List<Type>();
+                    foreach (Type type in Assembly.GetExecutingAssembly().GetTypes())
+                    {
+                        if (typeof(Condition).IsAssignableFrom(type) && type.IsClass)
+                        {
+                            allConditionTypes.Add(type);
+                        }
+                    }
+                }
+                return allConditionTypes;
+            }
         }
 
         public string AoiDefinitions

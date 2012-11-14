@@ -9,26 +9,26 @@ namespace ATUAV_RT
 {
     public class Database
     {
-        private static SqlConnection connection = new SqlConnection("Data Source=.\\SQLEXPRESS;AttachDbFilename=C:\\Documents and Settings\\Admin\\My Documents\\Visual Studio 2008\\Projects\\ATUAV_RT\\ATUAV_Experiment\\ATUAV_Experiment\\App_Data\\Experiment.mdf;Integrated Security=True;User Instance=True");
-        private static int runId;
+        private SqlConnection connection = new SqlConnection("Data Source=.\\SQLEXPRESS;AttachDbFilename=C:\\Documents and Settings\\Admin\\My Documents\\Visual Studio 2008\\Projects\\ATUAV_RT\\ATUAV_Experiment\\ATUAV_Experiment\\App_Data\\Experiment.mdf;Integrated Security=True;User Instance=True");
+        private int runId;
 
-        static Database()
+        public Database()
         {
             connection.Open();
         }
 
-        static ~Database()
+        ~Database()
         {
             connection.Close();
         }
 
-        public static int RunId
+        public int RunId
         {
             get { return runId; }
             set { runId = value; }
         }
 
-        public static void InsertCondition(string condition, DateTime time)
+        public void InsertCondition(string condition, DateTime time)
         {
             string conditionParameter = "@condition";
             string runIdParameter = "@runID";
