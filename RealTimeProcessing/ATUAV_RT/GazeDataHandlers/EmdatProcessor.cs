@@ -25,6 +25,7 @@ namespace ATUAV_RT
         private ScriptEngine engine = Python.CreateEngine();
         private dynamic emdat;
         private IDictionary<object, object> features = new Dictionary<Object, Object>();
+		private Dictionary<String, Condition> conditions = new Dictionary<String, Condition>();
 
         public EmdatProcessor(SyncManager syncManager)
             : base(syncManager)
@@ -53,6 +54,13 @@ namespace ATUAV_RT
             
             // import modules
             emdat = engine.ImportModule("emdat");
+			
+			// add conditions
+			Condition showText = new ShowText(this);
+			conditions.Add(showText.Id, showText);
+			
+			Condition showIntervention = new ShowIntervention(this);
+			conditions.Add(showIntervention.Id, showIntervention);
         }
 
         public string AoiDefinitions
@@ -77,6 +85,14 @@ namespace ATUAV_RT
                 return features;
             }
         }
+		
+		public Dictionary<String, Condition> Conditions
+		{
+			get
+			{
+				return conditions;
+			}
+		}
 
         public void ClearData()
         {

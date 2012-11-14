@@ -1,17 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System;
 
 namespace ATUAV_RT
 {
-    public class ShowIntervention : ConditionImp
-    {
-        public ShowIntervention(string id, EmdatProcessor processor) : base(id, processor) { }
-
-        public override bool Met
-        {
-            get { return false; } // TODO process window
-        }
-    }
+	public class ShowIntervention : Condition
+	{
+		private readonly EmdatProcessor processor;
+		
+		public ShowIntervention(EmdatProcessor processor)
+		{
+			this.processor = processor;
+		}
+		
+		public string Id
+		{
+			get
+			{
+				return "showintervention";
+			}
+		}
+		
+		public bool Met
+		{
+			get
+			{
+				// TODO
+				return false;
+			}
+		}
+	}
 }

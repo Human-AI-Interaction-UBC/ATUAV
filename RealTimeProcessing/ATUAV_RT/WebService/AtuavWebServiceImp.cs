@@ -25,9 +25,10 @@ namespace ATUAV_RT
             MemoryStream ms = new MemoryStream();
             StreamWriter sw = new StreamWriter(ms);
             sw.Write(callback + "(");
-            if (Program.Conditions.ContainsKey(condition))
+            Condition c = Program.Processors[processorId].Conditions[condition];
+            if (c != null && c.Met)
             {
-                sw.Write(Program.Conditions[condition].Met);
+                sw.Write("true");
             }
             else
             {
