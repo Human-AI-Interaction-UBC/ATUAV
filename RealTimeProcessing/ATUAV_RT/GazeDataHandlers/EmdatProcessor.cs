@@ -24,7 +24,7 @@ namespace ATUAV_RT
         private LinkedList<GazeDataItem> gazePoints = new LinkedList<GazeDataItem>();
         private ScriptEngine engine = Python.CreateEngine();
         private dynamic emdat;
-        private IDictionary<object, object> features = new Dictionary<Object, Object>();
+        private IDictionary<Object, Object> features = new Dictionary<Object, Object>();
 		private Dictionary<String, Condition> conditions = new Dictionary<String, Condition>();
 
         public EmdatProcessor(SyncManager syncManager)
@@ -267,11 +267,29 @@ namespace ATUAV_RT
         {
             lock (this)
             {
-                features = emdat.generate_features(SegmentId, RawGazePoints, RawFixations, aoiDefinitions);
-                if (!cumulativeData)
+                try
                 {
-                    fixations.Clear();
-                    gazePoints.Clear();
+                    IDictionary<Object, Object> features = emdat.generate_features(SegmentId, RawGazePoints, RawFixations, aoiDefinitions);
+                    if (features != null)
+                    {
+                        this.features = features;
+                    }
+                    else
+                    {
+                        this.features.Clear();
+                    }
+                }
+                catch (Exception e)
+                {
+                    System.Console.WriteLine(e.Message);
+                }
+                finally
+                {
+                    if (!cumulativeData)
+                    {
+                        fixations.Clear();
+                        gazePoints.Clear();
+                    }
                 }
             }
         }

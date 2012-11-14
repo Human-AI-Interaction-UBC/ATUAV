@@ -146,8 +146,6 @@
     <Compile Include="GazeDataHandlers\WindowingHandler.cs" />
     <Compile Include="WebService\AtuavWebServiceImp.cs" />
     <Compile Include="Conditions\Condition.cs" />
-    <Compile Include="Conditions\ShowText.cs" />
-    <Compile Include="Conditions\ShowIntervention.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

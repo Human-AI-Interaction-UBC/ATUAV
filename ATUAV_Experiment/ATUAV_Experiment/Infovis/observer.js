@@ -1,9 +1,13 @@
 ﻿var address = "http://localhost:8080/atuav";
-var id = "observer";
+var processorId = "observer";
 var trackedSumFeatures = []
 
+function startTask(userId, taskId, aois) {
+    $.get(address + "/start?userId=" + userId + "&taskId=" + taskId + "&aois=" + aois)
+}
+
 function pollFeatures() {
-    $.getJSON(address + "/features?id=" + id + "&callback=?", null, function (data) {
+    $.getJSON(address + "/features?processorId=" + processorId + "&callback=?", null, function (data) {
         var features = "";
         for (var key in data) {
             if (data.hasOwnProperty(key)) {
@@ -31,7 +35,8 @@ function updateTrackedSumFeature(feature, value) {
     $feature.text("sum " + feature + ": " + value);
 }
 
-setInterval(pollFeatures, 5000);
 $(document).ready(function () {
     addTrackedSumFeatures();
+    startTask("test_user", "test_task", "left\\t0,0\\t640,0\\t640,1024\\t0,1024\\r\\nright\\t641,0\\t1280,0\\t1280,1024\\t641,1024")
+    setInterval(pollFeatures, 5000);
 });
