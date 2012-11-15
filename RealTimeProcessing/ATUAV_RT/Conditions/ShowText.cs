@@ -24,10 +24,10 @@ namespace ATUAV_RT
 			get
 			{
                 processor.ProcessWindow();
-                object feature = processor.Features["graph_numfixations"];
+                object feature = processor.Features["left_numfixations"];
                 if (feature is int)
                 {
-                    return (int)feature > 5;
+                    return (int)feature > 50;
                 }
                 return false;
 			}

@@ -1,5 +1,5 @@
 ﻿var address = "http://localhost:8080/atuav";
-var processorId = "observer";
+var processorId = "experiment-c";
 var trackedSumFeatures = []
 
 function startTask(runId, aois) {
@@ -7,7 +7,7 @@ function startTask(runId, aois) {
 }
 
 function pollFeatures() {
-    $.getJSON(address + "/features?processorId=" + processorId + "&callback=?", null, function (data) {
+    $.getJSON(address + "/features?processorId=" + processorId + "&callback=?", null, function(data) {
         var features = "";
         for (var key in data) {
             if (data.hasOwnProperty(key)) {
@@ -18,6 +18,12 @@ function pollFeatures() {
             }
         }
         $("#features").html(features);
+    });
+}
+
+function pollShowText() {
+    $.getJSON(address + "/condition?processorId=" + processorId + "&condition=showtext&callback=?", function (data) {
+        $("#showtext").html("showtext:" + data);
     });
 }
 
@@ -39,4 +45,5 @@ $(document).ready(function () {
     addTrackedSumFeatures();
     startTask(0, "left\\t0,0\\t640,0\\t640,1024\\t0,1024\\r\\nright\\t641,0\\t1280,0\\t1280,1024\\t641,1024")
     setInterval(pollFeatures, 5000);
+    setInterval(pollShowText, 1000);
 });

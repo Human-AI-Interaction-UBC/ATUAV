@@ -45,7 +45,7 @@ namespace ATUAV_RT
         {
             try
             {
-                Program.Database.InsertCondition(condition, DateTime.Now);
+                Program.Database.InsertCondition(condition);
             }
             catch (Exception e)
             {

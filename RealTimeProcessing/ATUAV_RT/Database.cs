@@ -28,20 +28,17 @@ namespace ATUAV_RT
             set { runId = value; }
         }
 
-        public void InsertCondition(string condition, DateTime time)
+        public void InsertCondition(string condition)
         {
             string conditionParameter = "@condition";
             string runIdParameter = "@runID";
-            string timeParameter = "@time";
 
             SqlCommand command = connection.CreateCommand();
-            command.CommandText = "INSERT INTO Conditions (Condition, RunID, Time) VALUES (" + conditionParameter + ", " + runIdParameter + ", " + timeParameter + ")";
+            command.CommandText = "INSERT INTO Conditions (Condition, RunID, Time) VALUES (" + conditionParameter + ", " + runIdParameter + ", GetDate())";
             command.Parameters.Add(conditionParameter, SqlDbType.VarChar);
             command.Parameters.Add(runIdParameter, SqlDbType.Int);
-            command.Parameters.Add(timeParameter, SqlDbType.DateTime);
             command.Parameters[conditionParameter].Value = condition;
             command.Parameters[runIdParameter].Value = runId;
-            command.Parameters[timeParameter].Value = time;
             command.ExecuteNonQuery();
         }
     }
