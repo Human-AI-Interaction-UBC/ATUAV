@@ -9,7 +9,7 @@ namespace ATUAV_RT
     {
         [OperationContract]
         [WebGet(UriTemplate = "/start?runId={runId}&aois={aois}")]
-        void StartTask(int runId, string aois);
+        void StartRun(int runId, string aois);
 
         [OperationContract]
         [WebGet(UriTemplate = "/condition?processorId={processorId}&condition={condition}&callback={callback}")]

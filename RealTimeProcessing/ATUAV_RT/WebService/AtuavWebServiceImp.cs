@@ -9,7 +9,7 @@ namespace ATUAV_RT
     [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
     public class AtuavWebServiceImp : AtuavWebService
     {
-        public void StartTask(int runId, string aois)
+        public void StartRun(int runId, string aois)
         {
             Program.Database.RunId = runId;
             aois = decodeEscapedCharacters(aois);
