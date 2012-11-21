@@ -15,7 +15,7 @@ namespace ATUAV_Experiment
         public static void Main(){
 
             //Basic INSERT method with Parameters
-            SqlConnection sqlConn = new SqlConnection("Data Source=.\\SQLEXPRESS;AttachDbFilename=C:\\Users\\Ben\\Documents\\Visual Studio 2010\\Projects\\ATUAV-Experiment\\ATUAV-Experiment\\App_Data\\Experiment.mdf;Integrated Security=True;User Instance=True");
+            SqlConnection sqlConn = new SqlConnection("Data Source=.\\SQLEXPRESS;AttachDbFilename=C:\\Documents and Settings\\Admin\\My Documents\\Visual Studio 2008\\Projects\\ATUAV_RT\\ATUAV_Experiment\\ATUAV_Experiment\\App_Data\\Experiment.mdf;Integrated Security=True;User Instance=True");
             SqlCommand sqlComm = new SqlCommand();
 
             sqlComm = sqlConn.CreateCommand();

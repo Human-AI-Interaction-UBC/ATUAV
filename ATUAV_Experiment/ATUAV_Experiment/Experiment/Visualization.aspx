@@ -8,7 +8,7 @@
     protected void Page_Load(object sender, EventArgs e)
     {
 
-        String dbString = "Data Source=.\\SQLEXPRESS;AttachDbFilename=C:\\Users\\Ben\\Documents\\atuav\\ATUAV_Experiment\\ATUAV_Experiment\\App_Data\\Experiment.mdf;Integrated Security=True;User Instance=True";
+        String dbString = "Data Source=.\\SQLEXPRESS;AttachDbFilename=C:\\Documents and Settings\\Admin\\My Documents\\Visual Studio 2008\\Projects\\ATUAV_RT\\ATUAV_Experiment\\ATUAV_Experiment\\App_Data\\Experiment.mdf;Integrated Security=True;User Instance=True";
         
 //Initial setting of username and task
         int userID = 0;

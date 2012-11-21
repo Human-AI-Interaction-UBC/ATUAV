@@ -2,3 +2,8 @@ C:\Users\Ben\Documents\atuav\ATUAV_Experiment\ATUAV_Experiment\bin\ATUAV_Experim
 C:\Users\Ben\Documents\atuav\ATUAV_Experiment\ATUAV_Experiment\bin\ATUAV_Experiment.pdb
 C:\Users\Ben\Documents\atuav\ATUAV_Experiment\ATUAV_Experiment\obj\Release\ATUAV_Experiment.dll
 C:\Users\Ben\Documents\atuav\ATUAV_Experiment\ATUAV_Experiment\obj\Release\ATUAV_Experiment.pdb
+C:\Documents and Settings\Admin\My Documents\Visual Studio 2008\Projects\ATUAV_RT\ATUAV_Experiment\ATUAV_Experiment\bin\ATUAV_Experiment.dll
+C:\Documents and Settings\Admin\My Documents\Visual Studio 2008\Projects\ATUAV_RT\ATUAV_Experiment\ATUAV_Experiment\bin\ATUAV_Experiment.pdb
+C:\Documents and Settings\Admin\My Documents\Visual Studio 2008\Projects\ATUAV_RT\ATUAV_Experiment\ATUAV_Experiment\obj\Release\ResolveAssemblyReference.cache
+C:\Documents and Settings\Admin\My Documents\Visual Studio 2008\Projects\ATUAV_RT\ATUAV_Experiment\ATUAV_Experiment\obj\Release\ATUAV_Experiment.dll
+C:\Documents and Settings\Admin\My Documents\Visual Studio 2008\Projects\ATUAV_RT\ATUAV_Experiment\ATUAV_Experiment\obj\Release\ATUAV_Experiment.pdb
