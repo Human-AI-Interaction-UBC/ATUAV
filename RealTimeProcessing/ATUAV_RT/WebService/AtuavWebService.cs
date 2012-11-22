@@ -17,7 +17,7 @@ namespace ATUAV_RT
 
         [OperationContract]
         [WebGet(UriTemplate = "/stop")]
-        void StopTask();
+        void StopRun();
 
         [OperationContract]
         [WebGet(UriTemplate = "/features?processorId={processorId}&callback={callback}")]

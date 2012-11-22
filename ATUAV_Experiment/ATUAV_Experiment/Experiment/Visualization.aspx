@@ -2,6 +2,7 @@
 <%@ Import Namespace="System.Data" %>
 <%@ Import Namespace="System.Data.SqlClient" %>
 <%@ Import Namespace="System.Data.SqlTypes" %>
+<%@ Import Namespace="System.Net" %>
 
 <script runat="server">
     
@@ -50,8 +51,10 @@
             sqlConn.Open();
             sqlComm.ExecuteNonQuery();
             sqlConn.Close();
-
             
+            // stop previous run
+            WebRequest stopRequest = WebRequest.Create("http://localhost:8080/atuav/stop");
+            stopRequest.GetResponse();
         }
         
 //Retrieving next task       
@@ -336,6 +339,11 @@
 
         int color = r.Next(0, 6);
         colorFamily.InnerHtml = "{\"colorFamily\":" + color + "}";
+        
+        // start run
+        string aois = "text\\t350,590\\t950,590\\t950,640\\t350,640";
+        WebRequest startRequest = WebRequest.Create("http://localhost:8080/atuav/start?runId=" + newRunID + "&aois=" + aois);
+        startRequest.GetResponse();
     }
 </script>
 

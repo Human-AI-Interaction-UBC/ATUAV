@@ -17,8 +17,8 @@ namespace ATUAV_RT
     /// </summary>
     public class FixationDetector : GazeDataSynchronizedHandler
     {
-        private static readonly double SCREEN_HEIGHT = 1024; // Tobii T120 Eye Tracker
-        private static readonly double SCREEN_WIDTH = 1280;  // Tobii T120 Eye Tracker
+        public static readonly double SCREEN_HEIGHT = 1024; // Tobii T120 Eye Tracker
+        public static readonly double SCREEN_WIDTH = 1280;  // Tobii T120 Eye Tracker
 
         private readonly FixDetector fixationDetector;
 

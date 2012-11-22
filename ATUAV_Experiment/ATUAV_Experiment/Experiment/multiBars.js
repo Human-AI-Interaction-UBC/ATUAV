@@ -254,30 +254,19 @@ var currentInterventionTime = xmlDoc.getElementsByTagName("intervention").item(0
 	    var eyeTrackerDivData = "";
         var objJason = null;
 
- 		$.get("eyetracker.html", { "_": $.now() },function(data){ // get the data, cache off 
-		    var xmlEyeTracker=loadXMLDoc(data);	 
-		    eyeTrackerDivData = $(xmlEyeTracker).find("div[id=interventionStatus]").text();// get the div
-		});
-
-        // check if some data was received
-        if (eyeTrackerDivData != "") {
-            objJason = JSON.parse(eyeTrackerDivData);
-        }
-
-        if (objJason != null)
-        {
-            if (objJason.intervention == 'true')
-            {
+        $.getJSON("http://localhost:8080/atuav/condition?processorId=experiment-c&condition=showtext&callback=?", function (data) {
+            if (data == true) {
                 setIntervention();
                 clearInterval(intervalID);
             }
+        });
+        if (countReq == 10) {
+            setIntervention();
+            clearInterval(intervalID);
         }
-		else if(countReq==5) {
-		    setIntervention();
-			clearInterval(intervalID);	
-		}
-		countReq++;
-	}
+        countReq++;
+    }
+
 //Enamul: Set the intervention based on eye tracking data or time limit exit	
 	function setIntervention(){	
 		var id;

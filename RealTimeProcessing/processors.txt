@@ -1,1 +1,1 @@
-TT120-204-80900268	observer,experiment-c
+TT120-204-80900268	experiment-c

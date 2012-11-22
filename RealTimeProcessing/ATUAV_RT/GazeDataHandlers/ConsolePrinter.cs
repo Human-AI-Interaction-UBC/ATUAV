@@ -35,7 +35,7 @@ namespace ATUAV_RT
         protected void Print(GazeDataItem gazePoint)
         {
             int ms = (int)syncManager.RemoteToLocal(gazePoint.TimeStamp);
-            Console.WriteLine("GazePoint [" + ms + "] - (" + gazePoint.LeftEyePosition3D.X + ", " + gazePoint.LeftEyePosition3D.Y + ")");
+            Console.WriteLine("GazePoint [" + ms + "] - (" + gazePoint.LeftGazePoint2D.X*FixationDetector.SCREEN_WIDTH + ", " + gazePoint.LeftGazePoint2D.Y*FixationDetector.SCREEN_HEIGHT + ")");
         }
 
         /// <summary>

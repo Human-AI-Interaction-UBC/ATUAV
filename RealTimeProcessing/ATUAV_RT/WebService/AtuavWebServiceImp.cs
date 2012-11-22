@@ -11,6 +11,7 @@ namespace ATUAV_RT
     {
         public void StartRun(int runId, string aois)
         {
+            System.Console.WriteLine("starting run: " + runId);
             Program.Database.RunId = runId;
             aois = decodeEscapedCharacters(aois);
             foreach (EmdatProcessor processor in Program.Processors.Values)
@@ -53,11 +54,13 @@ namespace ATUAV_RT
             }
         }
 
-        public void StopTask()
+        public void StopRun()
         {
+            System.Console.WriteLine("stopping run");
             foreach (EmdatProcessor processor in Program.Processors.Values)
             {
                 processor.StopWindow();
+                processor.ClearData();
             }
         }
 

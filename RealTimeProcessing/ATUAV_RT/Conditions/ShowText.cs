@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace ATUAV_RT
 {
@@ -24,10 +25,18 @@ namespace ATUAV_RT
 			get
 			{
                 processor.ProcessWindow();
-                object feature = processor.Features["left_numfixations"];
-                if (feature is int)
+                try
                 {
-                    return (int)feature > 50;
+                    object feature = processor.Features["text_numfixations"];
+                    Console.WriteLine(feature);
+                    if (feature is int)
+                    {
+                        return (int)feature > 7;
+                    }
+                }
+                catch (KeyNotFoundException)
+                {
+                    // do nothing
                 }
                 return false;
 			}
