@@ -14,7 +14,7 @@
 
             for (int i = 0; i < 80; i++)
             {
-                task_order[i] = i + 18;
+                task_order[i] = i + 1;
             }
 
             Session["task_order"] = task_order;

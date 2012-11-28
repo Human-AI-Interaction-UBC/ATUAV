@@ -27,11 +27,14 @@ namespace ATUAV_RT
                 processor.ProcessWindow();
                 try
                 {
-                    object feature = processor.Features["text_numfixations"];
-                    Console.WriteLine(feature);
-                    if (feature is int)
+                    object feature1 = processor.Features["text1_numfixations"];
+                    object feature2 = processor.Features["text2_numfixations"];
+                    object feature3 = processor.Features["text3_numfixations"];
+                    Console.WriteLine(feature1 + " / " + feature2 + " / " + feature3);
+
+                    if (feature1 is int)
                     {
-                        return (int)feature > 7;
+                        return ((int)feature1 > 2 && (int)feature2 > 2 && (int)feature3 > 2);
                     }
                 }
                 catch (KeyNotFoundException)
