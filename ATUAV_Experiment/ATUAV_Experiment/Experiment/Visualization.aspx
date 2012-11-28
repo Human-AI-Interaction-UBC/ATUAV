@@ -99,7 +99,7 @@
         
         Random r = new Random();
         
-        int domain = r.Next(0,3);
+        int domain = r.Next(0,4);
 
         if (domain == 0)
         {
@@ -121,12 +121,21 @@
         }
         else if (domain == 2)
         {
-            series = new String[] { "The_Haunting","Vampire_Attack","Love_and_Lovlier","A_Serious_Affair","Blades_of_Metal","The_Champ","Shark_Swamp_2","How_to_Date_Your_Friends","City_Lights_City_Life","The_Lost_Explorer","Zombiepocalyptica","Three_Chefs","Club_Universe","Blue_Mountain","Speed_Freak_3","Tea_and_Cigars","The_Four_Sided_Square","An_Unfinished_Life","Bus_Driver","The_Novice" };
-            samples = new String[] { "Vancouver","Los_Angeles","New_York","Berlin","London","Rome","Moscow","Tokyo","Paris","Mexico_City","Auckland","Hong_Kong" };
+            series = new String[] { "The_Haunting", "Vampire_Attack", "Love_and_Lovlier", "A_Serious_Affair", "Blades_of_Metal", "The_Champ", "Shark_Swamp_2", "How_to_Date_Your_Friends", "City_Lights_City_Life", "The_Lost_Explorer", "Zombiepocalyptica", "Three_Chefs", "Club_Universe", "Blue_Mountain", "Speed_Freak_3", "Tea_and_Cigars", "The_Four_Sided_Square", "An_Unfinished_Life", "Bus_Driver", "The_Novice" };
+            samples = new String[] { "Vancouver", "Los_Angeles", "New_York", "Berlin", "London", "Rome", "Moscow", "Tokyo", "Paris", "Mexico_City", "Auckland", "Hong_Kong" };
             domain_keyword1 = "revenue";
             domain_keyword2 = "cities";
             average_keyword1 = "average movie revenue in that city";
             average_keyword2 = "average revenue";
+        }
+        else if (domain == 3)
+        {
+            series = new String[] { "Kitty_Kibble", "Feline_Time", "Blue_Horizon", "Meow_Meal", "Fresh_Feast", "Puppy_Chowder", "Hungry_Beast", "Fancy_Fur", "Yellow_Label", "Canine_Companion", "4-Star_Brand", "Prime_Choice", "Prized_Pooch", "Tender_Cutz", "Value_Pet", "Grade-A_Form", "Smart_Cat", "Organic_Valley", "Nutra-Pet", "Select_Prize" };
+            samples = new String[] { "Vitamin_B12", "Iron", "Zinc", "Vitamin_E", "Vitamin_D", "Vitamin_A", "Folic_Acid", "Calcium", "Selenium", "DHA", "Riboflavin", "Potassium" };
+            domain_keyword1 = "level";
+            domain_keyword2 = "minerals/vitamins";
+            average_keyword1 = "average level for that mineral/vitamin";
+            average_keyword2 = "average level";
         }
 
         
@@ -283,6 +292,11 @@
             question = question.Replace("SERIES2", randomSingleSeries2);
             question = question.Replace("DOMAIN_KEYWORD2", domain_keyword2);
             question = question.Replace("AVERAGE_KEYWORD2", average_keyword2);
+
+            if (domain == 3)
+            {
+                question = question.Replace("In how many", "For how many");
+            }
         }
         
         QuestionText.InnerHtml = question.Replace("_"," ");

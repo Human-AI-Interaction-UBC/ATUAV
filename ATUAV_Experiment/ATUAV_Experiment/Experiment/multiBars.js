@@ -182,7 +182,7 @@ vis.append("g")
     .attr("font-size", "13px")
     .call(xAxis);
 
-var legendNames = seriesName;
+var legendNames = seriesName.slice();
 $.each(legendNames, function (index, value) {
     legendNames[index] = value.replace(/_/g,' ');
 });        
@@ -469,9 +469,10 @@ function blink2(selectedBars)
 
 //Enamul: Corrected version of deemphasis
 function deEmphRest(selectedBars){
-	var deEmphBarList=[];	
-	var deEmphBarListCount=0;
-    for(var i = 0; i< seriesName.length; i++){ 	
+	var deEmphBarList=[];
+	var deEmphBarListCount = 0;
+
+    for(var i = 0; i< seriesName.length; i++){
 		for(var j = 0; j< subject.length; j++){
 		 	for(var k = 0; k< selectedBars.length; k++){
 
@@ -581,7 +582,7 @@ function drawReferenceLine(seriesSamplepair) {
     var xCor = new Array;
     var yCor=selectedBars[0][2]; //by default
     var corLin = new Array;
-    linePaper = new Raphael(0,0,w,h);
+    linePaper = new Raphael(0,0,bodyW,bodyH);
 
     for (var i = 0; i < selectedBars.length; i++){
 	
@@ -790,7 +791,7 @@ function drawArrow(selectedBars){
     var xCor = new Array;
     var yCor = new Array;
     var arrow = new Array;
-    paper = new Raphael(0,0,w,h);
+    paper = new Raphael(0,0,bodyW,bodyH);
 	
     for (var i = 0; i < selectedBars.length; i++){
 	
@@ -836,7 +837,7 @@ function drawArrowLine(selectedBars){
     var yCor = new Array;
     var arrow = new Array;
     var corLin = new Array;
-    linePaper = new Raphael(0,0,w,h);
+    linePaper = new Raphael(0,0,bodyW,bodyH);
 	
     for (var i = 0; i < selectedBars.length; i++){
 	
@@ -859,7 +860,7 @@ function drawArrowLineRelative(selectedBars){
 	var yCor = new Array;
 	var arrow = new Array;
 	var corLin = new Array;
-	linePaper = new Raphael(0,0,w,h);
+	linePaper = new Raphael(0,0,bodyW,bodyH);
 	
 for (var i = 0; i < selectedBars.length; i++){
 	
