@@ -90,10 +90,10 @@ var linePaper;
 var barWidth;
 			
 				
-var w = 625,
-h = 500,
-bodyW = 875,
-bodyH = 550,
+var w = 800,
+h = 600,
+bodyW = 1100,
+bodyH = 660,
 strokeWidth=2,
 chartPadding = 25;
 y = d3.scale.linear().domain([0, 100]).range([ h,0]),
@@ -111,7 +111,7 @@ var xAxis = d3.svg.axis()
 .orient("bottom")
 .ticks(m)
 .tickFormat(function(i){
-    return subject[i];
+    return subject[i].replace(/_/g,' ');
 });
 
 var yAxis = d3.svg.axis()
@@ -173,35 +173,40 @@ var rect = g.selectAll("rect")
 vis.append("g")
     .attr("class", "axis")
     .attr("transform", "translate(10,0)")
-    .attr("font-size", "11px")
+    .attr("font-size", "13px")
     .call(yAxis);
 
 vis.append("g")
     .attr("class", "axis")
     .attr("transform", "translate( 4," + h + ")")
-    .attr("font-size", "11px")
+    .attr("font-size", "13px")
     .call(xAxis);
-        
+
+var legendNames = seriesName;
+$.each(legendNames, function (index, value) {
+    legendNames[index] = value.replace(/_/g,' ');
+});        
         
 var legend = vis.selectAll("g.legend")
-.data(seriesName)
+.data(legendNames)
 .enter().append("svg:g")
 .attr("class", "legend")
 .attr("id", String)
 .attr("transform", function(d, i) {
-    return "translate(" + (bodyW-200) + "," + ((i * 20 )+bodyH-300) + ")";
+    return "translate(" + (bodyW-250) + "," + ((i * 22 )+bodyH-300) + ")";
 });
        
-legend.append("svg:circle")
-    .attr("r", 3)
-    .attr("fill",function(d, i) {
+legend.append("svg:rect")
+    .attr("width", 10)
+    .attr("height", 10)
+    .style("fill",function(d, i) {
 		if(i==0) return  "rgb(0, 0, 0)";
 		else return "rgb("+colorFamily[randomFamily][i-1] + ")"; 
     } );
        
 legend.append("svg:text")
     .attr("x", 12)
-    .attr("dy", ".31em")
+    .attr("dy", ".70em")
     .text(function(d) {
         return d;
     });
@@ -576,7 +581,7 @@ function drawReferenceLine(seriesSamplepair) {
     var xCor = new Array;
     var yCor=selectedBars[0][2]; //by default
     var corLin = new Array;
-    linePaper = new Raphael(0,0,875,500);
+    linePaper = new Raphael(0,0,w,h);
 
     for (var i = 0; i < selectedBars.length; i++){
 	
@@ -785,7 +790,7 @@ function drawArrow(selectedBars){
     var xCor = new Array;
     var yCor = new Array;
     var arrow = new Array;
-    paper = new Raphael(0,0,875,500);
+    paper = new Raphael(0,0,w,h);
 	
     for (var i = 0; i < selectedBars.length; i++){
 	
@@ -831,7 +836,7 @@ function drawArrowLine(selectedBars){
     var yCor = new Array;
     var arrow = new Array;
     var corLin = new Array;
-    linePaper = new Raphael(0,0,875,500);
+    linePaper = new Raphael(0,0,w,h);
 	
     for (var i = 0; i < selectedBars.length; i++){
 	
@@ -854,7 +859,7 @@ function drawArrowLineRelative(selectedBars){
 	var yCor = new Array;
 	var arrow = new Array;
 	var corLin = new Array;
-	linePaper = new Raphael(0,0,875,500);
+	linePaper = new Raphael(0,0,w,h);
 	
 for (var i = 0; i < selectedBars.length; i++){
 	

@@ -15,7 +15,8 @@ namespace ATUAV_Experiment
         public static void Main(){
 
             //Basic INSERT method with Parameters
-            SqlConnection sqlConn = new SqlConnection("Data Source=.\\SQLEXPRESS;AttachDbFilename=C:\\Documents and Settings\\Admin\\My Documents\\Visual Studio 2008\\Projects\\ATUAV_RT\\ATUAV_Experiment\\ATUAV_Experiment\\App_Data\\Experiment.mdf;Integrated Security=True;User Instance=True");
+            String dbString = "Data Source=.\\SQLEXPRESS;AttachDbFilename=C:\\Users\\Ben\\Documents\\atuav\\ATUAV_Experiment\\ATUAV_Experiment\\App_Data\\Experiment.mdf;Integrated Security=True;User Instance=True";
+            SqlConnection sqlConn = new SqlConnection(dbString);
             SqlCommand sqlComm = new SqlCommand();
 
             sqlComm = sqlConn.CreateCommand();
@@ -34,17 +35,17 @@ namespace ATUAV_Experiment
 
             int[] questionID_RV = new int[] { 1,1,2,2};
 
-            String[] phrasingRV = new String[] { "Is SERIES's DOMAIN_KEYWORD1 in SAMPLE above the average?",
-                                                 "Is SERIES's DOMAIN_KEYWORD1 in SAMPLE above the average?",
-                                                 "Is SERIES's DOMAIN_KEYWORD1 in SAMPLE below the average?",
-                                                 "Is SERIES's DOMAIN_KEYWORD1 in SAMPLE below the average?"};
+            String[] phrasingRV = new String[] { "Is SERIES's DOMAIN_KEYWORD1 in SAMPLE above the AVERAGE_KEYWORD1?",
+                                                 "Is SERIES's DOMAIN_KEYWORD1 in SAMPLE above the AVERAGE_KEYWORD1?",
+                                                 "Is SERIES's DOMAIN_KEYWORD1 in SAMPLE below the AVERAGE_KEYWORD1?",
+                                                 "Is SERIES's DOMAIN_KEYWORD1 in SAMPLE below the AVERAGE_KEYWORD1?"};
 
             int[] questionID_CDV = new int[] { 3, 4, 5, 6 };
 
-            String[] phrasingCDV = new String[] { "In how many DOMAIN_KEYWORD2 is SERIES1 above the average and SERIES2 is below it?", 
-                                                  "In how many DOMAIN_KEYWORD2 is SERIES2 above the average and SERIES1 is below it?", 
-                                                  "In how many DOMAIN_KEYWORD2 are both SERIES1 and SERIES2 above the average?", 
-                                                  "In how many DOMAIN_KEYWORD2 are both SERIES1 and SERIES2 below the average?"};
+            String[] phrasingCDV = new String[] { "In how many DOMAIN_KEYWORD2 is SERIES1 above the AVERAGE_KEYWORD2 and SERIES2 is below it?", 
+                                                  "In how many DOMAIN_KEYWORD2 is SERIES2 above the AVERAGE_KEYWORD2 and SERIES1 is below it?", 
+                                                  "In how many DOMAIN_KEYWORD2 are both SERIES1 and SERIES2 above the AVERAGE_KEYWORD2?", 
+                                                  "In how many DOMAIN_KEYWORD2 are both SERIES1 and SERIES2 below the AVERAGE_KEYWORD2?"};
 
             String[] interventionTime = new String[] { "T0", "TX"};
 
@@ -84,7 +85,7 @@ namespace ATUAV_Experiment
 
                         dataValues = "";
 
-                        for(int i=0; i<56; i++)
+                        for(int i=0; i<48; i++)
                         {
                             dataValues += r.Next(40, 80) + " ";
                         }
@@ -146,7 +147,7 @@ namespace ATUAV_Experiment
 
                         dataValues = "";
 
-                        for (int i = 0; i < 56; i++)
+                        for (int i = 0; i < 48; i++)
                         {
                             dataValues += r.Next(60, 100) + " ";
                         }

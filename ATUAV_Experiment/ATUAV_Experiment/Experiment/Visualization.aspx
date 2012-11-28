@@ -9,7 +9,10 @@
     protected void Page_Load(object sender, EventArgs e)
     {
 
-        String dbString = "Data Source=.\\SQLEXPRESS;AttachDbFilename=C:\\Documents and Settings\\Admin\\My Documents\\Visual Studio 2008\\Projects\\ATUAV_RT\\ATUAV_Experiment\\ATUAV_Experiment\\App_Data\\Experiment.mdf;Integrated Security=True;User Instance=True";
+        int num_series = 6; //including average
+        int num_samples = 8;
+        
+        String dbString = "Data Source=.\\SQLEXPRESS;AttachDbFilename=C:\\Users\\Ben\\Documents\\atuav\\ATUAV_Experiment\\ATUAV_Experiment\\App_Data\\Experiment.mdf;Integrated Security=True;User Instance=True";
         
 //Initial setting of username and task
         int userID = 0;
@@ -52,9 +55,16 @@
             sqlComm.ExecuteNonQuery();
             sqlConn.Close();
             
-            // stop previous run
-            WebRequest stopRequest = WebRequest.Create("http://localhost:8080/atuav/stop");
-            stopRequest.GetResponse();
+            try
+            {
+                // stop previous run
+                WebRequest stopRequest = WebRequest.Create("http://localhost:8080/atuav/stop");
+                stopRequest.GetResponse();
+            }
+            catch
+            {
+                //do nothing
+            }
         }
         
 //Retrieving next task       
@@ -84,6 +94,8 @@
         String[] samples = {};
         String domain_keyword1 = "";
         String domain_keyword2 = "";
+        String average_keyword1 = "";
+        String average_keyword2 = "";
         
         Random r = new Random();
         
@@ -94,21 +106,27 @@
             series = new String[] { "Michael", "Christopher", "Matthew", "Joshua", "Andrew", "Daniel", "Ryan", "William", "Kyle", "Zachary", "Ashley", "Brittany", "Samantha", "Elizabeth", "Meghan", "Heather", "Victoria", "Lindsey", "Olivia", "Gabrielle" };
             samples = new String[] { "Chemistry", "Physics", "Biology", "Anthropology", "Photography", "English ", "Engineering", "History", "Forestry", "Latin", "Political Science", "Math" };
             domain_keyword1 = "grade";
-            domain_keyword2 = "course";
+            domain_keyword2 = "courses";
+            average_keyword1 = "class average for that course";
+            average_keyword2 = "class average";
         }
         else if (domain == 1)
         {
-            series = new String[] { "Microfirm", "Logistix", "Info-Tek", "Metrocom", "Fabricare", "JL_Associates", "BioRestore_Inc", "WCC_Group", "Bluegem_Properties", "Talisco", "Davis_Holdings", "Benzad_International", "R_and_R_Foods", "Montco_Glocal", "Starshine_Entertainment", "DairyEmpire", "ChemCorp", "Fitzgerlad_Gold", "Uni-Sand_Ltd", "GT" };
+            series = new String[] { "Microfirm", "Logistix", "Info-Tek", "Metrocom", "Fabricare", "JL_Associates", "BioRestore_Inc", "WCC_Group", "Bluegem_Properties", "Talisco", "Davis_Holdings", "Benzad_International", "RR_Foods", "Montco_Glocal", "Starshine_Entertainment", "DairyEmpire", "ChemCorp", "Fitzgerlad_Gold", "Uni-Sand_Ltd", "GT" };
             samples = new String[] { "Human_Resources", "Accounting", "Marketing", "Information_Technology", "Logistics", "Customer_Service", "Legal", "Research", "Retail", "Advertising", "Public_Relations", "Security" };
             domain_keyword1 = "growth";
             domain_keyword2 = "departments";
+            average_keyword1 = "average growth in that department";
+            average_keyword2 = "average growth";
         }
         else if (domain == 2)
         {
             series = new String[] { "The_Haunting","Vampire_Attack","Love_and_Lovlier","A_Serious_Affair","Blades_of_Metal","The_Champ","Shark_Swamp_2","How_to_Date_Your_Friends","City_Lights_City_Life","The_Lost_Explorer","Zombiepocalyptica","Three_Chefs","Club_Universe","Blue_Mountain","Speed_Freak_3","Tea_and_Cigars","The_Four_Sided_Square","An_Unfinished_Life","Bus_Driver","The_Novice" };
             samples = new String[] { "Vancouver","Los_Angeles","New_York","Berlin","London","Rome","Moscow","Tokyo","Paris","Mexico_City","Auckland","Hong_Kong" };
             domain_keyword1 = "revenue";
-            domain_keyword2 = "city";
+            domain_keyword2 = "cities";
+            average_keyword1 = "average movie revenue in that city";
+            average_keyword2 = "average revenue";
         }
 
         
@@ -130,17 +148,17 @@
             randomSamplesFull[i] = samples[randomSamplesOrder[i]];
         }
 
-        String[] randomSeries = new String[7];
-        String[] randomSamples = new String[8];
+        String[] randomSeries = new String[num_series];
+        String[] randomSamples = new String[num_samples];
 
         randomSeries[0] = "Average";
         
-        for (int i = 1; i < 7; i++)
+        for (int i = 1; i < num_series; i++)
         {
             randomSeries[i] = randomSeriesFull[i];
         }
 
-        for (int i = 0; i < 8; i++)
+        for (int i = 0; i < num_samples; i++)
         {
             randomSamples[i] = randomSamplesFull[i];
         }
@@ -153,15 +171,15 @@
         
         if(QuestionType=="RV")
         {
-            randomSingleSeries = randomSeries[r.Next(1, 7)];
-            randomSingleSample = randomSamples[r.Next(0, 8)];
+            randomSingleSeries = randomSeries[r.Next(1, num_series)];
+            randomSingleSample = randomSamples[r.Next(0, num_samples)];
         }
         else
         {
             while (randomSingleSeries1 == randomSingleSeries2)
             {
-                randomSingleSeries1 = randomSeries[r.Next(1, 7)];
-                randomSingleSeries2 = randomSeries[r.Next(1, 7)];
+                randomSingleSeries1 = randomSeries[r.Next(1, num_series)];
+                randomSingleSeries2 = randomSeries[r.Next(1, num_series)];
             }
         }
         
@@ -203,11 +221,11 @@
                     }
                     else if (randomSeries[i] == randomSingleSeries1)
                     {
-                        data_string += importantValues[j+8];
+                        data_string += importantValues[j+num_samples];
                     }
                     else if (randomSeries[i] == randomSingleSeries2)
                     {
-                        data_string += importantValues[j + 16];
+                        data_string += importantValues[j + num_samples*2];
                     }
                     else
                     {
@@ -237,7 +255,7 @@
         }
         else if (QuestionType == "CDV")
         {
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < num_samples; i++)
             {
                 intervention_string += "<group>";
                 intervention_string += "<bar series=\"" + randomSingleSeries1 + "\" sample=\"" + randomSamples[i] + "\"></bar>";
@@ -257,34 +275,34 @@
             question = question.Replace("SERIES", randomSingleSeries);
             question = question.Replace("SAMPLE", randomSingleSample);
             question = question.Replace("DOMAIN_KEYWORD1", domain_keyword1);
+            question = question.Replace("AVERAGE_KEYWORD1", average_keyword1);
         }
         else if(QuestionType=="CDV")
         {
             question = question.Replace("SERIES1", randomSingleSeries1);
             question = question.Replace("SERIES2", randomSingleSeries2);
             question = question.Replace("DOMAIN_KEYWORD2", domain_keyword2);
+            question = question.Replace("AVERAGE_KEYWORD2", average_keyword2);
         }
         
-        QuestionText.InnerHtml = question;
+        QuestionText.InnerHtml = question.Replace("_"," ");
 
         String answer_string = "";
         
         if (QuestionType=="RV")
         {
-            answer_string += "<input type='radio' name='answer' value='true' checked>true ";
-            answer_string += "<input type='radio' name='answer' value='false'>false ";
+            answer_string += "<input type='radio' name='answer' value='yes' checked>yes ";
+            answer_string += "<input type='radio' name='answer' value='no'>no ";
         }
         else
         {
             answer_string += "<input type='radio' name='answer' value='0' checked>0 ";
-            answer_string += "<input type='radio' name='answer' value='1'>1 ";
-            answer_string += "<input type='radio' name='answer' value='2'>2 ";
-            answer_string += "<input type='radio' name='answer' value='3'>3 ";
-            answer_string += "<input type='radio' name='answer' value='4'>4 ";
-            answer_string += "<input type='radio' name='answer' value='5'>5 ";
-            answer_string += "<input type='radio' name='answer' value='6'>6 ";
-            answer_string += "<input type='radio' name='answer' value='7'>7 ";
-            answer_string += "<input type='radio' name='answer' value='8'>8 ";
+            
+            for(int i=1; i<=num_samples; i++)
+            {
+                answer_string += "<input type='radio' name='answer' value='"+i+"'>"+i+" ";
+            }
+
         }
 
         AnswerBox.InnerHtml = answer_string;
@@ -298,14 +316,17 @@
         if (userID != null && taskID != null)
         {
             sqlConn = new SqlConnection(dbString);
-            sqlComm = new SqlCommand("INSERT INTO Run (taskID, userID, StartTime) output inserted.RunID " +
-                                  "VALUES (@taskID, @userID, GetDate());", sqlConn);
+            sqlComm = new SqlCommand("INSERT INTO Run (taskID, userID, Question, StartTime) output inserted.RunID " +
+                                  "VALUES (@taskID, @userID, @Question, GetDate());", sqlConn);
 
             sqlComm.Parameters.Add("@userID", SqlDbType.Int);
             sqlComm.Parameters["@userID"].Value = userID;
 
             sqlComm.Parameters.Add("@taskID", SqlDbType.Int);
             sqlComm.Parameters["@taskID"].Value = taskID;
+
+            sqlComm.Parameters.Add("@Question", SqlDbType.VarChar);
+            sqlComm.Parameters["@Question"].Value = question.Replace("_", " ");
 
             sqlConn.Open();
             Object result = sqlComm.ExecuteScalar();
@@ -317,11 +338,35 @@
             HiddenParameters.InnerHtml = hidden_string;
         }
 
+        int color = r.Next(0, 6);
+        colorFamily.InnerHtml = "{\"colorFamily\":" + color + "}";
 
-        String debug_string = "*********************DEBUG*********************<br />";
+        double text_box_length = question.Length * 7.1;
+        double x1 = (1280-text_box_length)/2;
+        double x2 = x1 + text_box_length/3;
+        double x3 = x2 + text_box_length/3;
+        double x4 = x1 + text_box_length;
+        
+        // start eye tracking
+        string aois = "text\\t"+x1+",720\\t"+x2+",720\\t"+x2+",750\\t"+x1+",750\\n";
+        aois += "text\\t" + x2 + ",720\\t" + x3 + ",720\\t" + x3 + ",750\\t" + x2 + ",750";
+        aois += "text\\t" + x3 + ",720\\t" + x4 + ",720\\t" + x4 + ",750\\t" + x3 + ",750";
+        
+        try
+        {
+            WebRequest startRequest = WebRequest.Create("http://localhost:8080/atuav/start?runId=" + newRunID + "&aois=" + aois);
+            startRequest.GetResponse();
+        }
+        catch
+        {
+            //do nothing
+        }
+
+
+        String debug_string = "<br /><br />-------------Task Info-----------<br />";
         //debug_string += "User ID: " + userID + "<br />";
         //debug_string += "Run ID: " + newRunID + "<br />";
-        debug_string += "Task: " + taskID + "out of 80<br />";
+        debug_string += "Task: " + taskID + " out of 80<br />";
         debug_string += "Task ID/Type: " + taskID + "/" + QuestionType + "<br />";
         debug_string += "Intervention Type/Timing: " + InterventionType + "/" + InterventionTime + "<br />";
         if(QuestionType=="RV")
@@ -332,18 +377,14 @@
         {
             debug_string += "Intervention Target: Average, " + randomSingleSeries1 + " and " + randomSingleSeries2 + "<br />";
         }
-        debug_string += "*********************DEBUG*********************<br />";
+        debug_string += "Question AOI: x1=" + x1 + ", x2=" + x2 + ", x3=" + x3 + ", x4=" + x4 + "<br />";
+        debug_string += "<br />";
 
 
-        Answer.InnerHtml = debug_string;
+        Answer.InnerHtml = debug_string.Replace("_"," ");
 
-        int color = r.Next(0, 6);
-        colorFamily.InnerHtml = "{\"colorFamily\":" + color + "}";
         
-        // start run
-        string aois = "text\\t350,590\\t950,590\\t950,640\\t350,640";
-        WebRequest startRequest = WebRequest.Create("http://localhost:8080/atuav/start?runId=" + newRunID + "&aois=" + aois);
-        startRequest.GetResponse();
+        
     }
 </script>
 
@@ -356,6 +397,16 @@
         <script type="text/javascript" src="http://mbostock.github.com/d3/d3.js?2.1.3"></script>
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
         <script type="text/javascript" src="raphael.js"></script>
+        <style type="text/css">
+            body {
+                font-family:"Arial";  
+            }
+            .domain {
+                fill: none; 
+                stroke: black; 
+                stroke-width: 1;
+            }
+        </style>
 </head>
 <body>
     <form id="form1" runat="server">
@@ -364,9 +415,10 @@
     <div id='intervention' style='visibility:hidden;' runat="server"></div>
     <div id='colorFamily'  style='visibility:hidden;' runat="server"></div>
     <center>
-    <div id='infovis'></div>
-    <br />
+    <div id='infovis' style="position:relative; top:20px; left:80px; right:0px; width:1100px;"></div>
+    <br /><br />
     <div id='QuestionText' runat="server"></div>
+    <br /><br />
     <div id='AnswerBox' runat="server"></div>
     <div id='HiddenParameters' runat="server"></div>
     <asp:Button id="AnswerButton" Text="Submit" runat="server" />
