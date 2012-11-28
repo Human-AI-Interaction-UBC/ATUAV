@@ -12,7 +12,7 @@
         int num_series = 6; //including average
         int num_samples = 8;
         
-        String dbString = "Data Source=.\\SQLEXPRESS;AttachDbFilename=C:\\Users\\Ben\\Documents\\atuav\\ATUAV_Experiment\\ATUAV_Experiment\\App_Data\\Experiment.mdf;Integrated Security=True;User Instance=True";
+        String dbString = "Data Source=.\\SQLEXPRESS;AttachDbFilename=C:\\Documents and Settings\\Admin\\My Documents\\Visual Studio 2008\\Projects\\ATUAV_RT\\ATUAV_Experiment\\ATUAV_Experiment\\App_Data\\Experiment.mdf;Integrated Security=True;User Instance=True";
         
 //Initial setting of username and task
         int userID = 0;
@@ -362,9 +362,9 @@
         double x4 = x1 + text_box_length;
         
         // start eye tracking
-        string aois = "text\\t"+x1+",720\\t"+x2+",720\\t"+x2+",750\\t"+x1+",750\\n";
-        aois += "text\\t" + x2 + ",720\\t" + x3 + ",720\\t" + x3 + ",750\\t" + x2 + ",750";
-        aois += "text\\t" + x3 + ",720\\t" + x4 + ",720\\t" + x4 + ",750\\t" + x3 + ",750";
+        string aois = "text1\\t"+x1+",720\\t"+x2+",720\\t"+x2+",750\\t"+x1+",750\\r\\n";
+        aois += "text2\\t" + x2 + ",720\\t" + x3 + ",720\\t" + x3 + ",750\\t" + x2 + ",750\\r\\n";
+        aois += "text3\\t" + x3 + ",720\\t" + x4 + ",720\\t" + x4 + ",750\\t" + x3 + ",750";
         
         try
         {
