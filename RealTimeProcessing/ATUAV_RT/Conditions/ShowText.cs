@@ -16,7 +16,7 @@ namespace ATUAV_RT
 		{
 			get
 			{
-				return "showtext";
+				return "showText";
 			}
 		}
 		
@@ -27,14 +27,13 @@ namespace ATUAV_RT
                 processor.ProcessWindow();
                 try
                 {
-                    object feature1 = processor.Features["text1_numfixations"];
-                    object feature2 = processor.Features["text2_numfixations"];
-                    object feature3 = processor.Features["text3_numfixations"];
-                    Console.WriteLine(feature1 + " / " + feature2 + " / " + feature3);
+                    object feature1 = processor.Features["graph_numfixations"];
+                    object feature2 = processor.Features["legend_numfixations"];
+                    Console.WriteLine("Graph: "+feature1 + ", Legend: " + feature2);
 
                     if (feature1 is int)
                     {
-                        return ((int)feature1 > 2 && (int)feature2 > 2 && (int)feature3 > 2);
+                        return ((int)feature1 > 4 && (int)feature2 > 1);
                     }
                 }
                 catch (KeyNotFoundException)

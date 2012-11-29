@@ -139,9 +139,7 @@
         }
 
         
-        //randomize full series
-        
-        
+//randomize full series
         var randomSeriesOrder = Enumerable.Range(0, 20).OrderBy(i => r.Next()).ToArray();
         var randomSamplesOrder = Enumerable.Range(0, 12).OrderBy(i => r.Next()).ToArray();
         String[] randomSeriesFull = new String[20];
@@ -355,17 +353,34 @@
         int color = r.Next(0, 6);
         colorFamily.InnerHtml = "{\"colorFamily\":" + color + "}";
 
+//SET AOIs
+        
+        double text_y1 = 805;
+        double text_y2 = 855;
         double text_box_length = question.Length * 7.1;
-        double x1 = (1280-text_box_length)/2;
-        double x2 = x1 + text_box_length/3;
-        double x3 = x2 + text_box_length/3;
-        double x4 = x1 + text_box_length;
+        double text_x1 = (1280-text_box_length)/2;
+        double text_x2 = text_x1 + text_box_length/3;
+        double text_x3 = text_x2 + text_box_length/3;
+        double text_x4 = text_x1 + text_box_length;
+        
+        double graph_x1=200;
+        double graph_x2=995;
+        double graph_y1=145;
+        double graph_y2=770;
+
+        double legend_x1 = 1033;
+        double legend_x2 = 1114;
+        double legend_y1 = 504;
+        double legend_y2 = 632;
         
         // start eye tracking
-        string aois = "text1\\t"+x1+",720\\t"+x2+",720\\t"+x2+",750\\t"+x1+",750\\r\\n";
-        aois += "text2\\t" + x2 + ",720\\t" + x3 + ",720\\t" + x3 + ",750\\t" + x2 + ",750\\r\\n";
-        aois += "text3\\t" + x3 + ",720\\t" + x4 + ",720\\t" + x4 + ",750\\t" + x3 + ",750";
-        
+        string aois = "text1\\t" + text_x1 + "," + text_y1 + "\\t" + text_x2 + "," + text_y1 + "\\t" + text_x2 + "," + text_y2 + "\\t" + text_x1 + "," + text_y2 + "\\r\\n";
+        aois += "text2\\t" + text_x2 + "," + text_y1 + "\\t" + text_x3 + "," + text_y1 + "\\t" + text_x3 + "," + text_y2 + "\\t" + text_x2 + "," + text_y2 + "\\r\\n";
+        aois += "text3\\t" + text_x3 + "," + text_y1 + "\\t" + text_x4 + "," + text_y1 + "\\t" + text_x4 + "," + text_y2 + "\\t" + text_x3 + "," + text_y2 + "\\r\\n";
+
+        aois += "graph\\t" + graph_x1 + "," + graph_y1 + "\\t" + graph_x2 + "," + graph_y1 + "\\t" + graph_x2 + "," + graph_y2 + "\\t" + graph_x1 + "," + graph_y2 + "\\r\\n";
+        aois += "legend\\t" + legend_x1 + "," + legend_y1 + "\\t" + legend_x2 + "," + legend_y1 + "\\t" + legend_x2 + "," + legend_y2 + "\\t" + legend_x1 + "," + legend_y2 + "\\r\\n";
+
         try
         {
             WebRequest startRequest = WebRequest.Create("http://localhost:8080/atuav/start?runId=" + newRunID + "&aois=" + aois);
@@ -376,7 +391,7 @@
             //do nothing
         }
 
-
+//DEBUG STRING
         String debug_string = "<br /><br />-------------Task Info-----------<br />";
         //debug_string += "User ID: " + userID + "<br />";
         //debug_string += "Run ID: " + newRunID + "<br />";
@@ -391,14 +406,11 @@
         {
             debug_string += "Intervention Target: Average, " + randomSingleSeries1 + " and " + randomSingleSeries2 + "<br />";
         }
-        debug_string += "Question AOI: x1=" + x1 + ", x2=" + x2 + ", x3=" + x3 + ", x4=" + x4 + "<br />";
+        debug_string += "Question AOI: x1=" + text_x1 + ", x2=" + text_x2 + ", x3=" + text_x3 + ", x4=" + text_x4 + "<br />";
         debug_string += "<br />";
 
-
-        Answer.InnerHtml = debug_string.Replace("_"," ");
-
-        
-        
+        //Answer.InnerHtml = debug_string.Replace("_", " ");
+//DEBUG STRING
     }
 </script>
 
@@ -424,18 +436,18 @@
 </head>
 <body>
     <form id="form1" runat="server">
-    
+    <div id='HiddenParameters' runat="server"></div>
     <div id='data' style='visibility:hidden;' runat="server"></div>
     <div id='intervention' style='visibility:hidden;' runat="server"></div>
     <div id='colorFamily'  style='visibility:hidden;' runat="server"></div>
     <center>
-    <div id='infovis' style="position:relative; top:20px; left:80px; right:0px; width:1100px;"></div>
+    <div id='infovis' class="phase1" style="position:relative; top:100px; left:80px; right:0px; width:1100px;"></div>
     <br /><br />
-    <div id='QuestionText' runat="server"></div>
+    <br /><br /><br /><br /><br />
+    <div id='QuestionText' class="phase2" runat="server"></div>
     <br /><br />
-    <div id='AnswerBox' runat="server"></div>
-    <div id='HiddenParameters' runat="server"></div>
-    <asp:Button id="AnswerButton" Text="Submit" runat="server" />
+    <div id='AnswerBox' class="phase2" runat="server"></div>
+    <asp:Button id="AnswerButton" class="phase2" Text="Submit" runat="server" />
     <div id='Exception' runat="server"></div>
     <script type="text/javascript" src="multiBars.js"></script>
     </center>

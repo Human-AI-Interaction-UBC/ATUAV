@@ -30,9 +30,6 @@ if(obj.colorFamily<6 && obj.colorFamily>0)
 else 
 	randomFamily= Math.floor(Math.random()*6);
 
-
-
-
 var subject = [];
 //BEN: Added the series name
 
@@ -249,24 +246,54 @@ var currentInterventionTime = xmlDoc.getElementsByTagName("intervention").item(0
         setIntervention();
     }
     else if (currentInterventionTime == 'TX') {
-        var intervalID = setInterval(function () { interventionInfoFromEyeTracker() }, 1000);
+        $('.phase2').css('visibility', 'hidden');
+        var intervalID = setInterval(function () { checkForGraphCondition() }, 1000);
     }
-	
 
-//Enamul: getting intervention info from the eye tracker
-	function interventionInfoFromEyeTracker(){
+
+    //Check if Graph has been looked at
+    function checkForGraphCondition() {
+
+        var eyeTrackerDivData = "";
+        var objJason = null;
+
+        $.getJSON("http://localhost:8080/atuav/condition?processorId=experiment-c&condition=showText&callback=?", function (data) {
+            if (data == true) {
+                $('.phase1').css('visibility', 'hidden');
+                $('.phase2').css('visibility', 'visible');
+                clearInterval(intervalID);
+                countReq = 0;
+                intervalID = setInterval(function () { checkForTextCondition() }, 1000);
+            }
+        });
+        if (countReq == 7) {
+            $('.phase1').css('visibility', 'hidden');
+            $('.phase2').css('visibility', 'visible');
+            clearInterval(intervalID);
+            countReq = 0;
+            intervalID = setInterval(function () { checkForTextCondition() }, 1000);
+        }
+        countReq++;
+    }
+
+
+
+//Check if Text has been looked at
+    function checkForTextCondition() {
 
 	    var eyeTrackerDivData = "";
         var objJason = null;
 
-        $.getJSON("http://localhost:8080/atuav/condition?processorId=experiment-c&condition=showtext&callback=?", function (data) {
+        $.getJSON("http://localhost:8080/atuav/condition?processorId=experiment-c&condition=showIntervention&callback=?", function (data) {
             if (data == true) {
+                $('.phase1').css('visibility', 'visible');
                 setIntervention();
                 clearInterval(intervalID);
             }
         });
-        if (countReq == 10) {
-            setIntervention();
+        if (countReq == 7) {
+            $('.phase1').css('visibility', 'visible');
+            setTimeout(setIntervention, 1000);
             clearInterval(intervalID);
         }
         countReq++;

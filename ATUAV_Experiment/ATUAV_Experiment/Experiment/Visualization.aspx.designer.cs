@@ -22,6 +22,15 @@ namespace ATUAV_Experiment {
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
         
         /// <summary>
+        /// HiddenParameters control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl HiddenParameters;
+        
+        /// <summary>
         /// data control.
         /// </summary>
         /// <remarks>
@@ -65,15 +74,6 @@ namespace ATUAV_Experiment {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl AnswerBox;
-        
-        /// <summary>
-        /// HiddenParameters control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl HiddenParameters;
         
         /// <summary>
         /// AnswerButton control.
