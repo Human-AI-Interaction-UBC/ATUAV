@@ -94,12 +94,12 @@ namespace ATUAV_Experiment {
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl Exception;
         
         /// <summary>
-        /// Answer control.
+        /// Debug control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl Answer;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl Debug;
     }
 }

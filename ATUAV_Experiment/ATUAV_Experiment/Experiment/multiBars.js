@@ -13,12 +13,16 @@
 var data = [];
 var seriesName = [];
 
-var colorFamily =[["127, 201, 127","190, 174, 212","253, 192, 134","255, 255, 153","56, 108, 176","240, 2, 127"],
-				  ["27, 158, 119","217, 95, 2","117, 112, 179","231, 41, 138", "102, 166, 30","230, 171, 2"],
-				  ["166, 206, 227", "31, 120, 180", "178, 223, 138", "51, 160, 44", "251, 154, 153", "227, 26, 28"],
-				  ["228, 26, 28", "55, 126, 184", "77, 175, 74", "152, 78, 163", "255, 127, 0", "255, 255, 51"], 
-				  ["102, 194, 165", "252, 141, 98", "141, 160, 203", "231, 138, 195", "166, 216, 84", "255, 217, 47"],
-				  ["141, 211, 199", "255, 255, 179", "190, 186, 218", "251, 128, 114", "128, 177, 211", "253, 180, 98"]
+var colorFamily = [//["127, 201, 127","190, 174, 212","253, 192, 134","255, 255, 153","56, 108, 176","240, 2, 127"],
+				  ["241,89,95", "121,195,106", "89,154,211", "249,166,90", "158,102,171"],
+				  ["205,112,88", "89,154,211", "241,89,95", "215,127,179", "121,195,106", "230, 171, 2"],
+                  //["166, 206, 227", "31, 120, 180", "178, 223, 138", "51, 160, 44", "251, 154, 153", "227, 26, 28"],
+				  ["205,112,88", "89,154,211", "121,195,106", "158,102,171", "241,89,95"],
+                  //["228, 26, 28", "55, 126, 184", "77, 175, 74", "152, 78, 163", "248,158,90", "255, 255, 51"], 
+				  ["241, 89,95", "121,195,106", "249,166,90", "215,127,179", "205,112,88"],
+				  ["249,166,90", "205,112,88", "89,154,211", "215,127,179", "121,195,106"],
+                  //["141, 211, 199", "255, 255, 179", "190, 186, 218", "251, 128, 114", "128, 177, 211", "253, 180, 98"]
+				  ["205,112,88", "121,195,106", "215,127,179", "89,154,211", "241, 89,95"]
 				 ];
 				 
 // if a valid color family is provided use that, otherwise use the random color family				 
@@ -60,25 +64,21 @@ for (i = 0; i < M.length; i++) {
     {
         subject[j]=children[j].attributes[0].nodeValue;
         data[i][j] = children[j].attributes[1].nodeValue;
-    };
-
-    //JQUERY solution
-    //seriesName[i] = $($("series", xmlDoc).get(i)).attr('name');
-    //$("sample", $("series", xmlDoc).get(i));
-    //for (var j = 0; j < $("sample", $("series", xmlDoc).get(i)).length; j++) {
-    //    subject[j] = $($("sample", $("series", xmlDoc).get(i)).get(j)).attr('name');
-    //    data[i][j] = $($("sample", $("series", xmlDoc).get(i)).get(j)).attr('value');
-    //};    
+    };   
 }
 
-var numTicks = 3;
+xAxisLabel = "";
+yAxisLabel = "";
+xAxisLabel = xmlDoc.getElementsByTagName("xaxis").item(0).attributes[0].nodeValue;
+yAxisLabel = xmlDoc.getElementsByTagName("yaxis").item(0).attributes[0].nodeValue;
+
+var numTicks = 5;
 var n = data[0].length; // number of samples
 m = data.length; // number of series
 
 
 //BEN: Need this variable to be able to stop blinking
 var timeOutHandle;
-
 
 var grade = ["0","50",""];		
 var stack = new Array;
@@ -88,7 +88,7 @@ var barWidth;
 			
 				
 var w = 800,
-h = 600,
+h = 580,
 bodyW = 1100,
 bodyH = 660,
 strokeWidth=2,
@@ -101,21 +101,23 @@ y = d3.scale.linear().domain([0, 100]).range([ h,0]),
 pix2Score = d3.scale.linear().domain([0,100]).range([0, 500]);
 
 score2 = d3.scale.linear().domain([0,100]).range([0, 100]);
-z = d3.scale.category20c();   
+z = d3.scale.category20c();
 
 var xAxis = d3.svg.axis()
 .scale(x0)
 .orient("bottom")
 .ticks(m)
-.tickFormat(function(i){
+.tickFormat(function (i) {
     return subject[i].replace(/_/g,' ');
-});
+})
+;
+
+
 
 var yAxis = d3.svg.axis()
 .scale(y)
 .orient("left")
 .ticks(numTicks)
-//.tickFormat(function(numbTicks){ return grade[numTicks];});
 .tickFormat(function(numTicks){
     return Math.floor(score2(numTicks));
 });
@@ -125,9 +127,7 @@ var vis = d3.select("#infovis")
 .attr("width", bodyW)
 .attr("height", bodyH)
 .append("svg:g")
-.attr("transform", "translate(20,20)");
-
-
+.attr("transform", "translate(30,20)");
 
 var g = vis.selectAll("g")
 .data(data) 
@@ -175,9 +175,51 @@ vis.append("g")
 
 vis.append("g")
     .attr("class", "axis")
+    .attr("id", "xaxis")
     .attr("transform", "translate( 4," + h + ")")
     .attr("font-size", "13px")
     .call(xAxis);
+
+vis.append("text")
+    .attr("class", "x label")
+    .attr("text-anchor", "center")
+    .attr("font-weight", "bold")
+	.attr("font-style", "italic")
+    .attr("font-size", "15px")
+    .attr("x", bodyH / 2 + 30)
+    .attr("y", h + 50)
+    .text(xAxisLabel);
+
+// Break long labels
+var xaxiscontainer = $("#xaxis");
+$("text", xaxiscontainer).each(function (index) {
+
+    labelCheck = $(this).text().trim();
+
+    if (labelCheck.indexOf(" ") >= 0 && labelCheck.length > 11) {
+        yvalue = parseInt($(this).attr("y"));
+        splitLabels = labelCheck.split(" ");
+        $(this).text(splitLabels[0]);
+        for (i = 1; i < splitLabels.length; i++) {
+            yvalue = yvalue + 13;
+            newLabel = $(this).clone();
+            newLabel.attr("y", yvalue);
+            newLabel.text(splitLabels[i]);
+            $(this).parent().append(newLabel);
+
+        }
+
+    }
+});
+
+vis.append("text")
+    .attr("class", "y label")
+    .attr("text-anchor", "center")
+    .attr("font-weight", "bold")
+	.attr("font-style", "italic")
+    .attr("font-size", "15px")
+    .attr("transform", "rotate(270," + (155) + "," + (175) + ")")
+    .text(yAxisLabel);
 
 var legendNames = seriesName.slice();
 $.each(legendNames, function (index, value) {
@@ -266,7 +308,7 @@ var currentInterventionTime = xmlDoc.getElementsByTagName("intervention").item(0
                 intervalID = setInterval(function () { checkForTextCondition() }, 1000);
             }
         });
-        if (countReq == 7) {
+        if (countReq == 2) {
             $('.phase1').css('visibility', 'hidden');
             $('.phase2').css('visibility', 'visible');
             clearInterval(intervalID);
@@ -291,7 +333,7 @@ var currentInterventionTime = xmlDoc.getElementsByTagName("intervention").item(0
                 clearInterval(intervalID);
             }
         });
-        if (countReq == 7) {
+        if (countReq == 2) {
             $('.phase1').css('visibility', 'visible');
             setTimeout(setIntervention, 1000);
             clearInterval(intervalID);
@@ -889,27 +931,22 @@ function drawArrowLineRelative(selectedBars){
 	var corLin = new Array;
 	linePaper = new Raphael(0,0,bodyW,bodyH);
 	
-for (var i = 0; i < selectedBars.length; i++){
+    for (var i = 0; i < selectedBars.length; i++){
 	
-	xCor[i] = selectedBars[i][1];
-	yCor[i] = selectedBars[i][2];
-	
-	 
-	 
-	 corLin[i] = xCor[i]+barWidth/2;
-	 
-}
-var	minXVal = d3.min(corLin);
-var maxXVal = d3.max(corLin);
-var maxYVal = d3.min(yCor);
-maxYVal = maxYVal- 20;
-var arrowXLin = linePaper.path("M" + minXVal+" "+ maxYVal +"L" + maxXVal + " " + maxYVal +"Z");
+	    xCor[i] = selectedBars[i][1];
+	    yCor[i] = selectedBars[i][2];
+	    corLin[i] = xCor[i]+barWidth/2;
+    }
+    var	minXVal = d3.min(corLin);
+    var maxXVal = d3.max(corLin);
+    var maxYVal = d3.min(yCor);
+    maxYVal = maxYVal- 20;
+    var arrowXLin = linePaper.path("M" + minXVal+" "+ maxYVal +"L" + maxXVal + " " + maxYVal +"Z");
 
-for (var i = 0; i < selectedBars.length; i++){
-
-arrow[i] = linePaper.arrow(xCor[i]+barWidth/2,maxYVal,xCor[i]+barWidth/2,yCor[i],10);
-}
-stack.push("drawArrowLineRelative");
+    for (var i = 0; i < selectedBars.length; i++){
+        arrow[i] = linePaper.arrow(xCor[i]+barWidth/2,maxYVal,xCor[i]+barWidth/2,yCor[i],10);
+    }
+    stack.push("drawArrowLineRelative");
 }
 
 function undoArrowLine(){
@@ -1188,22 +1225,20 @@ function triggerC1(){
 }
 
 function triggerdeEmphRest(){
-//    selectedBars = getSelectedBars([["Andrea", "1"],["Diana", "6"]]);
-//    deEmphRest(selectedBars);
-//    setTimeout("undoDeEmph(selectedBars)", 5000);
-    
-    // assuming that there will always be only one group for deEmphasis
+    for (i = 1; i < seriesValuePairGroups.length; i++) {  // merge all the groups into one group
+        for (j = 0; j < seriesValuePairGroups[i].length; j++) {
+            seriesValuePairGroups[0].push(seriesValuePairGroups[i][j]);
+            k++;
+        }
+    }
     selectedBars = getSelectedBars(seriesValuePairGroups[0]);
-    deEmphRest(selectedBars);    
+    deEmphRest(selectedBars);   
 }
 function triggerBolding(){
-//    selectedBars = getSelectedBars([["Andrea", "1"],["Andrea", "6"]]);
-//    deEmphRest(selectedBars);
-//    setTimeout("undoDeEmph(selectedBars)", 5000);
-    
-    // assuming that there will always be only one group for deEmphasis
-    selectedBars = getSelectedBars(seriesValuePairGroups[0]);
-    bolding(selectedBars);    
+    for (i = 0; i < seriesValuePairGroups.length; i++) {
+        selectedBars = getSelectedBars(seriesValuePairGroups[i]);
+        bolding(selectedBars);
+    }  
 }
 function triggerE1(){
     selectedJBars = getSelectedJBars([["Andrea", "0"],["Andrea", "1"],["Andrea", "2"], ["Andrea", "3"], ["Andrea", "4"],["Andrea", "5"], ["Andrea", "6"], ["Andrea", "7"],
@@ -1290,46 +1325,24 @@ function triggerH1(){
 
 }
 //Enamul Avg reference line
-
 function triggerAvgReferenceLine(seriesValuePairGroups){
-//   selectedGroup = "#Diana";
-       
-//   referenceLine(selectedGroup);
 
     for (i = 0; i < seriesValuePairGroups.length; i++)
     {
         selectedJBars1 = seriesValuePairGroups[i];
         drawReferenceLine(selectedJBars1);
     }
-//
-
-//    for (var i=0; i<n; i++)
-//    {
-//        selectedJBars1 = [["Andrea", i],["Average", i],["Diana", i]];        
-//        drawReferenceLine(selectedJBars1);
-//    }    
-    
-    //drawLine(avg, colour, true);
- //   drawAvgRefLine(selectedJBar1);
 }
 // Enamul: Gridline
 function triggerGrid(){
-    //drawLine(avg, colour, true);
     for(var i = 1; i*5<=100; i++){	
         drawLine(pix2Score(i*5),"grey",true);
     }
-	
-//		drawBlock(pix2Score(50),pix2Score(51),"red");
-//}
 }
 // Enamul: Intervention: Labelling bars with series name
 function triggerSeriesLabels(){
-
     selectedGroup = "#Diana";    
-    showSeriesLabelOnBar(selectedGroup);
-//    selectedGroup = "#Andrea";    
-//    showSeriesLabelOnBar(selectedGroup);
-    
+    showSeriesLabelOnBar(selectedGroup);    
 }
 
 function triggerSamplesLabels(){

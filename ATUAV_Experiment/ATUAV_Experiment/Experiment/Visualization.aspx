@@ -9,23 +9,34 @@
     protected void Page_Load(object sender, EventArgs e)
     {
 
+        int current_task = 0;
+        
         int num_series = 6; //including average
         int num_samples = 8;
-        
-        String dbString = "Data Source=.\\SQLEXPRESS;AttachDbFilename=C:\\Documents and Settings\\Admin\\My Documents\\Visual Studio 2008\\Projects\\ATUAV_RT\\ATUAV_Experiment\\ATUAV_Experiment\\App_Data\\Experiment.mdf;Integrated Security=True;User Instance=True";
+
+        String dbString = "Data Source=.\\SQLEXPRESS;AttachDbFilename=C:\\Users\\Ben\\Documents\\atuav\\ATUAV_Experiment\\ATUAV_Experiment\\App_Data\\Experiment.mdf;Integrated Security=True;User Instance=True";
         
 //Initial setting of username and task
         int userID = 0;
         int taskID = 0;
+
+        int[] task_order = null;
         
         try
         {
             String userID_string = Session["userID"].ToString();
             userID = Convert.ToInt32(Session["userID"]);
-            int[] task_order = (int[])Session["task_order"];
-            int current_task = (int)Session["current_task"];
+            task_order = (int[])Session["task_order"];
+            current_task = (int)Session["current_task"];
+
+            if (current_task == 80)
+            {
+                Response.Redirect("Default.aspx?message=finished");
+            }
+            
             taskID = task_order[current_task];
             current_task++;
+            
             Session["current_task"] = current_task;
         }
         catch (Exception ex)
@@ -197,6 +208,9 @@
 
         String data_string = "<data>";
 
+        data_string += "<xaxis name=\"" + domain_keyword2 + "\">";
+        data_string += "<yaxis name=\"" + domain_keyword1 + "\">";
+        
         for (int i = 0; i < randomSeries.Length; i++)
         {
             data_string += "<series name=\"" + randomSeries[i] + "\">";
@@ -353,7 +367,7 @@
         int color = r.Next(0, 6);
         colorFamily.InnerHtml = "{\"colorFamily\":" + color + "}";
 
-//SET AOIs
+//Set AOIs and start eye tracking
         
         double text_y1 = 805;
         double text_y2 = 855;
@@ -373,7 +387,6 @@
         double legend_y1 = 504;
         double legend_y2 = 632;
         
-        // start eye tracking
         string aois = "text1\\t" + text_x1 + "," + text_y1 + "\\t" + text_x2 + "," + text_y1 + "\\t" + text_x2 + "," + text_y2 + "\\t" + text_x1 + "," + text_y2 + "\\r\\n";
         aois += "text2\\t" + text_x2 + "," + text_y1 + "\\t" + text_x3 + "," + text_y1 + "\\t" + text_x3 + "," + text_y2 + "\\t" + text_x2 + "," + text_y2 + "\\r\\n";
         aois += "text3\\t" + text_x3 + "," + text_y1 + "\\t" + text_x4 + "," + text_y1 + "\\t" + text_x4 + "," + text_y2 + "\\t" + text_x3 + "," + text_y2 + "\\r\\n";
@@ -392,24 +405,36 @@
         }
 
 //DEBUG STRING
-        String debug_string = "<br /><br />-------------Task Info-----------<br />";
+        String debug_string = "-------------Task Info-----------<br />";
         //debug_string += "User ID: " + userID + "<br />";
         //debug_string += "Run ID: " + newRunID + "<br />";
-        debug_string += "Task: " + taskID + " out of 80<br />";
+        debug_string += "Task: " + current_task + " out of 80<br />";
         debug_string += "Task ID/Type: " + taskID + "/" + QuestionType + "<br />";
         debug_string += "Intervention Type/Timing: " + InterventionType + "/" + InterventionTime + "<br />";
-        if(QuestionType=="RV")
+        //if(QuestionType=="RV")
+        //{
+        //    debug_string += "Intervention Target: "+randomSingleSample+" for Average and " + randomSingleSeries + "<br />";
+        //}
+        //else if(QuestionType == "CDV")
+        //{
+        //    debug_string += "Intervention Target: Average, " + randomSingleSeries1 + " and " + randomSingleSeries2 + "<br />";
+        //}
+        //debug_string += "Question AOI: x1=" + text_x1 + ", x2=" + text_x2 + ", x3=" + text_x3 + ", x4=" + text_x4 + "<br />";
+        //debug_string += "<br />";
+        debug_string += "Sequence: ";
+        for (int i = 0; i < task_order.Length; i++)
         {
-            debug_string += "Intervention Target: "+randomSingleSample+" for Average and " + randomSingleSeries + "<br />";
+            if (i+1 == current_task)
+            {
+                debug_string += "<b>";
+            }
+            debug_string += task_order[i] + " ";
+            if (i+1 == current_task)
+            {
+                debug_string += "</b>";
+            }
         }
-        else if(QuestionType == "CDV")
-        {
-            debug_string += "Intervention Target: Average, " + randomSingleSeries1 + " and " + randomSingleSeries2 + "<br />";
-        }
-        debug_string += "Question AOI: x1=" + text_x1 + ", x2=" + text_x2 + ", x3=" + text_x3 + ", x4=" + text_x4 + "<br />";
-        debug_string += "<br />";
-
-        //Answer.InnerHtml = debug_string.Replace("_", " ");
+        Debug.InnerHtml = debug_string.Replace("_", " ");
 //DEBUG STRING
     }
 </script>
@@ -451,7 +476,7 @@
     <div id='Exception' runat="server"></div>
     <script type="text/javascript" src="multiBars.js"></script>
     </center>
-    <div id='Answer' runat="server"></div>
+    <div id='Debug' runat="server" style='font-size:small;'></div>
     </form>
 </body>
 </html>

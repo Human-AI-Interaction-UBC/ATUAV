@@ -10,13 +10,19 @@
 
         if (userID != null)
         {
+            /*START SEQUENTIAL ORDERING//
             int[] task_order = new int[80];
-
             for (int i = 0; i < 80; i++)
             {
                 task_order[i] = i + 1;
             }
+            //END SEQUENTIAL ORDERING*/
 
+            //START RANDOM ORDERING
+            Random r = new Random();
+            var task_order = Enumerable.Range(1, 80).OrderBy(i => r.Next()).ToArray();
+            //END RANDOM ORDERING
+            
             Session["task_order"] = task_order;
             Session["current_task"] = 0;
             Session["userID"] = userID;
@@ -39,6 +45,7 @@
         Please enter your User ID: <asp:TextBox ID="userID" runat="server" />
         <asp:Button ID="button1" runat="server" Text="submit" />
         </center>
+
     </div>
     </form>
 </body>
