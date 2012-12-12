@@ -10,7 +10,7 @@
 
         if (userID != null)
         {
-            /*START SEQUENTIAL ORDERING//
+            /*START SEQUENTIAL ORDERING
             int[] task_order = new int[80];
             for (int i = 0; i < 80; i++)
             {
@@ -21,13 +21,14 @@
             //START RANDOM ORDERING
             Random r = new Random();
             var task_order = Enumerable.Range(1, 80).OrderBy(i => r.Next()).ToArray();
-            //END RANDOM ORDERING
+            //END RANDOM ORDERING*/
             
             Session["task_order"] = task_order;
             Session["current_task"] = 0;
             Session["userID"] = userID;
-            
-            Response.Redirect("Visualization.aspx");
+
+            Session["current_training"] = 0;
+            Response.Redirect("Training.aspx");
         }
     }   
     
@@ -36,11 +37,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title>ATUAV-Experiment</title>
+    <style type="text/css">
+        body {
+            font-family:"Arial";  
+        }
+    </style>
 </head>
 <body>
     <form id="form1" runat="server">
     <div>
-    <br /><br /><br /><br /><br /><br /><br />
+    <br /><br /><br /><br /><br /><br /><br /></br><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
         <center>
         Please enter your User ID: <asp:TextBox ID="userID" runat="server" />
         <asp:Button ID="button1" runat="server" Text="submit" />

@@ -288,7 +288,7 @@ var currentInterventionTime = xmlDoc.getElementsByTagName("intervention").item(0
         setIntervention();
     }
     else if (currentInterventionTime == 'TX') {
-        $('.phase2').css('visibility', 'hidden');
+        $('.phase2').css('opacity', 0);
         var intervalID = setInterval(function () { checkForGraphCondition() }, 1000);
     }
 
@@ -301,16 +301,19 @@ var currentInterventionTime = xmlDoc.getElementsByTagName("intervention").item(0
 
         $.getJSON("http://localhost:8080/atuav/condition?processorId=experiment-c&condition=showText&callback=?", function (data) {
             if (data == true) {
-                $('.phase1').css('visibility', 'hidden');
-                $('.phase2').css('visibility', 'visible');
+
+                $('.phase1').animate({ opacity: 0 }, 1000);
+                $('.phase2').css('opacity', 1);
+                
                 clearInterval(intervalID);
                 countReq = 0;
                 intervalID = setInterval(function () { checkForTextCondition() }, 1000);
             }
         });
-        if (countReq == 2) {
-            $('.phase1').css('visibility', 'hidden');
-            $('.phase2').css('visibility', 'visible');
+        if (countReq == 5) {
+            $('.phase1').animate({ opacity: 0 }, 1000);
+            $('.phase2').css('opacity', 1);
+            
             clearInterval(intervalID);
             countReq = 0;
             intervalID = setInterval(function () { checkForTextCondition() }, 1000);
@@ -328,13 +331,16 @@ var currentInterventionTime = xmlDoc.getElementsByTagName("intervention").item(0
 
         $.getJSON("http://localhost:8080/atuav/condition?processorId=experiment-c&condition=showIntervention&callback=?", function (data) {
             if (data == true) {
-                $('.phase1').css('visibility', 'visible');
+
+
+                $('.phase1').animate({ opacity: 1 }, 1000);
                 setIntervention();
                 clearInterval(intervalID);
             }
         });
-        if (countReq == 2) {
-            $('.phase1').css('visibility', 'visible');
+        if (countReq == 5) {
+
+            $('.phase1').animate({ opacity: 1 }, 1000);
             setTimeout(setIntervention, 1000);
             clearInterval(intervalID);
         }
@@ -477,7 +483,7 @@ function undoColorChange(selectedBars){
 function bolding(selectedBars){
     for (var i=0; i<selectedBars.length; i++)
     {
-        selectedBars[i].style("stroke-width", strokeWidth)
+        selectedBars[i].transition().duration(500).style("stroke-width", strokeWidth)
         .style("stroke", "black");
     }
     stack.push("bolding");
@@ -559,7 +565,7 @@ function deEmphRest(selectedBars){
 	
 	var deemphBars= getSelectedBars(deEmphBarList);
 	for(i = 0; i< deemphBars.length; i++){ 
-        deemphBars[i].style("opacity", 0.2);	
+        deemphBars[i].transition().duration(500).style("opacity", 0.2);	
 	}
 
 
@@ -643,7 +649,7 @@ function referenceLine(selectedGroup){
     stack.push("referenceLine");
 }  
 
-//Enamul: Draw average referenfe line for a sample
+// RAPHAEL IMPLEMENTATION OF REFERENCE LINE
 function drawReferenceLine(seriesSamplepair) {
 
     selectedBars = getSelectedJBars(seriesSamplepair);
@@ -671,6 +677,49 @@ function drawReferenceLine(seriesSamplepair) {
 
     stack.push("drawReferenceLine");
 }
+
+
+
+/* d3 IMPLEMENTATION OF REFERENCE LINE
+function drawReferenceLine(seriesSamplepair) {
+
+    selectedBars = getSelectedJBars(seriesSamplepair);
+
+    var xCor = new Array;
+    var yCor = selectedBars[0][2]; //Since average is by default is the first series
+    var corLin = new Array;
+    linePaper = new Raphael(0, 0, w, h);
+
+    for (var i = 0; i < selectedBars.length; i++) {
+
+        xCor[i] = selectedBars[i][1];
+        //if(seriesSamplepair[i][0]=="Class_Average")
+        //{
+        //alert("true");
+        //yCor = selectedBars[i][2];
+        //}
+        corLin[i] = xCor[i] + barWidth / 2;
+
+    }
+
+    var minXVal = d3.min(corLin) - barWidth / 2;
+    var maxXVal = d3.max(corLin) + barWidth / 2;
+    var maxYVal = yCor;
+
+    //var arrowXLin = linePaper.path("M" + minXVal+" "+ maxYVal +"L" + maxXVal + " " + maxYVal +"Z");
+    vis.append("svg:line")
+	.transition().duration(1000)
+    .attr("x1", minXVal - 118) // Enamul: Why I had to adjust X and Y values? 
+    .attr("y1", maxYVal - 66)
+    .attr("x2", maxXVal - 118)
+    .attr("y2", maxYVal - 66)
+    .style("stroke", "rgb(60, 60, 60)")
+    .style("stroke-width", strokeWidth);
+
+
+    stack.push("drawReferenceLine");
+}
+*/
 
 function undoRefLine(){
 	
@@ -924,6 +973,7 @@ function drawArrowLine(selectedBars){
     stack.push("drawArrowLine");
 }
 
+// RAPHAEL IMPLEMENTATION OF CONNECTED ARROWS
 function drawArrowLineRelative(selectedBars){
 	var xCor = new Array;
 	var yCor = new Array;
@@ -948,6 +998,81 @@ function drawArrowLineRelative(selectedBars){
     }
     stack.push("drawArrowLineRelative");
 }
+
+
+
+/* D3 IMPLEMENTATION OF CONNECTED ARROWS 
+function drawArrowLineRelative(selectedBars) {
+    //	alert("Draw arrow line");
+    var xCor = new Array;
+    var yCor = new Array;
+    var arrow = new Array;
+    var corLin = new Array;
+    var adjustX = 192;
+    var adjustY = 148;
+    var defs = vis.append("defs");
+
+    defs.append("marker")
+    .attr("id", "triangle-start")
+    .attr("viewBox", "0 0 10 10")
+    .attr("refX", 10)
+    .attr("refY", 5)
+    .attr("markerWidth", -6)
+    .attr("markerHeight", 6)
+    .attr("orient", "auto")
+  .append("path")
+    .attr("d", "M 0 0 L 10 5 L 0 10 z");
+
+    defs.append("marker")
+    .attr("id", "triangle-end")
+    .attr("viewBox", "0 0 10 10")
+    .attr("refX", 10)
+    .attr("refY", 5)
+    .attr("markerWidth", 6)
+    .attr("markerHeight", 6)
+    .attr("orient", "auto")
+  .append("path")
+    .attr("d", "M 0 0 L 10 5 L 0 10 z");
+
+    for (var i = 0; i < selectedBars.length; i++) {
+
+        xCor[i] = selectedBars[i][1];
+        yCor[i] = selectedBars[i][2];
+        corLin[i] = xCor[i] + barWidth / 2;
+
+    }
+    var minXVal = d3.min(corLin);
+    var maxXVal = d3.max(corLin);
+    var maxYVal = d3.min(yCor);
+    maxYVal = maxYVal - 20;
+
+    vis.append("svg:line")
+	.transition().duration(1000)
+    .attr("x1", minXVal - adjustX)
+    .attr("y1", maxYVal - adjustY)
+    .attr("x2", maxXVal - adjustX)
+    .attr("y2", maxYVal - adjustY)
+    .style("stroke", "rgb(60, 60, 60)")
+    .style("stroke-width", strokeWidth);
+
+    for (var i = 0; i < selectedBars.length; i++) {
+
+        vis.append("line")
+	.transition().duration(1000)
+    .attr("class", "arrow")
+    .attr("x1", xCor[i] + barWidth / 2 - adjustX)
+	.attr("y1", maxYVal - adjustY)
+    .attr("x2", xCor[i] + barWidth / 2 - adjustX)
+	.attr("y2", yCor[i] - adjustY)
+        //.attr("y2", 30)
+    .attr("marker-end", "url(#triangle-end)");
+
+        //arrow[i] = linePaper.arrow(xCor[i]+barWidth/2,maxYVal,xCor[i]+barWidth/2,yCor[i],10);
+    }
+
+    stack.push("drawArrowLineRelative");
+}
+*/
 
 function undoArrowLine(){
     linePaper.clear();

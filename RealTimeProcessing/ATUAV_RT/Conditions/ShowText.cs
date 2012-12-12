@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace ATUAV_RT
 {
+    /// <summary>
+    /// Defines when the question text should be shown.
+    /// </summary>
 	public class ShowText : Condition
 	{
 		private readonly EmdatProcessor processor;

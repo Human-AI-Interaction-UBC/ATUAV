@@ -7,6 +7,9 @@ using System.Text;
 
 namespace ATUAV_RT
 {
+    /// <summary>
+    /// Utility class for database writes.
+    /// </summary>
     public class Database
     {
         private SqlConnection connection = new SqlConnection("Data Source=.\\SQLEXPRESS;AttachDbFilename=C:\\Documents and Settings\\Admin\\My Documents\\Visual Studio 2008\\Projects\\ATUAV_RT\\ATUAV_Experiment\\ATUAV_Experiment\\App_Data\\Experiment.mdf;Integrated Security=True;User Instance=True");

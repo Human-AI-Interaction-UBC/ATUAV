@@ -13,6 +13,10 @@ using Tobii.Eyetracking.Sdk.Time;
 
 namespace ATUAV_RT
 {
+    /// <summary>
+    /// Process gaze data and fixations for features using the EMDAT library.
+    /// EMDAT is written in Python so IronPython is needed to host the Python code.
+    /// </summary>
     public class EmdatProcessor : GazeDataSynchronizedHandler, WindowingHandler
     {
         private static List<Type> allConditionTypes = null;

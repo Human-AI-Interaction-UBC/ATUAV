@@ -1,56 +1,56 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="ATUAV_RT.Program" Collapsed="true">
-    <Position X="0.5" Y="0.5" Width="1.75" />
+    <Position X="0.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AIQAAAgAAEAAEABACBAAAgAAAAKAAAAAgAECBAAAAQA=</HashCode>
       <FileName>Program.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ATUAV_RT.Settings" Collapsed="true">
-    <Position X="2.5" Y="0.5" Width="1.5" />
+    <Position X="2.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAABAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Settings.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ATUAV_RT.EyetrackerEvent" Collapsed="true">
-    <Position X="2.5" Y="1.25" Width="1.5" />
+    <Position X="2.25" Y="1.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>IAAAACAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAA=</HashCode>
       <FileName>EyetrackerEvent.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ATUAV_RT.EyetrackerErrors" Collapsed="true">
-    <Position X="4.25" Y="1.25" Width="1.5" />
+    <Position X="4" Y="1.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>EyetrackerErrors.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ATUAV_RT.EyetrackerConnector" Collapsed="true">
-    <Position X="0.5" Y="1.25" Width="1.75" />
+    <Position X="0.5" Y="1.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAQAAAAAAAAEQAAABAAAAJAAAAAAAAAAQAAAAEAAAAA=</HashCode>
       <FileName>EyetrackerConnector.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ATUAV_RT.EmdatProcessorSettings" Collapsed="true">
-    <Position X="5.25" Y="3.25" Width="2" />
+    <Position X="5.75" Y="3.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AACgAAAAoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>EmdatProcessorSettings.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ATUAV_RT.Database" Collapsed="true">
-    <Position X="0.5" Y="2" Width="1.75" />
+    <Position X="0.5" Y="2" Width="1.5" />
     <TypeIdentifier>
       <HashCode>BAAAAAAAAAAAAAAAAAABAAAAgAAEAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Database.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ATUAV_RT.AtuavWebServiceImp" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="0.5" Y="4.75" Width="1.75" />
+    <Position X="0.5" Y="6" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAgACAIAAAEAAAAAAAAAAAAAAAAAEAIAAAAAA=</HashCode>
       <FileName>WebService\AtuavWebServiceImp.cs</FileName>
@@ -65,7 +65,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="ATUAV_RT.WindowingConsolePrinter" Collapsed="true">
-    <Position X="9.5" Y="4.5" Width="2" />
+    <Position X="9.75" Y="4.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AgAAAAAAAABQAAAAUAAAAAAghAAAAAIgAAAAgAAAAAA=</HashCode>
       <FileName>GazeDataHandlers\WindowingConsolePrinter.cs</FileName>
@@ -102,7 +102,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="ATUAV_RT.ShowIntervention" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="3.25" Y="4.75" Width="1.5" />
+    <Position X="0.5" Y="4" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAQCAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Conditions\ShowIntervention.cs</FileName>
@@ -110,15 +110,22 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="ATUAV_RT.ShowText" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="5" Y="4.75" Width="1.5" />
+    <Position X="2.25" Y="4" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAQCAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Conditions\ShowText.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
+  <Class Name="ATUAV_RT.GazeDataHandlers.FeaturesGeneratedEventArgs" Collapsed="true">
+    <Position X="5.75" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>FeaturesGeneratedEventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
   <Interface Name="ATUAV_RT.AtuavWebService" Collapsed="true">
-    <Position X="0.5" Y="4" Width="1.75" />
+    <Position X="0.5" Y="5.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAgACAAAAAEAAAAAAAAAAAAAAAAAEAAAAAAAA=</HashCode>
       <FileName>WebService\AtuavWebService.cs</FileName>
@@ -132,7 +139,7 @@
     </TypeIdentifier>
   </Interface>
   <Interface Name="ATUAV_RT.Condition" Collapsed="true">
-    <Position X="3.25" Y="4" Width="1.5" />
+    <Position X="0.5" Y="3.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAACAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Conditions\Condition.cs</FileName>

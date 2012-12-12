@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace ATUAV_RT
 {
+    /// <summary>
+    /// Defines when the graph (and subsequent intervention) should be shown.
+    /// </summary>
 	public class ShowIntervention : Condition
 	{
 		private readonly EmdatProcessor processor;
@@ -20,6 +23,9 @@ namespace ATUAV_RT
 			}
 		}
 		
+        /// <summary>
+        /// Show graph after user has fixated on beginning, middle and end of question text.
+        /// </summary>
 		public bool Met
 		{
 

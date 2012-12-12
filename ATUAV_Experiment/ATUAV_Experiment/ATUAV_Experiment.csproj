@@ -59,9 +59,27 @@
     <Content Include="App_Data\Experiment_log.ldf">
       <DependentUpon>Experiment.mdf</DependentUpon>
     </Content>
+    <Content Include="Experiment\Break.aspx" />
+    <Content Include="Experiment\CalibrationAfterBreak.aspx" />
+    <Content Include="Experiment\CalibrationAfterTraining.aspx" />
+    <Content Include="Experiment\d3.js" />
+    <Content Include="Experiment\d3.v2.js" />
     <Content Include="Experiment\default.aspx" />
+    <Content Include="Experiment\jquery.min.js" />
     <Content Include="Experiment\multiBars.js" />
     <Content Include="Experiment\Raphael.js" />
+    <Content Include="Experiment\ThankYou.aspx" />
+    <Content Include="Experiment\Training.aspx" />
+    <Content Include="Experiment\TrainingImages\1.JPG" />
+    <Content Include="Experiment\TrainingImages\2.JPG" />
+    <Content Include="Experiment\TrainingImages\3.JPG" />
+    <Content Include="Experiment\TrainingImages\4.JPG" />
+    <Content Include="Experiment\TrainingImages\CDV.JPG" />
+    <Content Include="Experiment\TrainingImages\RV-Empty.JPG" />
+    <Content Include="Experiment\TrainingImages\RV-Full.JPG" />
+    <Content Include="Experiment\TrainingImages\RV-Graph.JPG" />
+    <Content Include="Experiment\TrainingImages\RV-Text.JPG" />
+    <Content Include="Experiment\TrainingImages\RV.JPG" />
     <Content Include="Experiment\Visualization.aspx" />
     <Content Include="Infovis\duoBars.js" />
     <Content Include="Infovis\duoIndex.html" />
@@ -133,6 +151,27 @@
     <Compile Include="Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Experiment\Break.aspx.cs">
+      <DependentUpon>Break.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Experiment\Break.aspx.designer.cs">
+      <DependentUpon>Break.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Experiment\CalibrationAfterBreak.aspx.cs">
+      <DependentUpon>CalibrationAfterBreak.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Experiment\CalibrationAfterBreak.aspx.designer.cs">
+      <DependentUpon>CalibrationAfterBreak.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Experiment\CalibrationAfterTraining.aspx.cs">
+      <DependentUpon>CalibrationAfterTraining.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Experiment\CalibrationAfterTraining.aspx.designer.cs">
+      <DependentUpon>CalibrationAfterTraining.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Experiment\default.aspx.cs">
       <DependentUpon>default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -141,6 +180,20 @@
       <DependentUpon>default.aspx</DependentUpon>
     </Compile>
     <Compile Include="Experiment\Run.cs" />
+    <Compile Include="Experiment\ThankYou.aspx.cs">
+      <DependentUpon>ThankYou.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Experiment\ThankYou.aspx.designer.cs">
+      <DependentUpon>ThankYou.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Experiment\Training.aspx.cs">
+      <DependentUpon>Training.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Experiment\Training.aspx.designer.cs">
+      <DependentUpon>Training.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Experiment\Visualization.aspx.cs">
       <DependentUpon>Visualization.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

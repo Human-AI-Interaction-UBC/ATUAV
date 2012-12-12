@@ -14,7 +14,7 @@
         int num_series = 6; //including average
         int num_samples = 8;
 
-        String dbString = "Data Source=.\\SQLEXPRESS;AttachDbFilename=C:\\Users\\Ben\\Documents\\atuav\\ATUAV_Experiment\\ATUAV_Experiment\\App_Data\\Experiment.mdf;Integrated Security=True;User Instance=True";
+        String dbString = "Data Source=.\\SQLEXPRESS;AttachDbFilename=C:\\Documents and Settings\\Admin\\My Documents\\Visual Studio 2008\\Projects\\ATUAV_RT\\ATUAV_Experiment\\ATUAV_Experiment\\App_Data\\Experiment.mdf;Integrated Security=True;User Instance=True";
         
 //Initial setting of username and task
         int userID = 0;
@@ -31,10 +31,11 @@
 
             if (current_task == 80)
             {
-                Response.Redirect("Default.aspx?message=finished");
+                Response.Redirect("ThankYou.aspx?message=finished");
             }
             
             taskID = task_order[current_task];
+
             current_task++;
             
             Session["current_task"] = current_task;
@@ -65,7 +66,7 @@
             sqlConn.Open();
             sqlComm.ExecuteNonQuery();
             sqlConn.Close();
-            
+
             try
             {
                 // stop previous run
@@ -77,6 +78,19 @@
                 //do nothing
             }
         }
+        
+        
+//Check if it's time for a break
+        if (PreviousPage == null)
+        {
+            if (current_task == 31 || current_task == 56)
+            {
+                current_task--;
+                Session["current_task"] = current_task;
+                Response.Redirect("Break.aspx");
+            }
+        }
+        
         
 //Retrieving next task       
         sqlConn = new SqlConnection(dbString);
@@ -123,7 +137,7 @@
         }
         else if (domain == 1)
         {
-            series = new String[] { "Microfirm", "Logistix", "Info-Tek", "Metrocom", "Fabricare", "JL_Associates", "BioRestore_Inc", "WCC_Group", "Bluegem_Properties", "Talisco", "Davis_Holdings", "Benzad_International", "RR_Foods", "Montco_Glocal", "Starshine_Entertainment", "DairyEmpire", "ChemCorp", "Fitzgerlad_Gold", "Uni-Sand_Ltd", "GT" };
+            series = new String[] { "Microfirm", "Logistix", "Info-Tek", "Metrocom", "Fabricare", "JL_Associates", "BioRestore_Inc", "WCC_Group", "Bruegem_Properties", "Talisco", "Davis_Holdings", "Benzad_International", "RR_Foods", "Montco_Glocal", "Starshine_Entertainment", "DairyEmpire", "ChemCorp", "Fitzgerlad_Gold", "Uni-Sand_Ltd", "GT" };
             samples = new String[] { "Human_Resources", "Accounting", "Marketing", "Information_Technology", "Logistics", "Customer_Service", "Legal", "Research", "Retail", "Advertising", "Public_Relations", "Security" };
             domain_keyword1 = "growth";
             domain_keyword2 = "departments";
@@ -141,7 +155,7 @@
         }
         else if (domain == 3)
         {
-            series = new String[] { "Kitty_Kibble", "Feline_Time", "Blue_Horizon", "Meow_Meal", "Fresh_Feast", "Puppy_Chowder", "Hungry_Beast", "Fancy_Fur", "Yellow_Label", "Canine_Companion", "4-Star_Brand", "Prime_Choice", "Prized_Pooch", "Tender_Cutz", "Value_Pet", "Grade-A_Form", "Smart_Cat", "Organic_Valley", "Nutra-Pet", "Select_Prize" };
+            series = new String[] { "Kitty_Kibble", "Feline_Time", "Blue_Horizon", "Meow_Meal", "Fresh_Feast", "Puppy_Chowder", "Hungry_Beast", "Fancy_Fur", "Super_Label", "Canine_Companion", "4-Star_Brand", "Prime_Choice", "Prized_Pooch", "Tender_Cutz", "Value_Pet", "Grade-A_Form", "Smart_Cat", "Organic_Valley", "Nutra-Pet", "Select_Prize" };
             samples = new String[] { "Vitamin_B12", "Iron", "Zinc", "Vitamin_E", "Vitamin_D", "Vitamin_A", "Folic_Acid", "Calcium", "Selenium", "DHA", "Riboflavin", "Potassium" };
             domain_keyword1 = "level";
             domain_keyword2 = "minerals/vitamins";
@@ -293,21 +307,22 @@
 //Generating question output
         if(QuestionType == "RV")
         {
-            question = question.Replace("SERIES", randomSingleSeries);
-            question = question.Replace("SAMPLE", randomSingleSample);
+            question = question.Replace("SERIES", "<i>" + randomSingleSeries + "</i>");
+            question = question.Replace("SAMPLE", "<i>" + randomSingleSample + "</i>");
             question = question.Replace("DOMAIN_KEYWORD1", domain_keyword1);
             question = question.Replace("AVERAGE_KEYWORD1", average_keyword1);
         }
         else if(QuestionType=="CDV")
         {
-            question = question.Replace("SERIES1", randomSingleSeries1);
-            question = question.Replace("SERIES2", randomSingleSeries2);
+            question = question.Replace("SERIES1", "<i>" + randomSingleSeries1 + "</i>");
+            question = question.Replace("SERIES2", "<i>" + randomSingleSeries2 + "</i>");
             question = question.Replace("DOMAIN_KEYWORD2", domain_keyword2);
             question = question.Replace("AVERAGE_KEYWORD2", average_keyword2);
 
             if (domain == 3)
             {
                 question = question.Replace("In how many", "For how many");
+                question = question.Replace("level in", "level of");
             }
         }
         
@@ -317,12 +332,12 @@
         
         if (QuestionType=="RV")
         {
-            answer_string += "<input type='radio' name='answer' value='yes' checked>yes ";
+            answer_string += "<input type='radio' name='answer' value='yes'>yes ";
             answer_string += "<input type='radio' name='answer' value='no'>no ";
         }
         else
         {
-            answer_string += "<input type='radio' name='answer' value='0' checked>0 ";
+            answer_string += "<input type='radio' name='answer' value='0'>0 ";
             
             for(int i=1; i<=num_samples; i++)
             {
@@ -398,6 +413,8 @@
         {
             WebRequest startRequest = WebRequest.Create("http://localhost:8080/atuav/start?runId=" + newRunID + "&aois=" + aois);
             startRequest.GetResponse();
+
+            
         }
         catch
         {
@@ -405,12 +422,13 @@
         }
 
 //DEBUG STRING
-        String debug_string = "-------------Task Info-----------<br />";
+        //String debug_string = "<br /><br />-------------Task Info-----------<br />";
         //debug_string += "User ID: " + userID + "<br />";
         //debug_string += "Run ID: " + newRunID + "<br />";
-        debug_string += "Task: " + current_task + " out of 80<br />";
-        debug_string += "Task ID/Type: " + taskID + "/" + QuestionType + "<br />";
-        debug_string += "Intervention Type/Timing: " + InterventionType + "/" + InterventionTime + "<br />";
+        //debug_string += "Task: " + current_task + " out of 80<br />";
+        //debug_string += "Task ID: " + taskID + "<br />";
+        //debug_string += "Task Type: " + QuestionType + "<br />";
+        //debug_string += "Intervention Type/Timing: " + InterventionType + "/" + InterventionTime + "<br />";
         //if(QuestionType=="RV")
         //{
         //    debug_string += "Intervention Target: "+randomSingleSample+" for Average and " + randomSingleSeries + "<br />";
@@ -421,10 +439,11 @@
         //}
         //debug_string += "Question AOI: x1=" + text_x1 + ", x2=" + text_x2 + ", x3=" + text_x3 + ", x4=" + text_x4 + "<br />";
         //debug_string += "<br />";
-        debug_string += "Sequence: ";
+        /*debug_string += "Sequence: ";
+        
         for (int i = 0; i < task_order.Length; i++)
         {
-            if (i+1 == current_task)
+           if (i+1 == current_task)
             {
                 debug_string += "<b>";
             }
@@ -434,7 +453,8 @@
                 debug_string += "</b>";
             }
         }
-        Debug.InnerHtml = debug_string.Replace("_", " ");
+        */
+        //Debug.InnerHtml = debug_string.Replace("_", " ");
 //DEBUG STRING
     }
 </script>
@@ -444,10 +464,29 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title></title>
-        <script type="text/javascript" src="http://github.com/mbostock/d3/raw/v1.8.2/d3.js"></script>
+        <script type="text/javascript" src="d3.js"></script>
+        <script type="text/javascript" src="d3.v2.js"></script>
+        <script type="text/javascript" src="jquery.min.js"></script>
+        <script type="text/javascript" src="raphael.js"></script>
+
+         <script type="text/javascript" src="http://github.com/mbostock/d3/raw/v1.8.2/d3.js"></script>
         <script type="text/javascript" src="http://mbostock.github.com/d3/d3.js?2.1.3"></script>
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
-        <script type="text/javascript" src="raphael.js"></script>
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+
+                $('#form1').submit(function () {
+
+                    var checkBox = $(this).find(':radio:checked');
+
+                    if (checkBox.val() == undefined) {
+                        return false;
+                    }
+                });
+            });
+        </script>
+
         <style type="text/css">
             body {
                 font-family:"Arial";  
@@ -456,6 +495,10 @@
                 fill: none; 
                 stroke: black; 
                 stroke-width: 1;
+            }
+            .arrow {
+              stroke: #000;
+              stroke-width: 1.5px;
             }
         </style>
 </head>
@@ -469,7 +512,7 @@
     <div id='infovis' class="phase1" style="position:relative; top:100px; left:80px; right:0px; width:1100px;"></div>
     <br /><br />
     <br /><br /><br /><br /><br />
-    <div id='QuestionText' class="phase2" runat="server"></div>
+    <b><div id='QuestionText' class="phase2" runat="server"></div></b>
     <br /><br />
     <div id='AnswerBox' class="phase2" runat="server"></div>
     <asp:Button id="AnswerButton" class="phase2" Text="Submit" runat="server" />

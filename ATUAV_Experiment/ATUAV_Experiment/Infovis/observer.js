@@ -22,8 +22,8 @@ function pollFeatures() {
 }
 
 function pollShowText() {
-    $.getJSON(address + "/condition?processorId=" + processorId + "&condition=showtext&callback=?", function (data) {
-        $("#showtext").html("showtext:" + data);
+    $.getJSON(address + "/condition?processorId=" + processorId + "&condition=showText&callback=?", function (data) {
+        $("#showtext").html("showtext: " + data);
     });
 }
 
