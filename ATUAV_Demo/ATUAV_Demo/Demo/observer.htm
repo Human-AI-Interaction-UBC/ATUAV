@@ -4,6 +4,8 @@
     <title>Observer</title>
 	<link type="text/css" rel="stylesheet" href="style.css"/>
     <script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
+    <script type="text/javascript" src="d3.v3.min.js"></script>
+    <script type="text/javascript" src="sparklines.js"></script>
     <script type="text/javascript" src="observer.js"></script>
   </head>
   <body>
@@ -13,10 +15,26 @@
     </div>
     </div>
 
+    <div id="sparklinePanel">
+      <span>Fixation Rate:</span>
+	    <div id="fixationrate" class="sparkline" style="width:500px; height:60px;"></div>
+	    <br/>
+      <span>Mean Fixation Duration:</span>
+	    <div id="meanfixationduration" class="sparkline" style="width:500px; height:60px;"></div>
+	    <br/>
+      <span>Mean Relative Path Angles:</span>
+	    <div id="meanrelpathangles" class="sparkline" style="width:500px; height:60px;"></div>
+	    <br/>
+      <span>Path Distance Standard Deviation:</span>
+	    <div id="stddevpathdistance" class="sparkline" style="width:500px; height:60px;"></div>
+	    <br/>
+    </div>
+    <!--
     <div id="trackedFeaturesPanel">
     <b>Tracked Features</b><br />
     <div id="left_numfixations" class="sum"></div>
     <div id="right_numfixations" class="sum"></div>
     </div>
+    -->
 </body>
 </html>
