@@ -1,0 +1,245 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <title>IUI Group Demo Page</title>
+    
+
+     <script type="text/javascript" src="libraries/d3.v3.min.js"></script>
+    <script type="text/javascript" src="libraries/jquery-1.6.3.min.js"></script>
+
+  </head>
+<style type="text/css">
+            body {
+                font-family:"Arial"; 
+				margin-left: 4em;
+				margin-right: 4em;
+            }
+            .domain {
+                fill: none; 
+                stroke: black; 
+                stroke-width: 1;
+            }
+			.arrow {
+			  stroke: #000;
+			  stroke-width: 1.5px;
+			}
+			
+        .auto-style1 {
+	font-size: x-large;
+}
+			
+        </style>
+  <body>
+  <h1>ATUAV Project</h1>
+<!-- color family values: 0-5 --> 		
+		<div id='colorFamily'  style='visibility:hidden;'>
+		{"colorFamily":4}
+		</div>  		
+		
+    <div id='smallData' style='visibility:hidden;'>
+        <data>
+				<xaxis label="Course"></xaxis>
+				<yaxis label="Marks"></yaxis>	
+                <series name="Class_Average">
+                    <sample name="Physics" value="90.2"></sample>
+                    <sample  name="Marine Biology" value="81.1"></sample>
+                    <sample name="Calculus" value="70.7"></sample>
+                    <sample name="Geometry" value="90.5"></sample>
+                </series>		
+                <series name="Andrea">
+                    <sample name="Physics" value="71.1"></sample>
+                    <sample  name="Marine Biology" value="91"></sample>
+                    <sample name="Calculus" value="90.45"></sample>
+                    <sample name="Geometry" value="80.3"></sample>
+                </series>				
+			
+                <series name="Diana">
+                    <sample name="Physics" value="86"></sample>
+                    <sample  name="Marine Biology" value="85"></sample>
+                    <sample name="Calculus" value="75"></sample>
+                    <sample name="Geometry" value="72"></sample>
+                </series>
+                <series name="Mark">
+                    <sample name="Physics" value="86"></sample>
+                    <sample  name="Marine Biology" value="65"></sample>
+                    <sample name="Calculus" value="75"></sample>
+                    <sample name="Geometry" value="84.1"></sample>
+                </series>	
+                <series name="Spencer">
+                    <sample name="Physics" value="76"></sample>
+                    <sample  name="Marine Biology" value="65"></sample>
+                    <sample name="Calculus" value="90.5"></sample>
+                    <sample name="Geometry" value="74"></sample>
+                </series>
+                <series name="Steve">
+                    <sample name="Physics" value="86"></sample>
+                    <sample  name="Marine Biology" value="90.5"></sample>
+                    <sample name="Calculus" value="75"></sample>
+                    <sample name="Geometry" value="72"></sample>
+                </series>
+        </data>		
+    
+    </div>       	
+    <div id='smallIntervention' style='visibility:hidden;'>
+        <!-- Intervention Names: ConnectedArrow, DeEmphasis, Bolding, AvgReferenceLine, None --> 
+        <intervention Name="AvgReferenceLine">
+                <group>
+                    <bar series="Class_Average" sample="Physics"></bar>
+					<bar series="Mark" sample="Physics"></bar>
+					<bar series="Steve" sample="Physics"></bar>				
+				</group>
+				<group>                    
+					<bar series="Class_Average" sample="Calculus"></bar>
+					<bar series="Mark" sample="Calculus"></bar>
+					<bar series="Steve" sample="Calculus"></bar>                                   
+                </group>				
+        </intervention>
+    </div>
+	
+	<div id='data' style='visibility:hidden;'>
+        <data>
+				<xaxis label="Course"></xaxis>
+				<yaxis label="Marks"></yaxis>	
+                <series name="Class_Average">
+                    <sample name="Physics" value="90.2"></sample>
+                    <sample  name="Marine Biology" value="81.1"></sample>
+                    <sample name="Calculus" value="70.7"></sample>
+                    <sample name="Geometry" value="90.5"></sample>
+                    <sample  name="Painting" value="95.90"></sample>
+                    <sample name="Photography" value="98.5"></sample>
+                    <sample name="English Literature" value="100"></sample>
+                    <sample name="Anthropology" value="91.3"></sample>
+                </series>		
+                <series name="Andrea">
+                    <sample name="Physics" value="71.1"></sample>
+                    <sample  name="Marine Biology" value="91"></sample>
+                    <sample name="Calculus" value="90.45"></sample>
+                    <sample name="Geometry" value="80.3"></sample>
+                    <sample  name="Painting" value="70.3"></sample>
+                    <sample name="Photography" value="90.8"></sample>
+                    <sample name="English Literature" value="90.1"></sample>
+                    <sample name="Anthropology" value="72.8"></sample>
+                </series>				
+			
+                <series name="Diana">
+                    <sample name="Physics" value="86"></sample>
+                    <sample  name="Marine Biology" value="85"></sample>
+                    <sample name="Calculus" value="75"></sample>
+                    <sample name="Geometry" value="72"></sample>
+                    <sample  name="Painting" value="71"></sample>
+                    <sample name="Photography" value="77"></sample>
+                    <sample name="English Literature" value="89"></sample>
+                    <sample name="Anthropology" value="79"></sample>
+                </series>
+                <series name="Mark">
+                    <sample name="Physics" value="86"></sample>
+                    <sample  name="Marine Biology" value="65"></sample>
+                    <sample name="Calculus" value="75"></sample>
+                    <sample name="Geometry" value="84.1"></sample>
+                    <sample  name="Painting" value="90.3"></sample>
+                    <sample name="Photography" value="71.7"></sample>
+                    <sample name="English Literature" value="80.1"></sample>
+                    <sample name="Anthropology" value="90.3"></sample>
+                </series>	
+                <series name="Spencer">
+                    <sample name="Physics" value="76"></sample>
+                    <sample  name="Marine Biology" value="65"></sample>
+                    <sample name="Calculus" value="90.5"></sample>
+                    <sample name="Geometry" value="74"></sample>
+                    <sample  name="Painting" value="73"></sample>
+                    <sample name="Photography" value="90"></sample>
+                    <sample name="English Literature" value="90"></sample>
+                    <sample name="Anthropology" value="81"></sample>
+                </series>
+                <series name="Steve">
+                    <sample name="Physics" value="86"></sample>
+                    <sample  name="Marine Biology" value="90.5"></sample>
+                    <sample name="Calculus" value="75"></sample>
+                    <sample name="Geometry" value="72"></sample>
+                    <sample  name="Painting" value="81"></sample>
+                    <sample name="Photography" value="87"></sample>
+                    <sample name="English Literature" value="81"></sample>
+                    <sample name="Anthropology" value="90"></sample>
+                </series>
+        </data>		
+    
+    </div>    
+	<div id='intervention' style='visibility:hidden;'>
+        <!-- Intervention Names: ConnectedArrow, DeEmphasis, Bolding, AvgReferenceLine, None --> 
+        <intervention Name="AvgReferenceLine">
+                <group>
+                    <bar series="Class_Average" sample="Physics"></bar>
+					<bar series="Mark" sample="Physics"></bar>
+					<bar series="Steve" sample="Physics"></bar>				
+				</group>
+				<group>
+					<bar series="Class_Average" sample="Anthropology"></bar>   
+                    <bar series="Mark" sample="Anthropology"></bar>
+					<bar series="Steve" sample="Anthropology"></bar>			
+                </group>
+				<group>                    
+					<bar series="Class_Average" sample="Marine Biology"></bar>
+					<bar series="Mark" sample="Marine Biology"></bar>
+					<bar series="Steve" sample="Marine Biology"></bar>                                   
+                </group>       
+				<group>
+					<bar series="Class_Average" sample="English Literature"></bar>
+					<bar series="Mark" sample="English Literature"></bar>
+					<bar series="Steve" sample="English Literature"></bar>
+				</group>				
+        </intervention>
+    </div>
+
+
+<div style="text-align:center">
+<button type="button" onclick="triggerA()" class="auto-style1"><strong>Toggle De-Emphasis</strong></button>
+</div>
+<div id='infovis1' style="position:relative; top:20px; left:80px; right:0px; width:1100px; height:400px"></div>
+<br/>
+<hr>
+<div style="text-align:center">
+<button type="button" onclick="triggerB()"  class="auto-style1"><strong>Toggle Bolding</strong></button>
+</div>
+<div id='infovis2' style="position:relative; top:20px; left:80px; right:0px; width:1100px; height:400px"></div>
+<br/>
+<hr>
+<div style="text-align:center">
+<button type="button" onclick="triggerC()"  class="auto-style1"><strong>Toggle Connected Arrows</strong></button>
+</div>
+<div id='infovis3' style="position:relative; top:20px; left:80px; right:0px; width:1100px; height:400px"></div>
+<br/>
+<hr>
+<div style="text-align:center">
+<button type="button" onclick="triggerD()"  class="auto-style1"><strong>Toggle Reference Line</strong></button>
+</div>
+<div id='infovis4' style="position:relative; top:20px; left:80px; right:0px; width:1100px; height:400px"></div>
+<br/>
+<hr>
+<div style="text-align:center">
+<button type="button" onclick="triggerE()"  class="auto-style1"><strong>Toggle Reference Block</strong></button>
+</div>
+<div id='infovis5' style="position:relative; top:20px; left:80px; right:0px; width:1100px; height:400px"></div>
+<br/>
+<hr>
+<div style="text-align:center">
+<button type="button" onclick="triggerF()"  class="auto-style1"><strong>Toggle Grid</strong></button>
+</div>
+<div id='infovis6' style="position:relative; top:20px; left:80px; right:0px; width:1100px; height:400px"></div>
+<br/>
+<hr>
+<div style="text-align:center">
+<button type="button" onclick="triggerG()"  class="auto-style1"><strong>Toggle Legend Bolding</strong></button>
+</div>
+<div id='infovis7' style="position:relative; top:20px; left:80px; right:0px; width:1100px; height:400px"></div>
+<br/>
+<hr>
+<div style="text-align:center">
+<button type="button" onclick="triggerH()"  class="auto-style1"><strong>Toggle Values</strong></button>
+</div>
+<div id='infovis8' style="position:relative; top:20px; left:80px; right:0px; width:1100px; height:400px"></div>
+
+<script src="multiBars.js"></script>
+<script src="demoMultiBars.js"></script>
+
+  </body>
+</html>
