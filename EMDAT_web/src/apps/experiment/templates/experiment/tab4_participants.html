@@ -1,0 +1,24 @@
+<div class="alert alert-info">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+    <p>For each participant is necessary to have the following files in the "sampledata" folder:</p>
+    <ul>
+        <li>{Participant ID}-All-Data.tsv</li>
+        <li>{Participant ID}-Event-Data.tsv</li>
+        <li>{Participant ID}-Fixation-Data.tsv</li>
+    </ul>
+</div>
+
+{% for field in participant_form.visible_fields %}
+    <div class="form-group">
+        <label class="control-label">
+            {{ field.label }} {% if field.field.required %} *{% endif %}
+            {% if field.help_text %}
+                <i tabindex="-1" class="fa fa-question-circle" data-toggle="popover" data-placement="right" data-trigger="focus" title="{{ field.label }}" data-content="{{ field.help_text }}"></i>
+            {% endif %}
+        </label>
+        <div>
+            {{ field }}
+        </div>
+    </div>
+    <div class="hr-line-dashed"></div>
+{% endfor %}

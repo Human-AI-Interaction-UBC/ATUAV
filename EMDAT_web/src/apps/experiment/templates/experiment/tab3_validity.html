@@ -1,0 +1,14 @@
+{% for field in validity_form.visible_fields %}
+    <div class="form-group">
+        <label class="control-label">
+            {{ field.label }} {% if field.field.required %} *{% endif %}
+            {% if field.help_text %}
+                <i tabindex="-1" class="fa fa-question-circle" data-toggle="popover" data-placement="right" data-trigger="focus" title="{{ field.label }}" data-content="{{ field.help_text }}"></i>
+            {% endif %}
+        </label>
+        <div>
+            {{ field }}
+        </div>
+    </div>
+    <div class="hr-line-dashed"></div>
+{% endfor %}

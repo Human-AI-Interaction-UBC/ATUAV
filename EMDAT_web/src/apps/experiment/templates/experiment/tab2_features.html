@@ -1,0 +1,44 @@
+{% for field in features_form.visible_fields %}
+    <div class="form-group">
+        <label class="control-label">
+            {{ field.label }} {% if field.field.required %} *{% endif %}
+            {% if field.help_text %}
+                <i tabindex="-1" class="fa fa-question-circle" data-toggle="popover" data-placement="right" data-trigger="focus" title="{{ field.label }}" data-content="{{ field.help_text }}"></i>
+            {% endif %}
+        </label>
+        <div class="list-features">
+            {% if field.name == 'general' %}
+                <select id="general" name="general[]" multiple>
+                    {% for value in general_features %}
+                        <option value="{{ value.0 }}">{{ value.1 }}</option>
+                    {% endfor %}
+                </select>
+            {% elif field.name == 'aoi' %}
+                <select id="aoi" name="aoi[]" multiple>
+                    {% for value in aoi_features %}
+                        <option value="{{ value.0 }}">{{ value.1 }}</option>
+                    {% endfor %}
+                </select>
+            {% elif field.name == 'pupil' %}
+                <select id="pupil" name="pupil[]" multiple>
+                    {% for value in pupil_features %}
+                        <option value="{{ value.0 }}">{{ value.1 }}</option>
+                    {% endfor %}
+                </select>
+            {% elif field.name == 'distance' %}
+                <select id="distance" name="distance[]" multiple>
+                    {% for value in distance_features %}
+                        <option value="{{ value.0 }}">{{ value.1 }}</option>
+                    {% endfor %}
+                </select>
+            {% elif field.name == 'events' %}
+                <select id="events" name="events[]" multiple>
+                    {% for value in events_features %}
+                        <option value="{{ value.0 }}">{{ value.1 }}</option>
+                    {% endfor %}
+                </select>
+            {% endif %}
+        </div>
+    </div>
+    <hr>
+{% endfor %}
