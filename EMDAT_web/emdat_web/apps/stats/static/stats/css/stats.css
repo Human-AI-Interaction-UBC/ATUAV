@@ -1,0 +1,114 @@
+.close{
+    #color: white;
+    opacity: .5;
+}
+
+.d3-tip {
+    line-height: 1;
+    font-weight: bold;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    border-radius: 2px;
+}
+
+/* Creates a small triangle extender for the tooltip */
+.d3-tip:after {
+    box-sizing: border-box;
+    display: inline;
+    font-size: 10px;
+    width: 100%;
+    line-height: 1;
+    color: rgba(0, 0, 0, 0.8);
+    content: "\25BC";
+    position: absolute;
+    text-align: center;
+}
+
+/* Style northward tooltips differently */
+.d3-tip.n:after {
+    margin: -1px 0 0 0;
+    top: 100%;
+    left: 0;
+}
+
+.generate {
+    margin-top: 10px
+}
+
+.buttons i{
+    cursor: pointer;
+}
+
+.stats-panel {
+    border-right: solid 1px darkgrey
+}
+
+.back-to-top {
+    display: none;
+    width: 60px;
+    height: 60px;
+    text-indent: -9999px;
+    position: fixed;
+    z-index: 999;
+    right: 20px;
+    bottom: 20px;
+    background: #337ab7 url("../images/up-arrow.png") no-repeat center 43%;
+    -webkit-border-radius: 30px;
+    -moz-border-radius: 30px;
+    border-radius: 30px;
+}
+
+.disabled {
+    color: #666;
+    pointer-events: none;
+}
+
+.has-error .btn-group .multiselect,
+.has-error label {
+    border-color: #a94442;
+    color: #a94442;
+}
+
+.stats-errors span {
+    color: #a94442;
+}
+
+.msg-no-data {
+    height: 275px;
+    line-height: 275px;
+    text-align: center;
+}
+
+.msg-no-data p {
+    display: inline-block;
+    vertical-align: middle;
+    line-height: normal;
+    font-size: 30px;
+}
+
+.line {
+    fill: none;
+    stroke: #ff8120;
+    stroke-width: 2px;
+}
+
+.tick text {
+    font-size: 12px;
+}
+
+.tick line {
+    opacity: 0.2;
+}
+
+.sort-chart {
+    padding-left: 10px;
+}
+
+#canvas_export {
+    display: none;
+}
+
+.panel-heading {
+    cursor: move;
+}

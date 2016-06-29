@@ -3,7 +3,3 @@ Django==1.9.5
 # Components
 django-bootstrap3==7.0.1
 django-compressor==2.0
-
-# Testing
-autopep8==1.2.2
-flake8==2.5.4

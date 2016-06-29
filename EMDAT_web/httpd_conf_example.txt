@@ -1,0 +1,18 @@
+ # Static files
+ Alias /static/ {path to EMDAT project}/static_deploy
+
+ <Directory {path to EMDAT project}/static_deploy>
+ Require all granted
+ </Directory>
+
+ # Django WSGI settings
+ WSGIScriptAlias / {path to EMDAT project}/settings/wsgi.py
+
+ <Directory {path to EMDAT project}>
+ <Files wsgi.py>
+ Require all granted
+ </Files>
+ </Directory>
+
+# If you have doubts about this configuration, take a look at the next guide:
+# https://docs.djangoproject.com/en/1.9/howto/deployment/wsgi/modwsgi/

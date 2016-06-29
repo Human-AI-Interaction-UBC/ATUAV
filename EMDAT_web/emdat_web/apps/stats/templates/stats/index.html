@@ -1,0 +1,204 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %} Visualization {% endblock %}
+
+{% block menu %}
+    {% include 'menu.html' with active_menu='stats' %}
+{% endblock %}
+
+{% block head_files_compress %}
+    <link rel="stylesheet" href="{% static "stats/css/plugins/multiselect/bootstrap-multiselect.css" %}">
+    {# CSS for this app #}
+    <link rel="stylesheet" href="{% static 'stats/css/stats.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="row well">
+        <div class="col-xs-10 stats-panel">
+            <form id="stats-form" class="form-inline" method="post">
+                {% csrf_token %}
+
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label for="select_participants">{{ stats_form.participants.label }} {% if stats_form.participants.field.required %} *{% endif %}</label> <br>
+                        <select name="select_participants" id="select_participants" multiple="multiple">
+                            <option value="0" {% if 0 in selected_participants %}selected{% endif %}>Average</option>
+                            <option data-role="divider"></option>
+                            {% for participant in participants_ids %}
+                                <option value="{{ participant }}" {% if participant in selected_participants %}selected{% endif %}>{{ participant }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <label for="select_features">{{ stats_form.features.label }} {% if stats_form.features.field.required %} *{% endif %}</label> <br>
+                        <select name="select_features" id="select_features" multiple="multiple">
+                            <option data-role="divider" disabled></option>
+                            <optgroup label="All gaze">
+                                {% for feature in gaze_features %}
+                                    <option value="{{ feature.key }}" {% if feature.key in selected_features %}selected{% endif %}>{{ feature.name }}</option>
+                                {% endfor %}
+                            </optgroup>
+                            <option data-role="divider" disabled></option>
+                            <optgroup label="All pupil">
+                                {% for feature in pupil_features %}
+                                    <option value="{{ feature.key }}" {% if feature.key in selected_features %}selected{% endif %}>{{ feature.name }}</option>
+                                {% endfor %}
+                            </optgroup>
+                            <option data-role="divider" disabled></option>
+                            <optgroup label="All distance">
+                                {% for feature in distance_features %}
+                                    <option value="{{ feature.key }}" {% if feature.key in selected_features %}selected{% endif %}>{{ feature.name }}</option>
+                                {% endfor %}
+                            </optgroup>
+                            <option data-role="divider" disabled></option>
+                            <optgroup label="All Events">
+                                {% for feature in events_features %}
+                                    <option value="{{ feature.key }}" {% if feature.key in selected_features %}selected{% endif %}>{{ feature.name }}</option>
+                                {% endfor %}
+                            </optgroup>
+                        </select>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <label for="select_aoi_features">{{ stats_form.aoi_features.label }} {% if stats_form.aoi_features.field.required %} *{% endif %}</label> <br>
+                        <select name="select_aoi_features" id="select_aoi_features" multiple="multiple">
+                            {% for aoi in aoi_names %}
+                                <option data-role="divider" disabled></option>
+                                <optgroup label="{{ aoi }}">
+                                    {% for feature in aoi_features %}
+                                        <option value="{{ aoi }}_{{ feature.key }}" {% if aoi|add:'_'|add:feature.key in selected_aoi_features %}selected{% endif %}>{{ feature.name }}</option>
+                                    {% endfor %}
+                                </optgroup>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="generate row">
+                    <div class="col-xs-10">
+                        <div class="stats-errors"></div>
+                    </div>
+                    <div class="col-xs-2 text-right">
+                        <button type="submit" class="btn btn-success">Generate</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+
+        {# Replay buttons #}
+        <div class="col-xs-2">
+            <div class="row text-center buttons">
+                <div class="col-xs-6">
+                    <i class="fa fa-play-circle fa-3x"></i>
+                    <span>Play</span>
+                </div>
+                <div class="col-xs-6">
+                    <i class="fa fa-stop-circle fa-3x"></i>
+                    <span>Stop</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if error_files_messages %}
+        <div class="row">
+            <div class="alert alert-danger">
+                <p>Please ensure that you have the following files in the output folder:</p>
+                <ul>
+                    {% for message in error_files_messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    {% endif %}
+
+    {# Charts #}
+    <div class="row" id="charts_panel">
+        {% for feature in selected_features_info %}
+            <div class="{% if panel_small %}col-md-6{% else %}col-md-12{% endif %} chart-emdat">
+                <div class="panel panel-primary" id="{{ feature.key }}">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            {{ feature.name }}
+                            <span class="close pull-right" data-toggle="tooltip" data-title="Delete" data-id="{{ feature.key }}"><i class="fa fa-times"></i></span>
+                        </h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="pull-right">
+                            <a class="save-chart" id="save_{{ feature.key }}" href="javascript:"><i class="fa fa-save"></i> Save</a>
+                            <a class="sort-chart" id="sort_{{ feature.key }}" href="javascript:"><i class="fa fa-sort-amount-asc"></i> Sort</a>
+                        </div>
+                        <div id="barchart_{{ feature.key }}"></div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+        {# Hidden canvas to export charts #}
+        <canvas id="canvas_export" width="{% if panel_small %}550{% else %}850{% endif %}px" height="250px"></canvas>
+
+    </div>
+
+    {# TEST Line charts #}
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="panel panel-primary" id="linechart">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        Mean Fixation Duration
+                        <span class="close pull-right" data-toggle="tooltip" data-title="Delete" data-id="linechart"><i class="fa fa-times"></i></span>
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <div id="linechart_meanfixationduration">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Button to scroll up #}
+    <a href="#" class="back-to-top">Back to Top </a>
+
+{% endblock %}
+
+{% block files_before_bootstrap %}
+    {# Jquery UI before bootstrap to avoid problems with tooltips #}
+    <script src="{% static 'stats/js/jquery-ui.min.js' %}"></script>
+{% endblock %}
+
+{% block body_files %}
+    <script src="{% static 'stats/js/plugins/d3/d3.min.js' %}"></script>
+    <script src="{% static 'stats/js/plugins/W/W.min.js' %}"></script>
+{% endblock %}
+
+{% block body_files_compress %}
+    <script src="{% static 'stats/js/plugins/multiselect/bootstrap-multiselect.js' %}"></script>
+    <script src="{% static 'stats/js/plugins/d3/d3-tip.js' %}"></script>
+    <script src="{% static 'experiment/js/plugins/validate/jquery.validate.min.js' %}"></script>
+    {# JS for this app #}
+    <script src="{% static 'stats/js/stats.js' %}"></script>
+
+    <script type="text/javascript">
+        $(document).ready(generateAllCharts('{% url 'stats:emdat_output' %}', {{ selected_participants }}, {{ selected_features_info|safe }}, '{{ column_participant }}'));
+
+
+        a = new LineChart('meanfixationduration', 0, 1000, 12);
+
+         function rep(){
+         a.addData([Math.random() * (1000 - 1) + 1]);
+         }
+
+         $(document).ready(function () {
+         setInterval(rep, 1000);
+         });
+
+
+    </script>
+
+{% endblock %}

@@ -1,0 +1,50 @@
+{# Combo trackers #}
+<div class="form-group">
+    <label class="control-label">
+        {{ tracker_form.eye_tracker.label }} {% if tracker_form.eye_tracker.field.required %} *{% endif %}
+        {% if tracker_form.eye_tracker.help_text %}
+            <i tabindex="-1" class="fa fa-question-circle" data-toggle="popover" data-placement="right" data-trigger="focus" title="{{ eye_tracker.label }}" data-content="{{ tracker_form.eye_tracker.help_text }}"></i>
+        {% endif %}
+    </label>
+    <div>
+        {{ tracker_form.eye_tracker }}
+    </div>
+</div>
+<div class="hr-line-dashed"></div>
+
+
+{# Tobii tracker #}
+<div id="tobii">
+    {% for field in tobii_form.visible_fields %}
+        <div class="form-group">
+            <label class="control-label">
+                {{ field.label }} {% if field.field.required %} *{% endif %}
+                {% if field.help_text %}
+                    <i tabindex="-1" class="fa fa-question-circle" data-toggle="popover" data-placement="right" data-trigger="focus" title="{{ field.label }}" data-content="{{ field.help_text }}"></i>
+                {% endif %}
+            </label>
+            <div>
+                {{ field }}
+            </div>
+        </div>
+        <div class="hr-line-dashed"></div>
+    {% endfor %}
+</div>
+
+{# SMI tracker #}
+<div id ='smi' style="display: none;">
+    {% for field in smi_form.visible_fields %}
+        <div class="form-group">
+            <label class="control-label">
+                {{ field.label }} {% if field.field.required %} *{% endif %}
+                {% if field.help_text %}
+                    <i tabindex="-1" class="fa fa-question-circle" data-toggle="popover" data-placement="right" data-trigger="focus" title="{{ field.label }}" data-content="{{ field.help_text }}"></i>
+                {% endif %}
+            </label>
+            <div>
+                {{ field }}
+            </div>
+        </div>
+        <div class="hr-line-dashed"></div>
+    {% endfor %}
+</div>

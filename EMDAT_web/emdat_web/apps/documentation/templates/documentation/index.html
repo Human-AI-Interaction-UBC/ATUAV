@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %} Documentation {% endblock %}
+
+{% block menu %}
+    {% include 'menu.html' with active_menu='documentation' %}
+{% endblock %}
+
+{% block head_files_compress %}
+    {# CSS for this app #}
+    <link rel="stylesheet" href="{% static 'documentation/css/documentation.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-9">
+            {% include 'documentation/part_1.html' %}
+            {% include 'documentation/part_2.html' %}
+            {% include 'documentation/part_3.html' %}
+            {% include 'documentation/part_4.html' %}
+            {% include 'documentation/part_5.html' %}
+            {% include 'documentation/footer.html' %}
+        </div>
+        <div class="col-md-3">
+            {% include 'documentation/sidebar.html' %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block body_files_compress %}
+    <script src="{% static 'documentation/js/documentation.js' %}"></script>
+{% endblock %}

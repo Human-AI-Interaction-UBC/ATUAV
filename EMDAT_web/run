@@ -1,4 +1,4 @@
 #!/bin/bash
 source venv/bin/activate
-cd src
+cd emdat_web
 python manage.py runserver

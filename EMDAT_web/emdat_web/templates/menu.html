@@ -1,0 +1,3 @@
+<li class="{% if active_menu == 'settings' %}active{% endif %}"><a href="{% url 'experiment:settings_experiment' %}">Settings</a></li>
+<li class="{% if active_menu == 'stats' %}active{% endif %}"><a href="{% url 'stats:index' %}">Visualization</a></li>
+<li class="{% if active_menu == 'documentation' %}active{% endif %}"><a href="{% url 'documentation:index' %}">Documentation</a></li>

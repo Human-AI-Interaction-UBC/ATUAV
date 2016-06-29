@@ -1,0 +1,116 @@
+{% load staticfiles %}
+
+<h1 id="par-1">1. Introduction</h1>
+
+<div class="par">
+    <p>
+        Eye Movement Data Analysis Toolkit (EMDAT) is a library for processing eye gaze data, developed in the University of British Columbia.
+        Currently EMDAT is able to use data exported from Tobii studio software for analysis. While Tobii studio enables researchers to perform
+        limited analysis on the eye gaze data collected by a Tobii eye tracker in an experiment, EMDAT can be used to calculate a comprehensive
+        list of eye gaze features for each participant. Additionally, EMDAT has built-in mechanisms for data preprocessing and clean up which makes
+        it a valuable toolkit for researchers. EMDAT is developed with generalizability in mind, so that it can be used for a variety of experiments,
+        with no or minimal amount of changes in the code provided. In summary the main functionalities of EMDAT are:
+    </p>
+    <ul>
+        <li>
+            Calculating a comprehensive set of features for eye gaze data, including:
+            <ul>
+                <li>General features for the whole experiment window, and</li>
+                <li>Features for specific areas on the screen (a.k.a., Areas Of Interest) and transitions between them.</li>
+            </ul>
+        </li>
+        <li>
+            Eye gaze Preprocessing and clean up, including:
+            <ul>
+                <li>Evaluation of the quality of eye gaze samples collected during the experiment (data validation) with different methods, and</li>
+                <li>Automatic restoration of certain invalid eye gaze samples and improving the quality of data used in analysis.  </li>
+            </ul>
+        </li>
+    </ul>
+    <p>
+        While there are works in the literature, that report calculating different sets of features for eye gaze data (e.g., [1]), we could not find
+        any publicly available library that would provide the above functionalities. We hope that EMDAT enables researchers with less coding experience,
+        to analyze their eye tracking data more comprehensively.
+    </p>
+    <p>
+        The rest of this manual describes how to use the EMDAT library for analyzing eye tracking data collected by a Tobii eye tracker. It is important
+        for the reader to be familiar with eye tracking concepts and Tobii Studio software before using EMDAT.
+    </p>
+
+    <h2 id="sub-par-1-1">1.1 Basic concepts</h2>
+
+    <div class="sub-par">
+        <p>
+            An eye-tracker provides eye-gaze information in terms of fixations (i.e., maintaining eye-gaze at one point on the screen) and saccades
+            (i.e., a quick movement of gaze from one fixation point to another), which are analyzed to derive a viewer’s attention patterns. EMDAT uses a large
+            set of basic eye-tracking features, described by [1] as the building blocks for comprehensive eye-data processing. These features are built by
+            calculating a variety of statistics upon the basic eye-tracking measures described in Table 1.
+        </p>
+
+        <br>
+
+        <p class="text-center"><b>Table 1.</b> Description of basic eye tracking measures</p>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Measure</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Fixation rate</td>
+                    <td>Rate of eye fixations per milliseconds</td>
+                </tr>
+                <tr>
+                    <td>Number of Fixations</td>
+                    <td>Number of eye fixations detected during an interval of interest</td>
+                </tr>
+                <tr>
+                    <td>Fixation Duration</td>
+                    <td>Time duration of an individual fixation</td>
+                </tr>
+                <tr>
+                    <td>Saccade Length</td>
+                    <td>Distance between the two fixations delimiting the saccade (d in Fig. 1)</td>
+                </tr>
+                <tr>
+                    <td>Relative Saccade Angles</td>
+                    <td>The angle between the two consecutive saccades (e.g., angle y in Fig. 1)</td>
+                </tr>
+                <tr>
+                    <td>Absolute Saccade Angles</td>
+                    <td>The angle between a saccade and the horizontal (e.g., angle x in Fig. 1)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <br>
+
+        <p>
+            Of these measures, Fixation rate, Number of Fixations and Fixation Duration are widely used (e.g., [2–5]); we also included Saccade Length
+            (e.g., distance d in Figure 1), Relative Saccades Angle (e.g., angle y in Figure 1) and Absolute Saccade Angle (e.g., angle x in Figure 1),
+            as suggested in [1], because these measures are useful to summarize trends in user attention patterns within a specific interaction window
+            (e.g., if the user’s gaze seems to follow a planned sequence as opposed to being scattered). Statistics such as sum, average and standard deviation
+            can be calculated over these measures with respect to: (i) the full experiment window, to get a sense of a user’s overall attention;
+            (ii) specific areas of interest (AOI from now on), which identify parts of the interface that are of specific relevance for understanding
+            a user’s attention processes.
+        </p>
+
+        <div class="text-center">
+            <img width="283" height="76" src="{% static 'documentation/images/image002.png' %}" alt="image002">
+            <p><b>Figure 1.</b> Saccade based eye measures.</p>
+        </div>
+
+        <ul>
+            <li>
+                We are using EMDAT for different projects in our research group. As of September 2012, the following publications used EMDAT to analyze gaze data:
+                <ul>
+                    <li>
+                        the results of using EMDAT to analyze gaze data in an interactive simulation for learning is published in [6].
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>

@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %} Experiment Settings {% endblock %}
+
+{% block menu %}
+    {% include 'menu.html' with active_menu='settings' %}
+{% endblock %}
+
+{% block head_files %}
+    <link rel="stylesheet" href="{% static "experiment/css/plugins/duallistbox/bootstrap-duallistbox.min.css" %}">
+{% endblock %}
+
+{% block head_files_compress %}
+    {# CSS for this app #}
+    <link rel="stylesheet" href="{% static 'experiment/css/experiment.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="panel panel-default">
+        <div class="panel-heading">Experiment Settings</div>
+        <div class="panel-body">
+            <form id="settings-form" method="post">
+                {% csrf_token %}
+                <div id="wizard">
+                    <ul>
+                        <li><a href="#tab1" data-toggle="tab"><span class="label">1</span> Eye tracker</a></li>
+                        <li><a href="#tab2" data-toggle="tab"><span class="label">2</span> Features</a></li>
+                        <li><a href="#tab3" data-toggle="tab"><span class="label">3</span> Validity</a></li>
+                        <li><a href="#tab4" data-toggle="tab"><span class="label">4</span> Participants</a></li>
+                        <li><a href="#tab5" data-toggle="tab"><span class="label">5</span> Summary</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane" id="tab1">
+                            {# Tracker #}
+                            {% include 'experiment/tab1_eye_tracker.html' %}
+                        </div>
+
+                        <div class="tab-pane" id="tab2">
+                            {# Pupil features #}
+                            {% include 'experiment/tab2_features.html' %}
+                        </div>
+
+                        <div class="tab-pane" id="tab3">
+                            {# Validity params #}
+                            {% include 'experiment/tab3_validity.html' %}
+                        </div>
+
+                        <div class="tab-pane" id="tab4">
+                            {# Participants #}
+                            {% include 'experiment/tab4_participants.html' %}
+                        </div>
+
+                        <div class="tab-pane" id="tab5">
+                            {# Summary #}
+                            {% include 'experiment/tab5_summary.html' %}
+                        </div>
+
+                        <div class="pager">
+                            <div class="pager-right">
+                                <input type='button' class='btn btn-default btn-next' name='next' value='Next' />
+                                <button style="display: none;" type="button" class="btn btn-primary btn-save" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Running">Run</button>
+                            </div>
+                            <div class="pager-left">
+                                <input type='button' class='btn btn-default btn-previous' name='previous' value='Previous' />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block body_files %}
+    <script src="{% static 'experiment/js/plugins/validate/jquery.validate.min.js' %}"></script>
+    <script src="{% static 'experiment/js/plugins/wizard/jquery.bootstrap.wizard.min.js' %}"></script>
+    <script src="{% static 'experiment/js/plugins/duallistbox/jquery.bootstrap-duallistbox.min.js' %}"></script>
+    <script src="{% static 'experiment/js/plugins/checkbox/bootstrap-checkbox.min.js' %}"></script>
+{% endblock %}
+
+{% block body_files_compress %}
+    {# JS for this app #}
+    <script src="{% static 'experiment/js/experiment.js' %}"></script>
+{% endblock %}

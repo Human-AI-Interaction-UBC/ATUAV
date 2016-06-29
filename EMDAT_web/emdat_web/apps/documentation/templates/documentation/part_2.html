@@ -1,0 +1,90 @@
+<h1 id="par-2">2. Input files for using EMDAT</h1>
+
+<div class="par">
+
+    <h2 id="sub-par-2-1">2.1 Files exported from Tobii Studio</h2>
+    <div class="sub-par">
+        <p>There are four types of files that are used by EMDAT, which can be directly exported from the Tobii studio software.
+            The file types that are mandatory for every project are:
+        </p>
+
+        <p>
+            <b>All-Data.tsv:</b>
+            This file contains all the data recorded by the eye-tracker. The eye-tracker samples at a constant
+            rate (e.g., every 8 milliseconds for a Tobii T120 sampling at 120Hz), and records values for a wide variety of features
+            including gaze location, pupil dilation etc.
+        </p>
+
+        <p>
+            <b>Fixation-Data.tsv: </b>
+            The individual points of gaze-location data output in the All-Data file can be aggregated into "Fixations" according to a
+            clustering algorithm. The algorithm groups gaze samples which are close enough in distance and time into Fixations, which
+            have a location (centre of the corresponding gaze samples), and a duration.
+            Note: When exporting the data, the Tobii software allows you to choose one of the available methods for clustering Fixations
+            (varies in different versions of Tobii studio). Make sure you use the same method for every subject in a given experiment, to ensure consistency.
+        </p>
+
+        <p>
+            In addition to All-Data.tsv and Fixation-Data.tsv, there are two other file types that can be exported from Tobii studio which may be
+            needed depending on the project and the type of analysis intended:
+        </p>
+
+        <p>
+            <b>Event-Data.tsv: </b>
+            This file includes all the non-gaze events, such as mouse-clicks and key-presses. It also includes all the user-defined events that are
+            added after the experiment using Tobii studio. This is important for aligning the experimental timing data with the eye-tracking data.
+        </p>
+
+        <p>
+            <b>‘.aoi’ file: </b>
+            This file contains the definition of the Areas of Interest that were defined and exported using the AOI tool in Tobii studio.
+            AOIs are defined as a single polygon. EMDAT also supports dynamic AOIs, which are active at certain time intervals. For defining dynamic AOIs
+            you need to use an extended version of the ‘.aoi’ file as defined in the next section.
+        </p>
+
+    </div>
+
+    <h2 id="sub-par-2-2">2.2 EMDAT-specific files</h2>
+
+    <div class="sub-par">
+        <p>
+            In addition to the files exported from Tobii studio, EMDAT uses the two other file types that are specific to EMDAT and needs to be created by the researcher.
+            The mandatory file type needed for every project is:
+        </p>
+
+        <p>
+            <b>‘.seg’ file:</b>
+            The '.seg' files have lines of the form:
+        </p>
+
+        <p>
+            <code>scene_name&lt;tab&gt;segment_name&lt;tab&gt;start_time&lt;tab&gt;end_time&lt;newline&gt;</code>
+        </p>
+
+        <p>
+            Where scene_name is the id of the Scene that this Segment belongs to, segment_name is the id of the Segement, and start_time and end_time determines the time interval for the Segment.
+        </p>
+
+        <p>
+            Additionally, if you want to use dynamic AOIs (i.e., AOIs which are active at certain time intervals only) for your analysis, you will need to create files of the following type:
+        </p>
+
+        <p>
+            <b>Extended ‘.aoi’ file:</b>
+            EMDAT supports dynamic AOIs. For defining dynamic AOIs you need to use the extended version of the ‘.aoi’ file. The extended version of '.aoi' files has pairs of lines for each AOI of the form:
+        </p>
+
+        <p>
+            <code>aoiname&lt;tab&gt;point1x,point1y&lt;tab&gt;point2x,point2y&lt;tab&gt;...&lt;newline&gt;</code> <br>
+            <code>#&lt;tab&gt;start1,end1&lt;tab&gt;...&lt;newline&gt;</code>
+        </p>
+
+        <p>
+            where in the first line, aoiname is the name of the AOI, pointix and pointiy define the x and y coordinates of the each vertex in the polygon that defines boundaries
+            of the AOI. In the second line, startj and endj define the start and end of each time interval that this AOI is active in milliseconds. The second line starts
+            with ’#' and is optional. If the second line does not exist the AOI will be active throughout the whole session (a.k.a. a global AOI).
+        </p>
+
+    </div>
+
+</div>

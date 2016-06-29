@@ -1,0 +1,187 @@
+{% load staticfiles %}
+<h1 id="par-3">3. EMDAT core functionalities</h1>
+
+<div class="par">
+    <h2 id="sub-par-3-1">3.1 Calculating eye gaze features</h2>
+
+    <p>
+        EMDAT calculates a large number of features for each Segment/Scene. In this section we will list them and describe them briefly.
+        These features are based on the eye tracking measures described in section ‎1.1.
+        All the available features can be accessed through get_features() method that returns two lists one with the feature
+        names and another with their corresponding values (please see sections 4.1 and 4.2 for definition of the Segment and Scene
+        classes accordingly).
+    </p>
+
+    <div class="sub-par">
+        <h3 id="sub-par-3-1-1">3.1.1 Non-AOI features</h3>
+
+        <p>
+            EMDAT calculates 15 general features for each Segment/Scene. These features are the only features that can be extracted without defining any AOIs.
+            For a Segment/Scene called S these features and their meaning will be:
+        </p>
+
+        <ul>
+            <li>
+                <b>length:</b>
+                Duration of S in milliseconds
+            </li>
+            <li>
+                <b>numfixations:</b>
+                Number of fixations in S
+            </li>
+            <li>
+                <b>fixationrate:</b>
+                Number of fixations in S over time
+            </li>
+            <li>
+                <b>sumfixationduration, meanfixationduration and stddevfixationduration:</b>
+                Sum, average and standard deviation for duration of fixations (in milliseconds) in S
+            </li>
+            <li>
+                <b>sumpathdistance, meanpathdistance, stddevpathdistance:</b>
+                Sum, average and standard deviation for length of saccades (in pixels) in S
+            </li>
+            <li>
+                <b>sumrelpathangles, meanrelpathangles, stddevrelpathangles:</b>
+                Sum, average and standard deviation for relative angles between consecutive saccades (in radian) in S
+            </li>
+            <li>
+                <b>sumabspathangles, meanabspathangles, stddevabspathangles:</b>
+                Sum, average and standard deviation for absolute angles saccades make with the horizontal line (in radian) in S
+            </li>
+            <li>
+                <b>eyemovementvelocity:</b>
+                length of path scanned in S over time (pixel/milliseconds) [to be added soon]
+            </li>
+        </ul>
+
+
+        <h3 id="sub-par-3-1-2">3.1.2 AOI-based features</h3>
+
+        <p>
+            In addition to general features, EMDAT also calculates a set of features for each of Segment/Scene S’s active AOIs. In order to calculate these features
+            EMDAT needs AOI definition information (i.e., at least one ‘.aoi’ file). These features can be grouped into two categories:
+        </p>
+
+        <ul>
+            <li>Fixation-based features</li>
+            <li>Transition-based features</li>
+        </ul>
+
+        <p>
+            For an AOI called A, the fixation-based features will be:
+        </p>
+
+        <ul>
+            <li>
+                <b>numfixations:</b>
+                Number of fixations in S that are inside A
+            </li>
+            <li>
+                <b>fixationrate:</b>
+                Number of fixations in S that are inside A over time
+            </li>
+            <li>
+                <b>proportionnum:</b>
+                Proportion of fixations in S that are inside A over total fixations in S.
+            </li>
+            <li>
+                <b>totaltimespent:</b>
+                Sum of the duration of fixations in S that are inside A (i.e., time spent looking inside A during S) in milliseconds.
+            </li>
+            <li>
+                <b>proportiontime:</b>
+                Proportion of time spent looking inside A during S over total duration of S.
+            </li>
+            <li>
+                <b>longestfixation:</b>
+                Longest fixation inside A during S.
+            </li>
+            <li>
+                <b>timetofirstfixation:</b>
+                Time (ms) before first fixation inside A during S
+            </li>
+            <li>
+                <b>timetolastfixation:</b>
+                Time (ms) of last fixation inside A during S
+            </li>
+        </ul>
+
+        <p>
+            A transition is a saccade with its start fixation in one AOI and the end fixation in another AOI. The transition-based features
+            will be calculated based on transitions from all other active AOIs in S to A. For each AOI, the following two features will be calculated for A:
+        </p>
+
+        <ul>
+            <li>
+                <b>Numtransfrom&lt;aid&gt;:</b>
+                Number of transitions from the AOI identified by aid to A.
+            </li>
+            <li>
+                <b>Proptransfrom&lt;aid&gt;:</b>
+                Proportion of transitions from the AOI identified by aid to A over total transitions in S.
+            </li>
+        </ul>
+
+    </div>
+
+    <h2 id="sub-par-3-2">3.2 Preproccessing and clean up of the eye gaze data</h2>
+    <div class="sub-par">
+        <h3 id="sub-par-3-2-1">3.2.1 Measuring the quality of eye gaze samples in a Segment</h3>
+
+        <p>
+            The collection of eye-tracking data is prone to error. This is particularly true for eye-trackers that are not head-mounted, especially if during
+            the experiment the movement of the participant’s head is not restricted (e.g., by a chin rest). Data can be lost due to the subject looking off the
+            screen or due to loss of calibration from rapid movement, blinking or other such events and finally due to blocking of the infra red beam from reaching
+            to the user’s eyes (e.g., by user’s hands).
+            Segments in which a large amount of data has failed to be captured could skew results to an unacceptable degree. Therefore, it is necessary to remove
+            these Segments from analysis. There are two ways in which validity can be determined:
+        </p>
+
+        <ol type="1">
+            <li>A Segment is valid as long as a certain proportion of time-samples (e.g., 90%) contain valid data.</li>
+            <li>A Segment is valid as long as there is no period of time (e.g., 300ms) in which there is no collected data.</li>
+        </ol>
+
+        <p>
+            Each of these has advantages and disadvantages. Using the first method will ensure that there is solid data for the whole Segment. However, it might
+            unnecessarily screen out Segments where the data is largely valid, but there are many very small discontinuities throughout (for example if 1 time-sample
+            in 10 is invalid but these are equally distributed throughout, this should not be a problem). The second method will ensure that there are no large gaps
+            in the data for a given Segment.
+        </p>
+
+        <p>
+            In the following two sections we will describe two different ways that EMDAT uses to improve the quality of the gaze data samples in Segments.
+        </p>
+
+        <h3 id="sub-par-3-2-2">3.2.2 Automatic Restoration of Invalid samples</h3>
+
+        <p>
+            EMDAT can optionally look for any restorable invalid eye gaze samples and add them to the valid samples. “Restored samples” are samples that are initially
+            deemed invalid (e.g., the red star in Figure 2), but which can be restored to be part of a Fixation (e.g., the green boxes in Figure 2). The rationale for
+            such restorations is as follows: if the user was fixating at the same point before and after a short period of “lost” gaze data, it can be assumed that the
+            user was looking at that same point during this “loss” period.
+        </p>
+
+        <div class="text-center">
+            <img width="365" height="75" src="{% static 'documentation/images/image004.png' %}" alt="image002">
+            <p><b>Figure 2.</b> Recovering invalid samples using fixation data.</p>
+        </div>
+
+        <h3 id="sub-par-3-2-3">3.2.3 Automatic Splitting of Invalid Segments</h3>
+
+        <p>
+            EMDAT comes with an additional option for improving the quality of overall data used in the analysis by splitting a Segment that does not meet the minimum quality
+            threshold because of a large continues gap of invalid samples in it (e.g., Segment1 in Figure 3, the invalid samples are shown with red starts). The auto-partition
+            option enables EMDAT to automatically split Segments of low sample quality into two new sub-Segments (e.g., Segments 11 and 12 in Figure 3), and discarding the
+            largest gap of invalid samples for that Segment. EMDAT will continue to perform the splitting on the Segments until there is no gap larger than MAX_SEG_TIMEGAP
+            parameter left in the data (see section 5.1 for description of parameters).
+        </p>
+
+        <div class="text-center">
+            <img width="434" height="109" src="{% static 'documentation/images/image006.png' %}" alt="image002">
+            <p><b>Figure 3.</b> Automatic splitting of an invalid Segment into two Segments with higher quality.</p>
+        </div>
+
+    </div>
+</div>

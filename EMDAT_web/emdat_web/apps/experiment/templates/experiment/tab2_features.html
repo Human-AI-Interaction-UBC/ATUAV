@@ -1,0 +1,89 @@
+{# Gaze #}
+<div class="form-group">
+    <label class="control-label">
+        {{ features_form.gaze.label }} {% if features_form.gaze.field.required %} *{% endif %}
+        {% if features_form.gaze.help_text %}
+            <i tabindex="-1" class="fa fa-question-circle" data-toggle="popover" data-placement="right" data-trigger="focus" title="{{ features_form.gaze.label }}" data-content="{{ features_form.gaze.help_text }}"></i>
+        {% endif %}
+    </label>
+    <div class="list-features">
+        <select id="gaze" name="gaze[]" multiple>
+            {% for value in gaze_features %}
+                <option value="{{ value.key }}">{{ value.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+</div>
+<hr>
+
+{# AOI #}
+<div class="form-group">
+    <label class="control-label">
+        {{ features_form.aoi.label }} {% if features_form.aoi.field.required %} *{% endif %}
+        {% if features_form.aoi.help_text %}
+            <i tabindex="-1" class="fa fa-question-circle" data-toggle="popover" data-placement="right" data-trigger="focus" title="{{ features_form.aoi.label }}" data-content="{{ features_form.aoi.help_text }}"></i>
+        {% endif %}
+    </label>
+    <div class="list-features">
+        <select id="aoi" name="aoi[]" multiple>
+            {% for value in aoi_features %}
+                <option value="{{ value.key }}">{{ value.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+</div>
+<hr>
+
+{# Pupil #}
+<div class="form-group">
+    <label class="control-label">
+        {{ features_form.pupil.label }} {% if features_form.pupil.field.required %} *{% endif %}
+        {% if features_form.pupil.help_text %}
+            <i tabindex="-1" class="fa fa-question-circle" data-toggle="popover" data-placement="right" data-trigger="focus" title="{{ features_form.pupil.label }}" data-content="{{ features_form.pupil.help_text }}"></i>
+        {% endif %}
+    </label>
+    <div class="list-features">
+        <select id="pupil" name="pupil[]" multiple>
+            {% for value in pupil_features %}
+                <option value="{{ value.key }}">{{ value.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+</div>
+<hr>
+
+{# Distance #}
+<div class="form-group">
+    <label class="control-label">
+        {{ features_form.distance.label }} {% if features_form.distance.field.required %} *{% endif %}
+        {% if features_form.distance.help_text %}
+            <i tabindex="-1" class="fa fa-question-circle" data-toggle="popover" data-placement="right" data-trigger="focus" title="{{ features_form.distance.label }}" data-content="{{ features_form.distance.help_text }}"></i>
+        {% endif %}
+    </label>
+    <div class="list-features">
+        <select id="distance" name="distance[]" multiple>
+            {% for value in distance_features %}
+                <option value="{{ value.key }}">{{ value.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+</div>
+<hr>
+
+{# Events #}
+<div class="form-group">
+    <label class="control-label">
+        {{ features_form.events.label }} {% if features_form.events.field.required %} *{% endif %}
+        {% if features_form.events.help_text %}
+            <i tabindex="-1" class="fa fa-question-circle" data-toggle="popover" data-placement="right" data-trigger="focus" title="{{ features_form.events.label }}" data-content="{{ features_form.events.help_text }}"></i>
+        {% endif %}
+    </label>
+    <div class="list-features">
+        <select id="events" name="events[]" multiple>
+            {% for value in events_features %}
+                <option value="{{ value.key }}">{{ value.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+</div>
+<hr>
